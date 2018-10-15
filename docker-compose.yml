@@ -1,0 +1,21 @@
+version: '3'
+services:
+  api-monitor_db:
+    image: postgres
+    container_name: api-monitor_db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  api-monitor:
+    container_name: api-monitor
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/api-monitor
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-monitor_db
+
+volumes:
+  postgres:
+    external: true
