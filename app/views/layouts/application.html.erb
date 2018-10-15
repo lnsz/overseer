@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ApiMonitor</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <!-- snip -->
 
   <body>
-    <%= yield %>
+    <!--
+      We load the JS in the body tag to ensure the element exists so we can
+      render to it. Otherwise, we need to use events on the document before we
+      instantiate and call the Clearwater app. And that's no fun.
+    -->
+    <%= javascript_include_tag 'application' %>
   </body>
 </html>
