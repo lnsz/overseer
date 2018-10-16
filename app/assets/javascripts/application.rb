@@ -6,6 +6,7 @@ class Layout
 
   def render
     h1('Hello, world!')
+    h1('Test')
   end
 end
 

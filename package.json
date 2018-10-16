@@ -1,5 +1,5 @@
 {
-  "name": "api-monitor",
+  "name": "overseer",
   "private": true,
   "dependencies": {}
 }

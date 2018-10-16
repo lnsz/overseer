@@ -1,16 +1,16 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: api-monitor_db
+  host: overseer_db
   username: postgres
   password:
   pool: 5
 
 development:
   <<: *default
-  database: api-monitor_development
+  database: overseer_development
 
 
 test:
   <<: *default
-  database: api-monitor_test
+  database: overseer_test
