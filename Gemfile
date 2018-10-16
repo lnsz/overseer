@@ -38,6 +38,11 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'clearwater'
 gem 'opal-rails'
+gem 'bowser'
+gem 'rack-cors'
+gem 'rest-client'
+gem 'opal-browser'
+gem 'browser'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
