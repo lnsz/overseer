@@ -1,12 +1,13 @@
 require 'opal'
 require 'clearwater'
-# require 'browser'
+require 'clearwater/memoized_component'
+require 'browser'
 require 'bowser/http'
 
-class Tile
-  include Clearwater::Component
+class Tile < Clearwater::MemoizedComponent
 
-  def initialize(protocol, uri, status)
+  def initialize(protocol, uri)
+		@online = true
     @protocol = protocol
     @uri = uri
     @url = protocol + uri
@@ -15,29 +16,37 @@ class Tile
   end
 
   def refresh
-    # Browser::HTTP.get "https://google.com" do
-    #   on :success do |res|
-    #     alert res.json.inspect
-    #   end
-    # end
-    Bowser::HTTP.fetch(@url)
-      .then(&:json)
-      .then { |response| @status = response.status } 
-      .catch { |exception| @status = 404 }
+    Bowser::HTTP.fetch('/test?url=' + @url)
+	    .then(&:json)
+			.then { |response| @online = true; @status = response['code']; call } 
+      .catch { |exception| (@online = false); (@status = 404); call }
   end
 
   def render
-    div({style: Style.tile}, [
-      h2({style: Style.h1}, [@uri, ' ', @status])
+		style = @online == true ? Style.green : Style.red
+		div({style: style}, [
+      h2({style: Style.h1}, [@uri, br, @status]),
     ])
   end
 
   module Style
     module_function
 
-    def tile
+    def green
       {
-        background_color: 'rgba(0, 255, 0, 0.5)',
+				background_color: 'rgba(0, 255, 0, 0.5)',
+        align_self: 'auto',
+        margin: 'auto',
+        display: 'flex',
+        align_items: 'center',
+        justify_content: 'center',
+        width: '30%', height: '30%'
+      }
+    end
+    
+		def red
+      {
+				background_color: 'rgba(255, 0, 0, 0.5)',
         align_self: 'auto',
         margin: 'auto',
         display: 'flex',
@@ -51,7 +60,8 @@ class Tile
       {
         margin: '0px',
         color: 'rgba(255, 255, 255, 1)',
-        font_family: 'Trebuchet MS'
+        font_family: 'Arial',
+				text_align: 'center'
       }
     end
   end

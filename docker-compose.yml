@@ -6,6 +6,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
   overseer:
+    restart: always
     container_name: overseer
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'

@@ -28,7 +28,7 @@ class Header
     def title
       {
         margin_left: '20px',
-        font_family: 'Trebuchet MS'
+        font_family: 'Arial'
       }
     end
 

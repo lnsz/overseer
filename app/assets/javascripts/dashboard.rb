@@ -7,15 +7,15 @@ class Dashboard
   
   def render
     div({style: Style.dashboard}, [
-      Tile.new("https://", "google.com"),
-      Tile.new("https://", "googleapis.com"),
-      Tile.new("https://", "github.com"),
-      Tile.new("https://", "reddit.com"),
-      Tile.new("https://", "twitch.tv"),
-      Tile.new("https://", "g894122r.com"),
-      Tile.new("https://", "facebook.com"),
-      Tile.new("https://", "y532rfd.com"),
-      Tile.new("https://", "instagram.com")
+			Tile.memoize("https://", "google.com"),
+			Tile.memoize("https://", "github.com"),
+			Tile.memoize("https://", "youtube.com"),
+			Tile.memoize("https://", "reddit.com"),
+			Tile.memoize("https://", "twitch.tv"),
+			Tile.memoize("https://", "g894122r.com"),
+			Tile.memoize("https://", "facebook.com"),
+			Tile.memoize("https://", "y532rfd.com"),
+			Tile.memoize("https://", "rdq.tdlab.ca")
     ])
   end
 
