@@ -1,7 +1,6 @@
 require 'opal'
 require 'clearwater'
 require 'clearwater/memoized_component'
-require 'browser'
 require 'bowser/http'
 
 class Tile < Clearwater::MemoizedComponent
@@ -16,7 +15,7 @@ class Tile < Clearwater::MemoizedComponent
   end
 
   def refresh
-    Bowser::HTTP.fetch('/test?url=' + @url)
+    Bowser::HTTP.fetch('/request?url=' + @url)
 	    .then(&:json)
 			.then { |response| @online = true; @status = response['code']; call } 
       .catch { |exception| (@online = false); (@status = 404); call }

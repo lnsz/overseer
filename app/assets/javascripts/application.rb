@@ -10,7 +10,7 @@ class Layout
   def render
     div({style: Style.background}, [
       Header.new,
-      Dashboard.new
+      Dashboard.new('tiles')
     ])
   end
 
