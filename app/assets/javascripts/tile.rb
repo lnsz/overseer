@@ -5,11 +5,13 @@ require 'bowser/http'
 
 class Tile < Clearwater::MemoizedComponent
 
-  def initialize(protocol, uri)
-		@online = true
+  def initialize(protocol, uri, name)
+    @name = name
     @protocol = protocol
     @uri = uri
     @url = protocol + uri
+
+    @online = true
     @status = 200
     refresh
   end
@@ -24,7 +26,7 @@ class Tile < Clearwater::MemoizedComponent
   def render
 		style = @online == true ? Style.green : Style.red
 		div({style: style}, [
-      h2({style: Style.h1}, [@uri, br, @status]),
+      h2({style: Style.h1}, [@name, br, @uri]),
     ])
   end
 
@@ -39,7 +41,10 @@ class Tile < Clearwater::MemoizedComponent
         display: 'flex',
         align_items: 'center',
         justify_content: 'center',
-        width: '30%', height: '30%'
+        width: '30%', height: '30%',
+        '&:hover' => {
+          background_color: 'blue'
+        }
       }
     end
     

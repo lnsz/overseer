@@ -38,11 +38,10 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'clearwater'
 gem 'opal-rails'
+gem 'grand_central'
 gem 'bowser'
+
 gem 'rack-cors'
-gem 'rest-client'
-gem 'opal-browser'
-gem 'browser'
 gem 'httparty'
 
 group :development, :test do
