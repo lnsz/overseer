@@ -26,6 +26,8 @@ services:
       RAILS_ENV: "${RAILS_ENV}"
     ports:
       - "${EXTERNAL_PORT}:3000"
+    volumes:
+      - '../:/home/docker/overseer'
 
 volumes:
   overseer_db:
