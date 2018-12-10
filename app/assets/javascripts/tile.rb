@@ -24,10 +24,26 @@ class Tile < Clearwater::MemoizedComponent
   end
 
   def render
-		style = @online == true ? Style.green : Style.red
+		style = @online == true ? green : Style.red
 		div({style: style}, [
       h2({style: Style.h1}, [@name, br, @uri]),
     ])
+  end
+
+  def green
+    {
+      background_color: 'rgba(0, 255, 0, 0.5)',
+      align_self: 'auto',
+      margin: 'auto',
+      display: 'flex',
+      align_items: 'center',
+      justify_content: 'center',
+      width: '30%', height: '30%',
+      hover: {
+        font_size: '2em',
+        background_color: 'red',
+      },
+    }
   end
 
   module Style
@@ -43,8 +59,9 @@ class Tile < Clearwater::MemoizedComponent
         justify_content: 'center',
         width: '30%', height: '30%',
         '&:hover' => {
-          background_color: 'blue'
-        }
+          font_size: '2em',
+          background_color: ->props { props.primary && :green },
+        },
       }
     end
     
