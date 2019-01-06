@@ -1,24 +1,16 @@
-# README
+# Overseer
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Build Setup
 
-Things you may want to cover:
+``` bash
+# build
+./overseer build
 
-* Ruby version
+# start
+./overseer start
 
-* System dependencies
+# stop
+./overseer stop
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# reset (delete node modules and db volume)
+./overseer reset

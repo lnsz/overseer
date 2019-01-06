@@ -1,0 +1,165 @@
+#!/bin/sh
+
+[ "$ENV_FILE" ]             || ENV_FILE='./.env'
+
+[ ! -f "$ENV_FILE" ]        || . "$ENV_FILE"
+
+# Networking
+[ "$LOCAL_IP" ]             || LOCAL_IP="$(/sbin/ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)"
+
+# File paths
+[ "$DOCKER_COMPOSE" ]       || DOCKER_COMPOSE='docker-compose.yml'
+[ "$GIT_ROOT" ]             || GIT_ROOT="$(pwd)"
+
+# Client variables
+[ "$CLIENT_NAME" ]          || CLIENT_NAME='overseer_client'
+[ "$CLIENT_IMAGE"]          || CLIENT_IMAGE='overseer/client'
+[ "$CLIENT_TAG"]            || CLIENT_TAG='latest'
+[ "$CLIENT_PATH" ]          || CLIENT_PATH="$GIT_ROOT/client"
+[ "$CLIENT_NODE_MODULES"]   || CLIENT_NODE_MODULES='overseer_client_node_modules'
+[ "$CLIENT_IP"]             || CLIENT_IP="$LOCAL_IP"
+[ "$CLIENT_HP" ]            || CLIENT_HP='4000'
+[ "$CLIENT_CP" ]            || CLIENT_CP='4000'
+
+# Server variables
+[ "$SERVER_NAME"]           || SERVER_NAME='overseer_server'
+[ "$SERVER_IMAGE"]          || SERVER_IMAGE='overseer/server'
+[ "$SERVER_TAG"]            || SERVER_TAG='latest'
+[ "$SERVER_PATH" ]          || SERVER_PATH="$GIT_ROOT/server"
+[ "$SERVER_NODE_MODULES"]   || SERVER_NODE_MODULES='overseer_server_node_modules'
+[ "$SERVER_IP"]             || SERVER_IP="$LOCAL_IP"
+[ "$SERVER_HP" ]            || SERVER_HP='4001'
+[ "$SERVER_CP" ]            || SERVER_CP='8000'
+
+# Database variables
+[ "$DATABASE_NAME"]         || DATABASE_NAME='overseer_db'
+[ "$DATABASE_IMAGE"]        || DATABASE_IMAGE='mongo'
+[ "$DATABASE_TAG"]          || DATABASE_TAG='4.0.5'
+[ "$DATABASE_VOLUME_NAME"]  || DATABASE_VOLUME_NAME='overseer_db_volume'
+[ "$DATABASE_HP" ]          || DATABASE_HP='27017'
+[ "$DATABASE_CP" ]          || DATABASE_CP='27017'
+
+ARGS="$@"
+
+stop_container() {
+  docker kill "$1" > /dev/null 2>&1
+  docker rm "$1"   > /dev/null 2>&1
+  echo "Container '$1' stopped"
+}
+
+clear_containers() {
+  stop_container "$CLIENT_NAME"
+  stop_container "$SERVER_NAME"
+  stop_container "$DATABASE_NAME"
+}
+
+setup() {
+  clear_containers
+  docker volume create "$DATABASE_VOLUME_NAME"
+  docker volume create "$CLIENT_NODE_MODULES"
+  docker volume create "$SERVER_NODE_MODULES"
+}
+
+create_compose_file() {
+cat <<EOT > $DOCKER_COMPOSE
+version: "3"
+
+services:
+  ${CLIENT_NAME}:
+    container_name: ${CLIENT_NAME}
+    image: ${CLIENT_IMAGE}:${CLIENT_TAG}
+    build: ${CLIENT_PATH}/docker
+    ports:
+      - '${CLIENT_HP}:${CLIENT_CP}'
+    environment:
+      - PORT=${CLIENT_CP}
+      - API_URL=http://${SERVER_IP}:${SERVER_HP}/
+    volumes:
+      - ${CLIENT_PATH}:/data
+      - ${SERVER_NODE_MODULES}:/data/node_modules
+
+  ${SERVER_NAME}:
+    container_name: ${SERVER_NAME}
+    image: ${SERVER_IMAGE}:${SERVER_TAG}
+    build: ${SERVER_PATH}/docker
+    ports:
+      - '${SERVER_HP}:${SERVER_CP}'
+      - '9229:9229'
+    environment:
+      - PORT=${SERVER_CP}
+      - DATABASE_URL=${DATABASE_NAME}:${DATABASE_HP}
+    depends_on: 
+      - ${DATABASE_NAME}
+    volumes:
+      - ${SERVER_PATH}:/data
+      - ${SERVER_NODE_MODULES}:/data/node_modules
+    command:
+      - node
+      - "--inspect=0.0.0.0"
+      - "./src/app.js" 
+    
+  ${DATABASE_NAME}:
+    container_name: ${DATABASE_NAME}
+    image: ${DATABASE_IMAGE}:${DATABASE_TAG}
+    ports:
+      - '${DATABASE_HP}:${DATABASE_CP}'
+    volumes:
+      - ${DATABASE_VOLUME_NAME}:/data/db
+
+volumes:
+  ${DATABASE_VOLUME_NAME}:
+    external: true
+  ${CLIENT_NODE_MODULES}:
+    external: true
+  ${SERVER_NODE_MODULES}:
+    external: true
+EOT
+}
+
+build_overseer() {
+  docker-compose build
+}
+
+start_overseer() {
+  setup
+  docker-compose up -d
+  docker-compose logs -f
+}
+
+dev_overseer() {
+  setup
+  docker-compose up -d
+  docker-compose logs -f
+}
+
+stop_overseer() {
+  clear_containers
+}
+
+reset_overseer() {
+  clear_containers
+  clear_node_modules
+  delete_database
+}
+
+clear_node_modules() {
+  docker volume rm "$CLIENT_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $CLIENT_NODE_MODULES" 
+  docker volume rm "$SERVER_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $SERVER_NODE_MODULES"
+}
+
+delete_database() {
+  docker volume rm "$DATABASE_VOLUME_NAME" > /dev/null 2>&1 && echo "Removed $DATABASE_VOLUME_NAME"
+}
+
+create_compose_file
+if [ "${ARGS#*build}" != "$ARGS" ]; then
+  build_overseer
+elif [ "${ARGS#*start}" != "$ARGS" ]; then
+  start_overseer
+elif [ "${ARGS#*stop}" != "$ARGS" ]; then
+  stop_overseer
+elif [ "${ARGS#*dev}" != "$ARGS" ]; then
+  dev_overseer
+elif [ "${ARGS#*reset}" != "$ARGS" ]; then
+  reset_overseer
+fi
