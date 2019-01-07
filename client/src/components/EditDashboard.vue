@@ -1,6 +1,6 @@
 <template>
-  <div class="posts">
-    <h1>Add Post</h1>
+  <div class="dashboards">
+    <h1>Edit Dashboard</h1>
       <div class="form">
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">
@@ -9,29 +9,40 @@
           <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
         </div>
         <div>
-          <button class="app_post_btn" @click="addPost">Add</button>
+          <button class="app_dashboard_btn" @click="updateDashboard">Update</button>
         </div>
       </div>
   </div>
 </template>
 
 <script>
-import PostsService from '@/services/PostsService'
+import DashboardsService from '@/services/DashboardsService'
 export default {
-  name: 'NewPost',
+  name: 'EditDashboard',
   data () {
     return {
       title: '',
       description: ''
     }
   },
+  mounted () {
+    this.getDashboard()
+  },
   methods: {
-    async addPost () {
-      await PostsService.addPost({
+    async getDashboard () {
+      const response = await DashboardsService.getDashboard({
+        id: this.$route.params.id
+      })
+      this.title = response.data.title
+      this.description = response.data.description
+    },
+    async updateDashboard () {
+      await DashboardsService.updateDashboard({
+        id: this.$route.params.id,
         title: this.title,
         description: this.description
       })
-      this.$router.push({ name: 'Posts' })
+      this.$router.push({ name: 'Dashboards' })
     }
   }
 }
@@ -47,7 +58,7 @@ export default {
 .form div {
   margin: 20px;
 }
-.app_post_btn {
+.app_dashboard_btn {
   background: #4d7ef7;
   color: #fff;
   padding: 10px 80px;
