@@ -94,7 +94,8 @@ services:
       - ${SERVER_PATH}:/data
       - ${SERVER_NODE_MODULES}:/data/node_modules
     command:
-      - node
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--legacy-watch"
       - "--inspect=0.0.0.0"
       - "./src/app.js" 
     

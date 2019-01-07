@@ -3,7 +3,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 
-var Post = require("../models/posts");
+const Dashboard = require('../models/dashboards');
+const Tiles = require('../models/tiles');
 
 const app = express()
 app.use(morgan('combined'))
@@ -11,67 +12,69 @@ app.use(bodyParser.json())
 app.use(cors())
 
 // DB Setup
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var DATABASE_URL = process.env.DATABASE_URL || 'http://localhost'
-mongoose.connect(`mongodb://${DATABASE_URL}/posts`);
+const DATABASE_URL = process.env.DATABASE_URL || 'http://localhost'
+mongoose.connect(`mongodb://${DATABASE_URL}`);
 
-var db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function(callback){
-  console.log("Connection Succeeded");
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error'));
+db.once('open', (callback) => {
+  console.log('Connection Succeeded');
 });
 
-// SERVER Setup 
-app.get('/posts', (req, res) => {
-  Post.find({}, 'title description', function (error, posts) {
-    if (error) { console.error(error); }
+// Dashboard endpoints
+// Fetch all dashboards
+app.get('/dashboards', (req, res) => {
+  Dashboard.find({}, (error, dashboards) => {
+    if (error) {
+       console.error(error);
+    }
     res.send({
-      posts: posts
+      dashboards: dashboards
     })
   }).sort({_id:-1})
 });
 
- 
-// Post Endpoints
-app.post('/posts', (req, res) => {
-  var db = req.db;
-  var title = req.body.title;
-  var description = req.body.description;
-  var new_post = new Post({
+// Create a dashboard
+app.post('/dashboards', (req, res) => {
+  let title = req.body.title;
+  let description = req.body.description;
+  let new_dashboard = new Dashboard({
     title: title,
-    description: description
+    description: description,
+    tiles: []
   })
-
-  new_post.save(function (error) {
+  new_dashboard.save((error) => {
     if (error) {
       console.log(error)
     }
     res.send({
       success: true,
-      message: 'Post saved successfully!'
+      message: 'Dashboard created successfully'
     })
   })
 })
 
-// Fetch single post
-app.get('/post/:id', (req, res) => {
-  var db = req.db;
-  Post.findById(req.params.id, 'title description', function (error, post) {
-    if (error) { console.error(error); }
-    res.send(post)
+// Fetch single dashboard
+app.get('/dashboards/:id', (req, res) => {
+  Dashboard.findById(req.params.id, (error, dashboard) => {
+    if (error) {
+      console.error(error);
+    }
+    res.send(dashboard)
   })
 })
 
-// Update a post
-app.put('/posts/:id', (req, res) => {
-  var db = req.db;
-  Post.findById(req.params.id, 'title description', function (error, post) {
-    if (error) { console.error(error); }
-
-    post.title = req.body.title
-    post.description = req.body.description
-    post.save(function (error) {
+// Update a dashboard
+app.put('/dashboards/:id', (req, res) => {
+  Dashboard.findById(req.params.id, (error, dashboard) => {
+    if (error) {
+      console.error(error);
+    }
+    dashboard.title = req.body.title
+    dashboard.description = req.body.description
+    dashboard.save((error) => {
       if (error) {
         console.log(error)
       }
@@ -82,19 +85,17 @@ app.put('/posts/:id', (req, res) => {
   })
 })
 
-// Delete a post
-app.delete('/posts/:id', (req, res) => {
-  var db = req.db;
-  Post.remove({
+// Delete a dashboard
+app.delete('/dashboards/:id', (req, res) => {
+  Dashboard.remove({
     _id: req.params.id
-  }, function(err, post){
-    if (err)
-      res.send(err)
+  }, (error) => {
+    if (error)
+      res.send(error)
     res.send({
       success: true
     })
   })
 })
-
 
 app.listen(process.env.PORT || 8081)
