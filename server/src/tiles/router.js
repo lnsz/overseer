@@ -1,0 +1,1 @@
+const Tiles = require('./schema');
