@@ -1,11 +1,11 @@
-const Dashboard = require('./schema');
+const Dashboard = require('./schema')
 const router  = require('express').Router()
 
 // Fetch all dashboards
 const getDashboards = (req, res) => {
   Dashboard.find({}, (error, dashboards) => {
     if (error) {
-       console.error(error);
+      console.error(error)
     }
     res.send({
       dashboards: dashboards
@@ -15,14 +15,10 @@ const getDashboards = (req, res) => {
 
 // Create a dashboard
 const createDashboard = (req, res) => {
-  let title = req.body.title;
-  let description = req.body.description;
-  let new_dashboard = new Dashboard({
-    title: title,
-    description: description,
-    tiles: []
-  })
-  new_dashboard.save((error) => {
+  new Dashboard({
+    title: req.body.title,
+    description: req.body.description
+  }).save((error) => {
     if (error) {
       console.log(error)
     }
@@ -37,7 +33,7 @@ const createDashboard = (req, res) => {
 const updateDashboard = (req, res) => {
   Dashboard.findById(req.params.id, (error, dashboard) => {
     if (error) {
-      console.error(error);
+      console.error(error)
     }
     dashboard.title = req.body.title
     dashboard.description = req.body.description
@@ -56,7 +52,7 @@ const updateDashboard = (req, res) => {
 const fetchDashboard = (req, res) => {
   Dashboard.findById(req.params.id, (error, dashboard) => {
     if (error) {
-      console.error(error);
+      console.error(error)
     }
     res.send(dashboard)
   })
@@ -75,10 +71,11 @@ const deleteDashboard = (req, res) => {
   })
 }
 
-router.get('/dashboards', getDashboards);
-router.get('/dashboards/:id', fetchDashboard)
-router.post('/dashboards', createDashboard)
-router.put('/dashboards/:id', updateDashboard) 
-router.delete('/dashboards/:id', deleteDashboard)
+router
+  .get('/dashboards', getDashboards)
+  .get('/dashboards/:id', fetchDashboard)
+  .post('/dashboards', createDashboard)
+  .put('/dashboards/:id', updateDashboard)
+  .delete('/dashboards/:id', deleteDashboard)
 
 module.exports = router

@@ -9,16 +9,17 @@ app.use(bodyParser.json())
 app.use(cors())
 
 // DB Setup
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const DATABASE_URL = process.env.DATABASE_URL || 'http://localhost'
-mongoose.connect(`mongodb://${DATABASE_URL}`);
+mongoose.connect(`mongodb://${DATABASE_URL}`)
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error'));
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error'))
 db.once('open', (callback) => {
-  console.log('Connection Succeeded');
-});
+  console.log('Connection Succeeded')
+})
 
 app.use('/api', require('./dashboards/router'))
+app.use('/api', require('./tiles/router'))
 app.listen(process.env.PORT || 8081)

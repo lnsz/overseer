@@ -28,7 +28,8 @@ export default {
   methods: {
     async addDashboard () {
       await DashboardsService.addDashboard({
-        title: this.title
+        title: this.title,
+        description: this.description
       })
       this.$router.push({ name: 'Dashboards' })
     }
