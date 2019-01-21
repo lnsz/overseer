@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboards from '@/components/Dashboards'
+import Dashboards from '@/components/DashboardList'
 import NewDashboard from '@/components/NewDashboard'
+import ViewDashboard from '@/components/ViewDashboard'
 import EditDashboard from '@/components/EditDashboard'
-import Hello from '@/views/Hello'
+import Home from '@/views/Home'
 
 Vue.use(Router)
 
@@ -12,13 +13,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello
+      name: 'Home',
+      component: Home
     },
     {
       path: '/dashboards',
-      name: 'Dashboards',
+      name: 'DashboardList',
       component: Dashboards
+    },
+    {
+      path: '/dashboards/:dashboard_id',
+      name: 'ViewDashboard',
+      component: ViewDashboard
     },
     {
       path: '/dashboards/new',
@@ -26,7 +32,7 @@ export default new Router({
       component: NewDashboard
     },
     {
-      path: '/dashboards/:id',
+      path: '/dashboards/:dashboard_id/edit',
       name: 'EditDashboard',
       component: EditDashboard
     }

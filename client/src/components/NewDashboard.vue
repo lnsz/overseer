@@ -1,6 +1,6 @@
 <template>
   <div class="dashboards">
-    <h1>Add Dashboard</h1>
+    <h1>Create Dashboard</h1>
       <div class="form">
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">
@@ -9,7 +9,7 @@
           <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
         </div>
         <div>
-          <button class="app_dashboard_btn" @click="addDashboard">Add</button>
+          <button class="app_dashboard_btn" @click="createDashboard">Create</button>
         </div>
       </div>
   </div>
@@ -26,8 +26,8 @@ export default {
     }
   },
   methods: {
-    async addDashboard () {
-      await DashboardsService.addDashboard({
+    async createDashboard () {
+      await DashboardsService.createDashboard({
         title: this.title,
         description: this.description
       })
@@ -36,6 +36,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .form input, .form textarea {
   width: 500px;

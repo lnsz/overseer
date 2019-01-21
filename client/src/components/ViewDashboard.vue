@@ -1,6 +1,5 @@
 <template>
   <div class="dashboards">
-    <h1>Edit Dashboard</h1>
       <div class="form">
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">

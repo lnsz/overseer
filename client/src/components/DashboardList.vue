@@ -3,7 +3,7 @@
     <h1>Dashboards</h1>
     <div v-if="dashboards.length > 0" class="table-wrap">
       <div>
-        <router-link v-bind:to="{ name: 'NewDashboard' }" class="">Add Dashboard</router-link>
+        <router-link v-bind:to="{ name: 'NewDashboard' }" class="">Create Dashboard</router-link>
       </div>
       <table>
         <tr>
@@ -12,18 +12,22 @@
           <td width="100" align="center">Action</td>
         </tr>
         <tr v-bind:key="dashboard.id" v-for="dashboard in dashboards">
-          <td>{{ dashboard.title }}</td>
+          <td>
+            <router-link v-bind:to="{ name: 'ViewDashboard', params: { dashboard_id: dashboard._id } }">
+              {{ dashboard.title }}
+            </router-link>
+          </td>
           <td>{{ dashboard.description }}</td>
           <td align="center">
-            <router-link v-bind:to="{ name: 'EditDashboard', params: { id: dashboard._id } }">Edit</router-link> |
+            <router-link v-bind:to="{ name: 'EditDashboard', params: { dashboard_id: dashboard._id } }">Edit</router-link> |
             <a href="#" @click="deleteDashboard(dashboard._id)">Delete</a>
           </td>
         </tr>
       </table>
     </div>
     <div v-else>
-      There are no dashboards.. Lets add one now!!! <br /><br />
-      <router-link v-bind:to="{ name: 'NewDashboard' }" class="add_dashboard_link">Add Dashboard</router-link>
+      There are no dashboards.. Lets create one now!!! <br /><br />
+      <router-link v-bind:to="{ name: 'NewDashboard' }" class="create_dashboard_link">Create Dashboard</router-link>
     </div>
   </div>
 </template>
@@ -46,7 +50,7 @@ export default {
       this.dashboards = response.data.dashboards
     },
     async deleteDashboard (id) {
-      await DashboardsService.deleteDashboard(id)
+      await DashboardsService.deleteDashboard({ dashboard_id: id })
       this.getDashboards()
       this.$router.push({ name: 'Dashboards' })
     }
@@ -79,7 +83,7 @@ a {
   color: #4d7ef7;
   text-decoration: none;
 }
-a.add_dashboard_link {
+a.create_dashboard_link {
   background: #4d7ef7;
   color: #fff;
   padding: 10px 80px;

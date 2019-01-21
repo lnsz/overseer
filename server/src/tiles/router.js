@@ -2,14 +2,10 @@ const Tile = require('./schema')
 const router  = require('express').Router()
 
 // Fetch all tiles with dashboard_id
-const getTiles = (req, res) => {
-  Tile.find({dashboard_id: req.params.dashboard_id}, (error, tiles) => {
-    if (error) {
-      console.error(error);
-    }
-    res.send({
-      tiles: tiles
-    })
+const fetchTiles = (req, res) => {
+  Tile.find({ dashboard_id: req.params.dashboard_id }, (error, tiles) => {
+    if (error) res.send({ error: error })
+    res.send({ tiles: tiles })
   })
 }
 
@@ -22,9 +18,7 @@ const createTile = (req, res) => {
     description: req.body.description,
     updated: Date.now()
   }).save((error) => {
-    if (error) {
-      console.log(error)
-    }
+    if (error) res.send({ error: error })
     res.send({
       success: true,
       message: 'Tile created successfully'
@@ -38,35 +32,28 @@ const updateTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
-    if (error) {
-      console.error(error)
-    }
+    if (error) res.send({ error: error })
     const title = req.body.title
     const url = req.body.url
     const description = req.body.description
     if (title) tile.title = title
     if (url) tile.url = url
     if (description) tile.description = description
+    tile.updated = Date.now()
     tile.save((error) => {
-      if (error) {
-        console.log(error)
-      }
-      res.send({
-        success: true
-      })
+      if (error) res.send({ error: error })
+      res.send({ success: true })
     })
   })
 }
 
 // Fetch single tile
-const fetchTile = (req, res) => {
+const getTile = (req, res) => {
   Tile.findOne({
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
-    if (error) {
-      console.error(error)
-    }
+    if (error) res.send({ error: error })
     res.send(tile)
   })
 }
@@ -77,17 +64,14 @@ const deleteTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error) => {
-    if (error)
-      res.send(error)
-    res.send({
-      success: true
-    })
+    if (error) res.send({ error: error })
+    res.send({ success: true })
   })
 }
 
 router
-  .get('/dashboards/:dashboard_id/tiles', getTiles)
-  .get('/dashboards/:dashboard_id/tiles/:tile_id', fetchTile)
+  .get('/dashboards/:dashboard_id/tiles', fetchTiles)
+  .get('/dashboards/:dashboard_id/tiles/:tile_id', getTile)
   .post('/dashboards/:dashboard_id/tiles', createTile)
   .put('/dashboards/:dashboard_id/tiles/:tile_id', updateTile)
   .delete('/dashboards/:dashboard_id/tiles/:tile_id', deleteTile)
