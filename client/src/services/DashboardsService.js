@@ -5,19 +5,21 @@ export default {
     return Api().get('dashboards')
   },
 
-  addDashboard (params) {
+  createDashboard (params) {
     return Api().post('dashboards', params)
   },
 
   updateDashboard (params) {
-    return Api().put('dashboards/' + params.id, params)
+    console.log(params)
+    return Api().put(`dashboards/${params.dashboard_id}`, params)
   },
 
   getDashboard (params) {
-    return Api().get('dashboards/' + params.id)
+    console.log(params)
+    return Api().get(`dashboards/${params.dashboard_id}`)
   },
 
-  deleteDashboard (id) {
-    return Api().delete('dashboards/' + id)
+  deleteDashboard (params) {
+    return Api().delete(`dashboards/${params.dashboard_id}`)
   }
 }
