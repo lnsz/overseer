@@ -46,7 +46,6 @@ export default {
     min-height: 100%;
     background-color: color('background');
   }
-  
   .slideshow {
     display: flex;
     justify-content: center;
