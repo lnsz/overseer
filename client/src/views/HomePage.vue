@@ -60,7 +60,6 @@ export default {
     width: 200px;
     color: color('text');
   }
-
   .view-dashboard {
     display: flex;
     justify-content: center;

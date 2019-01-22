@@ -1,4 +1,4 @@
-FROM node:carbon-alpine
+FROM node:10.15-alpine
 
 COPY ./entrypoint.sh /entrypoint/
 
