@@ -1,5 +1,6 @@
 <template>
   <div class="dashboards">
+    <Header />
     <h1>Dashboards</h1>
     <div v-if="dashboards.length > 0" class="table-wrap">
       <div>
@@ -34,8 +35,13 @@
 
 <script>
 import DashboardsService from '@/services/DashboardsService'
+import Header from '@/components/Header'
+
 export default {
   name: 'dashboards',
+  components: {
+    Header
+  },
   data () {
     return {
       dashboards: []
