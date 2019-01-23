@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboards from '@/views/DashboardList'
+import DashboardListPage from '@/views/DashboardListPage'
 import NewDashboard from '@/views/NewDashboard'
 import ViewDashboard from '@/views/ViewDashboard'
 import EditDashboard from '@/views/EditDashboard'
@@ -18,8 +18,8 @@ export default new Router({
     },
     {
       path: '/dashboards',
-      name: 'DashboardList',
-      component: Dashboards
+      name: 'DashboardListPage',
+      component: DashboardListPage
     },
     {
       path: '/dashboards/:dashboard_id',

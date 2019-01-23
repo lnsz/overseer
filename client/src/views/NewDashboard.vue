@@ -31,7 +31,7 @@ export default {
         title: this.title,
         description: this.description
       })
-      this.$router.push({ name: 'Dashboards' })
+      this.$router.push({ name: 'DashboardListPage' })
     }
   }
 }
