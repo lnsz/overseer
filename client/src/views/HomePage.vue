@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="home-page">
     <Header />
-    <div class="content">
+    <div class="home-page-content">
       <div class="slideshow">
         <div class="img" />
         <div class="text">
@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="view-dashboard">
-        <router-link v-bind:to="{ name: 'DashboardList' }" tag="button" class="view-dashboard-button">
+        <router-link v-bind:to="{ name: 'DashboardListPage' }" tag="button" class="view-dashboard-button">
           View Dashboards
         </router-link>
       </div>
@@ -37,7 +37,7 @@ export default {
   h1 {
     font-weight: normal;
   }
-  .container {
+  .home-page {
     display: flex;
     flex-direction: column;
     flex: 1;
