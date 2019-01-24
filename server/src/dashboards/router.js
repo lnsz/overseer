@@ -12,7 +12,7 @@ const fetchDashboards = (req, res) => {
 // Create a dashboard
 const createDashboard = (req, res) => {
   new Dashboard({
-    title: req.body.title,
+    name: req.body.name,
     description: req.body.description
   }).save((error) => {
     if (error) res.send({ error: error })
@@ -27,7 +27,7 @@ const createDashboard = (req, res) => {
 const updateDashboard = (req, res) => {
   Dashboard.findById(req.params.dashboard_id, (error, dashboard) => {
     if (error) res.send({ error: error })
-    dashboard.title = req.body.title
+    dashboard.name = req.body.name
     dashboard.description = req.body.description
     dashboard.save((error) => {
       if (error) res.send({ error: error })

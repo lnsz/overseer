@@ -21,7 +21,7 @@ export default {
   .search-box {
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 8px;
   }
   .search-box-input {
     color: color('text');

@@ -10,8 +10,12 @@
         </div>
       </div>
       <div class="view-dashboard">
-        <router-link v-bind:to="{ name: 'DashboardListPage' }" tag="button" class="view-dashboard-button">
-          View Dashboards
+        <router-link
+          v-bind:to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
+          tag="button"
+          class="view-dashboard-button"
+        >
+          Explore Dashboards
         </router-link>
       </div>
       <div class="extra" />
@@ -77,6 +81,9 @@ export default {
   }
   .view-dashboard-button:hover {
     background-color: shade(color('accent1'), 20%);
+  }
+  .view-dashboard-button:hover {
+    outline: none;
   }
   .extra {
     height: 500px;

@@ -13,7 +13,7 @@ const fetchTiles = (req, res) => {
 const createTile = (req, res) => {
   new Tile({
     dashboard_id: req.params.dashboard_id, 
-    title: req.body.title,
+    name: req.body.name,
     url: req.body.url,
     description: req.body.description,
     updated: Date.now()
@@ -33,10 +33,10 @@ const updateTile = (req, res) => {
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
     if (error) res.send({ error: error })
-    const title = req.body.title
+    const name = req.body.name
     const url = req.body.url
     const description = req.body.description
-    if (title) tile.title = title
+    if (name) tile.name = name
     if (url) tile.url = url
     if (description) tile.description = description
     tile.updated = Date.now()

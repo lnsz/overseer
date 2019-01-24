@@ -1,8 +1,10 @@
 <template>
   <div class="dashboard-list-page">
     <Header />
-    <div class="title">Dashboards</div>
-    <SearchBox @search="updateFilter" />
+    <div class="filters">
+      <TabBar v-bind:tabs="tabs" />
+      <SearchBox @search="updateFilter" />
+    </div>
     <DashboardList
       @delete-dashboard="deleteDashboard"
       v-bind:dashboards="filteredDashboards"
@@ -15,18 +17,21 @@ import DashboardsService from '@/services/DashboardsService'
 import Header from '@/components/Header'
 import SearchBox from '@/components/SearchBox'
 import DashboardList from '@/components/DashboardList'
+import TabBar from '@/components/TabBar'
 
 export default {
   name: 'DashboardListPage',
   components: {
     Header,
     SearchBox,
-    DashboardList
+    DashboardList,
+    TabBar
   },
   data () {
     return {
       dashboards: [],
-      dashboardFilter: ''
+      dashboardFilter: '',
+      tabs: ['Best', 'Hot', 'Newest', 'Private']
     }
   },
   mounted () {
@@ -49,10 +54,13 @@ export default {
   computed: {
     filteredDashboards () {
       return this.dashboards.filter(
-        dashboard => dashboard.title.toUpperCase().includes(
+        dashboard => dashboard.name.toUpperCase().includes(
           this.dashboardFilter.toUpperCase()
         )
       )
+    },
+    tab () {
+      return this.$route.query.tab
     }
   }
 }
@@ -62,6 +70,11 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
+  .filters{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 30px 0 30px;
+  }
   .dashboard-list-page {
     display: flex;
     flex-direction: column;
