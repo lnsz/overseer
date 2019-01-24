@@ -10,12 +10,10 @@ export default {
   },
 
   updateDashboard (params) {
-    console.log(params)
     return Api().put(`dashboards/${params.dashboard_id}`, params)
   },
 
   getDashboard (params) {
-    console.log(params)
     return Api().get(`dashboards/${params.dashboard_id}`)
   },
 

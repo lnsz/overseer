@@ -3,7 +3,7 @@
     <h1>Create Dashboard</h1>
       <div class="form">
         <div>
-          <input type="text" name="title" placeholder="TITLE" v-model="title">
+          <input type="text" name="name" placeholder="NAME" v-model="name">
         </div>
         <div>
           <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
@@ -21,14 +21,14 @@ export default {
   name: 'NewDashboard',
   data () {
     return {
-      title: '',
+      name: '',
       description: ''
     }
   },
   methods: {
     async createDashboard () {
       await DashboardsService.createDashboard({
-        title: this.title,
+        name: this.name,
         description: this.description
       })
       this.$router.push({ name: 'DashboardListPage' })

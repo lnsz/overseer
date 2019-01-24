@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const TileSchema = new Schema({
   dashboard_id: { type: Schema.ObjectId, ref: 'Dashboard' },
-  title: String,
+  name: String,
   url: String,
   description: String,
   updated: Date

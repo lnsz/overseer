@@ -48,6 +48,9 @@ export default {
   .nav-button-link:hover {
     text-decoration: underline;
   }
+  .nav-button-link:focus {
+    outline: none;
+  }
   .border {
     border: 1px solid color('text');
     border-radius: 3px;

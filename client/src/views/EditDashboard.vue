@@ -3,7 +3,7 @@
     <h1>Edit Dashboard</h1>
       <div class="form">
         <div>
-          <input type="text" name="title" placeholder="TITLE" v-model="title">
+          <input type="text" name="name" placeholder="NAME" v-model="name">
         </div>
         <div>
           <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
@@ -21,7 +21,7 @@ export default {
   name: 'EditDashboard',
   data () {
     return {
-      title: '',
+      name: '',
       description: ''
     }
   },
@@ -33,13 +33,13 @@ export default {
       const response = await DashboardsService.getDashboard({
         dashboard_id: this.$route.params.dashboard_id
       })
-      this.title = response.data.title
+      this.name = response.data.name
       this.description = response.data.description
     },
     async updateDashboard () {
       await DashboardsService.updateDashboard({
         dashboard_id: this.$route.params.dashboard_id,
-        title: this.title,
+        name: this.name,
         description: this.description
       })
       this.$router.push({ name: 'DashboardListPage' })

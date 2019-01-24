@@ -1,39 +1,34 @@
 <template>
   <div class="dashboard-list">
-      <div v-if="dashboards.length > 0" class="table-wrap">
-        <div>
-          <router-link v-bind:to="{ name: 'NewDashboard' }" class="">Create Dashboard</router-link>
-        </div>
-        <table>
-          <tr>
-            <td>Title</td>
-            <td width="550">Description</td>
-            <td width="100" align="center">Action</td>
-          </tr>
-          <tr v-bind:key="dashboard.id" v-for="dashboard in dashboards">
-            <td>
-              <router-link v-bind:to="{ name: 'ViewDashboard', params: { dashboard_id: dashboard._id } }">
-                {{ dashboard.title }}
-              </router-link>
-            </td>
-            <td class="description">{{ dashboard.description }}</td>
-            <td align="center">
-              <router-link v-bind:to="{ name: 'EditDashboard', params: { dashboard_id: dashboard._id } }">Edit</router-link> |
-              <a class="delete-button" href="#" @click="$emit('delete-dashboard', dashboard._id)">Delete</a>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div v-else>
-        There are no dashboards.. Lets create one now!!! <br /><br />
-        <router-link v-bind:to="{ name: 'NewDashboard' }" class="create_dashboard_link">Create Dashboard</router-link>
-      </div>
+    <div v-bind:key="dashboard.id" v-for="dashboard in dashboards">
+      <DashboardCard v-bind:dashboard="dashboard" />
+      <router-link
+        v-bind:to="{
+          name: 'EditDashboard',
+          params: { dashboard_id: dashboard._id }
+        }"
+      >
+        Edit
+      </router-link> |
+      <a
+        class="delete-button"
+        href="#"
+        @click="$emit('delete-dashboard', dashboard._id)"
+      >
+        Delete
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
+import DashboardCard from '@/components/DashboardCard'
+
 export default {
   name: 'DashboardList',
+  components: {
+    DashboardCard
+  },
   props: {
     dashboards: {
       type: Array,
@@ -47,7 +42,9 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
-  .dashboard-list{
+  .dashboard-list {
+    margin: 0 30px 0 30px;
+    border: 1px solid color('accent1');
     display: flex;
     justify-content: center;
   }
