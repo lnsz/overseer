@@ -31,7 +31,7 @@ export default {
     return {
       dashboards: [],
       dashboardFilter: '',
-      tabs: ['Best', 'Hot', 'Newest', 'Private']
+      tabs: ['Best', 'Hot', 'Newest', 'Private', 'Favourites']
     }
   },
   mounted () {
@@ -83,12 +83,5 @@ export default {
     justify-content: flex-start;
     min-height: 100%;
     background-color: color('background');
-  }
-  .title {
-    text-align: center;
-    font-size: 25px;
-    color: color('text');
-    font-weight: 300;
-    margin-bottom: 30px;
   }
 </style>

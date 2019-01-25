@@ -3,7 +3,7 @@
     v-bind:to="{ query: { ...$route.query, tab: name.toLowerCase() } }"
     tag="button"
     class="tab"
-    v-bind:class="{ 'selected': selected }"
+    v-bind:class="{ 'selected': isSelected }"
   >
     {{name}}
   </router-link>
@@ -19,7 +19,7 @@ export default {
     }
   },
   computed: {
-    selected () {
+    isSelected () {
       return this.$route.query.tab === this.name.toLowerCase()
     }
   }
