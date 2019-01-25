@@ -1,0 +1,107 @@
+<template>
+  <div class="new-dashboard-page">
+    <Header />
+    <div class="title">Create Dashboard</div>
+    <div class="form-container">
+      <div class="form">
+        <input class="field text-field" type="text" placeholder="Name" v-model="name">
+        <textarea class="field text-field" rows="10" placeholder="Description" v-model="description"></textarea>
+        <input class="field text-field" type="text" placeholder="Creator" v-model="creator">
+        <div class="number-fields">
+          <input class="field number-field" type="number" placeholder="Stars" v-model="stars">
+          <input class="field number-field" type="number" placeholder="Copies" v-model="copies">
+        </div>
+        <button class="app_dashboard_btn" @click="createDashboard">Create</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import DashboardsService from '@/services/DashboardsService'
+import Header from '@/components/Header'
+
+export default {
+  name: 'NewDashboardPage',
+  components: {
+    Header
+  },
+  data () {
+    return {
+      name: '',
+      description: '',
+      creator: '',
+      stars: '',
+      copies: ''
+    }
+  },
+  methods: {
+    async createDashboard () {
+      await DashboardsService.createDashboard({
+        name: this.name,
+        description: this.description,
+        creator: this.creator,
+        stars: this.stars,
+        copies: this.copies
+      })
+      this.$router.push({ query: { tab: 'best' }, name: 'DashboardListPage' })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "../assets/styles/colors";
+  @import "../assets/styles/functions";
+
+  .filters{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 30px 0 30px;
+  }
+  .new-dashboard-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    justify-content: flex-start;
+    min-height: 100%;
+    background-color: color('background');
+  }
+  .title {
+    text-align: center;
+    font-size: 25px;
+    color: color('text');
+    font-weight: 300;
+    margin-bottom: 30px;
+  }
+  .form-container {
+    display: flex;
+    justify-content: center;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+  }
+  .number-fields {
+    width: 100%;
+  }
+  .field {
+    margin: 5px 0 5px 0;
+    padding: 10px;
+    color: color('text');
+    background: color('background');
+    border: 1px solid color('foreground');
+    resize: none;
+    border-radius: 3px;
+    width: 478px;
+  }
+  .field:focus {
+    outline: none;
+    border: 1px solid color('accent1');
+  }
+  .field.number-field {
+    width: calc(50% - 25px);
+  }
+</style>

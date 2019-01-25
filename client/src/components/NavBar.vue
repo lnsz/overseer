@@ -1,7 +1,7 @@
 <template>
   <div class="nav-bar">
     <NavButton text="About" />
-    <NavButton text="Pricing" />
+    <NavButton text="New Dashboard" link="NewDashboardPage" />
     <NavButton text="Sign Up" border />
     <NavButton text="Login" />
     <div class="mobile-nav-bar">
