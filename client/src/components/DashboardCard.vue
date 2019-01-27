@@ -23,10 +23,12 @@
         </router-link>
       </div>
       <div class="dashboard-info">
-        <div class="dashboard-creator">Created By: {{dashboard.creator}}</div>
+        <div class="dashboard-creator">
+          Created By: <div class="creator-name">{{dashboard.creator}}</div>
+        </div>
         <div class="dashboard-stats">
-          <div class="dashboard-star"><font-awesome-icon icon="star" /> {{dashboard.stars}}</div>
-          <div class="dashboard-copy"><font-awesome-icon icon="copy" /> {{dashboard.copies}}</div>
+          <div class="dashboard-stars"><font-awesome-icon icon="star" /> {{dashboard.stars}}</div>
+          <div class="dashboard-copies"><font-awesome-icon icon="copy" /> {{dashboard.copies}}</div>
         </div>
       </div>
     </div>
@@ -75,12 +77,23 @@ export default {
   }
   .dashboard-info {
     color: color('foreground');
+    font-weight: 300;
     padding-top: 10px;
     display: flex;
     justify-content: space-between;
   }
-  .dashboard-copy {
+  .dashboard-copies {
+    cursor: pointer;
     padding: 0 5px 0 20px;
+  }
+  .dashboard-copies:hover {
+    color: color('accent1');
+  }
+  .dashboard-stars {
+    cursor: pointer;
+  }
+  .dashboard-stars:hover {
+    color: color('accent1');
   }
   .dashboard-stats {
     display: flex;
@@ -91,9 +104,6 @@ export default {
     color: color('text');
     text-decoration: none;
   }
-  .link:focus {
-    outline: none;
-  }
   .dashboard-name {
     font-size: 20px;
     padding-bottom: 10px;
@@ -101,22 +111,20 @@ export default {
   .dashboard-creator {
     color: color('foreground');
   }
+  .creator-name {
+    cursor: pointer;
+    display: inline;
+  }
+  .creator-name:hover {
+    color: color('accent1');
+  }
   .thumbnail {
     height: 100px;
     width: 100px;
     min-width: 100px;
     background: color('foreground');
   }
-  .button {
-    text-decoration: none;
-  }
-  .description {
-    color: color('text');
-  }
-  .edit-button {
-    color: color('accent1');
-  }
-  .delete-button{
-    color: color('accent2');
+  .dashboard-description {
+    font-weight: 100;
   }
 </style>

@@ -1,13 +1,16 @@
 <template>
   <div class="header">
-    <router-link
-      v-bind:to="{ name: 'HomePage' }"
-      class="title"
-      tag="button"
-    >
-      Overseer
-    </router-link>
-    <NavBar />
+    <div class="top" />
+    <div class="header-content">
+      <router-link
+        v-bind:to="{ name: 'HomePage' }"
+        class="title"
+        tag="button"
+      >
+        Overseer
+      </router-link>
+      <NavBar />
+    </div>
   </div>
 </template>
 
@@ -26,7 +29,13 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
+  .top {
+    height: 5px;
+    background: color('accent1');
+  }
   .title {
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
     background: transparent;
     cursor: pointer;
     border: none;
@@ -37,14 +46,16 @@ export default {
   .title:hover {
     text-decoration: underline;
   }
-  .title:focus {
-    outline: none;
-  }
   .header {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-content {
     background: color('background');
     display: flex;
     justify-content: space-between;
-    padding: 20px 30px 20px 30px;
-    margin-bottom: 40px;
+    padding: 20px 15px 20px 15px;
+    margin: 0 15px 40px 15px;
+    border-bottom: 1px solid color('foreground');
   }
 </style>

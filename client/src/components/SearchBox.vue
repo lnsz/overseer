@@ -24,6 +24,8 @@ export default {
     margin-bottom: 8px;
   }
   .search-box-input {
+    font-family: 'Roboto', sans-serif;
+    transition: all 0.2s ease;
     color: color('text');
     background: color('background');
     border: 1px solid color('foreground');
@@ -32,7 +34,6 @@ export default {
     text-align: center;
   }
   .search-box-input:focus {
-    outline: none;
     border: 1px solid color('accent1');
   }
 </style>

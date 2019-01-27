@@ -37,19 +37,19 @@ export default {
   @import "../assets/styles/functions";
 
   .nav-button-link {
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
     background: transparent;
     border: none;
     text-decoration: none;
     font-size: 18px;
     cursor: pointer;
     color: color('text');
-    padding: 5px;
+    padding: 8px 10px 8px 10px;
   }
   .nav-button-link:hover {
     text-decoration: underline;
-  }
-  .nav-button-link:focus {
-    outline: none;
   }
   .border {
     border: 1px solid color('text');
