@@ -5,8 +5,17 @@
       <div class="slideshow">
         <div class="img" />
         <div class="text">
-          <b> Title </b>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+          <p class="title">Title</p>
+          <p class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+            ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit
+            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia
+            deserunt mollit anim id est laborum
+          </p>
         </div>
       </div>
       <div class="view-dashboard">
@@ -38,9 +47,6 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
-  h1 {
-    font-weight: normal;
-  }
   .home-page {
     display: flex;
     flex-direction: column;
@@ -61,8 +67,16 @@ export default {
   }
   .text {
     padding-left: 30px;
-    width: 200px;
+    width: 250px;
     color: color('text');
+  }
+  .title {
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    font-size: 20px;
+  }
+  .description {
+    font-weight: 300;
   }
   .view-dashboard {
     display: flex;
@@ -70,6 +84,11 @@ export default {
     padding: 50px;
   }
   .view-dashboard-button {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
     cursor: pointer;
     padding: 15px;
     font-size: 20px;
@@ -80,10 +99,14 @@ export default {
     color: color('text');
   }
   .view-dashboard-button:hover {
+    transform: translate(0, -1px);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
     background-color: shade(color('accent1'), 20%);
   }
-  .view-dashboard-button:hover {
-    outline: none;
+  .view-dashboard-button:active {
+    transform: translate(0, 1px);
+    box-shadow: none;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
   }
   .extra {
     height: 500px;

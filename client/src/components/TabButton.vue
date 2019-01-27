@@ -31,6 +31,10 @@ export default {
   @import "../assets/styles/functions";
 
   .tab {
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
     font-size: 15px;
     cursor: pointer;
     background: color('background');
@@ -40,13 +44,11 @@ export default {
     padding: 12px 22px 13px 22px;
     border: 1px solid color('accent1');
   }
-  .tab:focus {
-    outline: none;
-  }
   .tab:hover {
     background: color('foreground');
   }
   .tab.selected {
+    border-radius: 3px 3px 0px 0px;
     margin: 0 -1px -1px 0;
     padding: 13px 22px 13px 22px;
     background: color('accent1');

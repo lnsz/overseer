@@ -32,7 +32,7 @@ export default {
   }
   .nav-bar {
     display: flex;
-    width: 400px;
+    width: 450px;
     justify-content: space-evenly;
   }
   #sign-up {

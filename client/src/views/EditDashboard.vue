@@ -53,7 +53,6 @@ export default {
     width: 500px;
     padding: 10px;
     border: 1px solid #e0dede;
-    outline: none;
     font-size: 12px;
   }
   .form div {

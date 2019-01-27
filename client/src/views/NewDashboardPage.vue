@@ -98,7 +98,6 @@ export default {
     width: 478px;
   }
   .field:focus {
-    outline: none;
     border: 1px solid color('accent1');
   }
   .field.number-field {

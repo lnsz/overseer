@@ -34,6 +34,7 @@ export default {
   @import "../assets/styles/functions";
 
   .dashboard-list {
+    border-radius: 0px 3px 3px 3px;
     margin: 0 30px 0 30px;
     border: 1px solid color('accent1');
     display: flex;

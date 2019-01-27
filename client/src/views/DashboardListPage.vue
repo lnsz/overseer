@@ -31,7 +31,7 @@ export default {
     return {
       dashboards: [],
       dashboardFilter: '',
-      tabs: ['Best', 'Hot', 'Newest', 'Private', 'Favourites']
+      tabs: ['Best', 'Hot', 'Newest', 'Private', 'Stars']
     }
   },
   mounted () {
