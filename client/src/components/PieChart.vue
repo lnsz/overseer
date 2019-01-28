@@ -15,7 +15,7 @@ export default {
   },
   mounted () {
     Chart.defaults.global.defaultFontColor = this.textColor ? this.textColor : 'white'
-    this.renderChart(this.chartdata, this.options)
+    this.renderChart(this.chartdata, {responsive: true, maintainAspectRatio: false})
   }
 }
 </script>

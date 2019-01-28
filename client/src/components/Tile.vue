@@ -18,7 +18,11 @@
       />
     </div>
     <div class="tile-type" v-else-if="tile.type === 'piechart'">
-      <PieChart :chartdata="tile.data" :textcolor="tile.textColor" />
+      <PieChart
+        :chartdata="tile.data"
+        :styles="{'height': '100%', 'position': 'relative'}"
+        :textcolor="tile.textColor"
+      />
     </div>
   </div>
 </template>
