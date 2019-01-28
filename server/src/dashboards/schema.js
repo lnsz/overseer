@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 const DashboardSchema = new Schema({
   name: String,
   description: String,
+  rows: Number,
+  columns: Number,
+  backgroundColor: String,
+  tileColor: String,
   creator: String,
   stars: Number,
   copies: Number

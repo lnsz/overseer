@@ -13,10 +13,7 @@ const fetchDashboards = (req, res) => {
 const createDashboard = (req, res) => {
   new Dashboard({
     name: req.body.name,
-    description: req.body.description,
-    creator: req.body.creator,
-    stars: req.body.stars,
-    copies: req.body.copies
+    ...req.body
   }).save((error) => {
     if (error) res.send({ error: error })
     res.send({
@@ -30,11 +27,7 @@ const createDashboard = (req, res) => {
 const updateDashboard = (req, res) => {
   Dashboard.findById(req.params.dashboard_id, (error, dashboard) => {
     if (error) res.send({ error: error })
-    dashboard.name = req.body.name
-    dashboard.description = req.body.description
-    dashboard.creator = req.body.creator
-    dashboard.stars = req.body.stars
-    dashboard.copies = req.body.copies
+    Object.keys(req.body).forEach( key => { if (req.body) dashboard[key] = req.body[key] } )
     dashboard.save((error) => {
       if (error) res.send({ error: error })
       res.send({ success: true })

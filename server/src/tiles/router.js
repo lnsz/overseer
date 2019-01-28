@@ -1,10 +1,27 @@
 const Tile = require('./schema')
-const router  = require('express').Router()
+const router = require('express').Router()
+const axios = require('axios')
 
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
   Tile.find({ dashboard_id: req.params.dashboard_id }, (error, tiles) => {
     if (error) res.send({ error: error })
+    tiles.forEach(tile =>  {
+      // TODO: Replace this
+      if (tile.type === 'status' && 
+        ((Date.now() - tile.updated.getTime()) / 60000 > 5)
+      ) {
+        axios.get(tile.url)
+          .then(() => tile.status = "online")
+          .catch(() => tile.status = "offline")
+          .then(() => {
+            tile.updated = Date.now()
+            tile.save((error) => {
+              if (error) console.log({ error: error })
+            })
+          })
+      }
+    })
     res.send({ tiles: tiles })
   })
 }
@@ -13,9 +30,7 @@ const fetchTiles = (req, res) => {
 const createTile = (req, res) => {
   new Tile({
     dashboard_id: req.params.dashboard_id, 
-    name: req.body.name,
-    url: req.body.url,
-    description: req.body.description,
+    ...req.body,
     updated: Date.now()
   }).save((error) => {
     if (error) res.send({ error: error })
@@ -33,12 +48,7 @@ const updateTile = (req, res) => {
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
     if (error) res.send({ error: error })
-    const name = req.body.name
-    const url = req.body.url
-    const description = req.body.description
-    if (name) tile.name = name
-    if (url) tile.url = url
-    if (description) tile.description = description
+    Object.keys(req.body).forEach( key => { if (req.body) tile[key] = req.body[key] } )
     tile.updated = Date.now()
     tile.save((error) => {
       if (error) res.send({ error: error })
