@@ -10,6 +10,8 @@
         <div class="number-fields">
           <input class="field number-field" type="number" placeholder="Stars" v-model="stars">
           <input class="field number-field" type="number" placeholder="Copies" v-model="copies">
+          <input class="field number-field" type="number" placeholder="Rows" v-model="rows">
+          <input class="field number-field" type="number" placeholder="Columns" v-model="columns">
         </div>
         <button class="app_dashboard_btn" @click="createDashboard">Create</button>
       </div>
@@ -32,7 +34,9 @@ export default {
       description: '',
       creator: '',
       stars: '',
-      copies: ''
+      copies: '',
+      rows: '',
+      columns: ''
     }
   },
   methods: {
@@ -42,7 +46,9 @@ export default {
         description: this.description,
         creator: this.creator,
         stars: this.stars,
-        copies: this.copies
+        copies: this.copies,
+        rows: this.rows,
+        columns: this.columns
       })
       this.$router.push({ query: { tab: 'best' }, name: 'DashboardListPage' })
     }
