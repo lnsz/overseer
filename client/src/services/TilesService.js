@@ -1,7 +1,7 @@
 import Api from '@/services/Api'
 
 export default {
-  fetchTiles () {
+  fetchTiles (params) {
     return Api().get(`dashboards/${params.dashboard_id}/tiles`)
   },
 
@@ -17,7 +17,7 @@ export default {
     return Api().get(`dashboards/${params.dashboard_id}/tiles/${params.tile_id}`)
   },
 
-  deleteTile (id) {
+  deleteTile (params) {
     return Api().delete(`dashboards/${params.dashboard_id}/tiles/${params.tile_id}`)
   }
 }
