@@ -95,16 +95,16 @@ export default {
     border: none;
     text-decoration: none;
     border-radius: 3px;
-    background-color: color('accent1');
+    background-color: color('green');
     color: color('text');
   }
   .view-dashboard-button:hover {
-    transform: translate(0, -1px);
+    transform: translateY(-1px);
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-    background-color: shade(color('accent1'), 20%);
+    background-color: shade(color('green'), 20%);
   }
   .view-dashboard-button:active {
-    transform: translate(0, 1px);
+    transform: translateY(1px);
     box-shadow: none;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
   }

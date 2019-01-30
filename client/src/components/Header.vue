@@ -31,7 +31,7 @@ export default {
 
   .top {
     height: 5px;
-    background: color('accent1');
+    background: color('green');
   }
   .title {
     font-family: 'Roboto', sans-serif;

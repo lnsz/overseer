@@ -1,7 +1,7 @@
 <template>
   <div class="tile" :style="tileStyle">
     <div div="tile-type" v-if="tile.type === 'status'">
-      <div class="status-bar" v-bind:class="tile.status"/>
+      <div class="status-bar" v-bind:class="tileState"/>
       <div class="text" :style="textStyle">
         <div class="title">{{tile.name}}</div>
         <div class="url">{{tile.url}}</div>
@@ -19,16 +19,16 @@
     </div>
     <div class="tile-type" v-else-if="tile.type === 'piechart'">
       <PieChart
-        :chartdata="tile.data"
+        :chartdata="tile.chart.data"
         :styles="{'height': '100%', 'position': 'relative'}"
-        :textcolor="tile.textColor"
+        :textcolor="tile.style.textColor"
       />
     </div>
   </div>
 </template>
 
 <script>
-import PieChart from '@/components/PieChart'
+import PieChart from '@/components/charts/PieChart'
 import { backgroundCSS, textCSS, iframeCSS } from '@/utils/styleHelper'
 
 export default {
@@ -70,13 +70,26 @@ export default {
       }
     },
     text () {
-      return textCSS(this.tile.textColor)
+      return textCSS(this.textColor)
     },
     iframe () {
-      return iframeCSS(this.rows, this.columns)
+      return iframeCSS(this.zoomLevel ? this.zoomLevel : this.columns)
     },
     background () {
-      return backgroundCSS(this.tile.backgroundColor)
+      return backgroundCSS(this.backgroundColor)
+    },
+    // TODO Backend validation on this
+    backgroundColor () {
+      return this.tile.style ? this.tile.style.backgroundColor : null
+    },
+    zoomLevel () {
+      return this.tile.style ? this.tile.style.zoomLevel : null
+    },
+    textColor () {
+      return this.tile.style ? this.tile.style.textColor : null
+    },
+    tileState () {
+      return this.tile.status ? this.tile.status.state : null
     }
   }
 }
@@ -116,7 +129,7 @@ export default {
     font-size: 24px;
     letter-spacing: 1px;
     padding-bottom: 5px;
-    border-bottom: 1px solid color('accent1');
+    border-bottom: 1px solid color('background');
   }
   .url {
     font-size: 16px;
@@ -131,9 +144,15 @@ export default {
     height: 15px;
   }
   .online {
-    background: color('accent1');
+    background: color('green');
+  }
+  .online ~ .title {
+    border-bottom: 1px solid color('green');
   }
   .offline {
-    background: color('accent2');
+    background: color('red');
+  }
+  .offline ~ .title {
+    border-bottom: 1px solid color('red');
   }
 </style>

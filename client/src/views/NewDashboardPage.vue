@@ -104,7 +104,7 @@ export default {
     width: 478px;
   }
   .field:focus {
-    border: 1px solid color('accent1');
+    border: 1px solid color('green');
   }
   .field.number-field {
     width: calc(50% - 25px);

@@ -42,7 +42,7 @@ export default {
     color: color('text');
     margin: 2px -1px -1px 0;
     padding: 12px 22px 13px 22px;
-    border: 1px solid color('accent1');
+    border: 1px solid color('green');
   }
   .tab:hover {
     background: color('foreground');
@@ -51,6 +51,6 @@ export default {
     border-radius: 3px 3px 0px 0px;
     margin: 0 -1px -1px 0;
     padding: 13px 22px 13px 22px;
-    background: color('accent1');
+    background: color('green');
   }
 </style>
