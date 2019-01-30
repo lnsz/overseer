@@ -36,7 +36,7 @@ export default {
   .dashboard-list {
     border-radius: 0px 3px 3px 3px;
     margin: 0 30px 0 30px;
-    border: 1px solid color('accent1');
+    border: 1px solid color('green');
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -6,11 +6,22 @@ import router from './router'
 
 // Add font-awesome icon pack
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faStar, faCopy } from '@fortawesome/free-solid-svg-icons'
+import {
+  faStar,
+  faCopy,
+  faPlus,
+  faEdit,
+  faTimes,
+  faBars
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
   faStar,
-  faCopy
+  faCopy,
+  faPlus,
+  faEdit,
+  faTimes,
+  faBars
 )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

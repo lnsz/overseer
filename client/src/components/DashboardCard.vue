@@ -87,13 +87,13 @@ export default {
     padding: 0 5px 0 20px;
   }
   .dashboard-copies:hover {
-    color: color('accent1');
+    color: color('green');
   }
   .dashboard-stars {
     cursor: pointer;
   }
   .dashboard-stars:hover {
-    color: color('accent1');
+    color: color('green');
   }
   .dashboard-stats {
     display: flex;
@@ -116,7 +116,7 @@ export default {
     display: inline;
   }
   .creator-name:hover {
-    color: color('accent1');
+    color: color('green');
   }
   .thumbnail {
     height: 100px;

@@ -9,11 +9,11 @@ const fetchTiles = (req, res) => {
     tiles.forEach(tile =>  {
       // TODO: Replace this
       if (tile.type === 'status' && 
-        ((Date.now() - tile.updated.getTime()) / 60000 > 5)
+        ((Date.now() - tile.updated.getTime()) / 60000 > 1)
       ) {
         axios.get(tile.url)
-          .then(() => tile.status = "online")
-          .catch(() => tile.status = "offline")
+          .then(() => tile.status.state = "online")
+          .catch(() => tile.status.state = "offline")
           .then(() => {
             tile.updated = Date.now()
             tile.save((error) => {

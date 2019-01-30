@@ -29,7 +29,7 @@ export default {
   }
 
   ::selection {
-    background: color('accent1');
+    background: color('green');
     color: color('text');
   }
 

@@ -34,6 +34,6 @@ export default {
     text-align: center;
   }
   .search-box-input:focus {
-    border: 1px solid color('accent1');
+    border: 1px solid color('green');
   }
 </style>
