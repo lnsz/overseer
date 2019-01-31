@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard"
     :style="dashboardStyle"
+    v-bind:class="{
+      'hide-cursor': !isFabVisible
+    }"
     v-on:mousemove="updateTimer"
     v-on:click="updateTimer"
   >
@@ -8,10 +11,11 @@
       v-bind:key="tile.id"
       v-for="(tile) in tiles"
     >
-      <Tile
+      <BaseTile
         v-bind:tile="tile"
         v-bind:columns="dashboard.columns"
         v-bind:rows="dashboard.rows"
+        @refresh="getTiles"
       />
     </div>
     <button
@@ -92,7 +96,7 @@
 <script>
 import DashboardsService from '@/services/DashboardsService'
 import TilesService from '@/services/TilesService'
-import Tile from '@/components/Tile'
+import BaseTile from '@/components/tiles/BaseTile'
 import { backgroundCSS, rowsCSS, columnsCSS } from '@/utils/styleHelper'
 
 export default {
@@ -109,7 +113,7 @@ export default {
     }
   },
   components: {
-    Tile
+    BaseTile
   },
   mounted () {
     this.getDashboard()
@@ -135,7 +139,6 @@ export default {
     async createTile () {
       await TilesService.createTile({
         dashboard_id: this.$route.params.dashboard_id,
-        type: 'status',
         style: {},
         chart: {},
         status: {}
@@ -201,6 +204,9 @@ export default {
     max-height: 100%;
     overflow: hidden;
     background-color: color('background');
+  }
+  .dashboard.hide-cursor {
+    cursor: none;
   }
   .icon {
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));

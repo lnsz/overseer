@@ -14,7 +14,7 @@ const TileSchema = new Schema({
   status: {
     state: { 
       type: String,
-      enum: ['online', 'offline']
+      enum: ['online', 'offline', '']
     },
   },
   chart: {
