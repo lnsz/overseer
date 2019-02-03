@@ -138,10 +138,7 @@ export default {
     },
     async createTile () {
       await TilesService.createTile({
-        dashboard_id: this.$route.params.dashboard_id,
-        style: {},
-        chart: {},
-        status: {}
+        dashboard_id: this.$route.params.dashboard_id
       }).then(() => this.getTiles())
     },
     updateTimer () {
@@ -182,11 +179,11 @@ export default {
     rows () {
       return rowsCSS(this.dashboard.rows)
     },
-    background () {
-      return backgroundCSS(this.dashboard.backgroundColor)
-    },
     maxTiles () {
       return this.dashboard.rows * this.dashboard.columns
+    },
+    background () {
+      return this.dashboard.style && backgroundCSS(this.dashboard.style.backgroundColor)
     }
   }
 }

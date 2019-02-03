@@ -2,22 +2,23 @@
   <div
     class="tile"
     :style="tileStyle"
-    @click="openEditView"
+    @click="toggleEditView"
   >
-    <EditTile
-      v-if="isEditTile"
-      :tile="tile"
-      @save="saveTile"
-    />
+    <transition name="fade">
+      <TileOptions
+        v-if="isEditTile"
+        :tile="tile"
+        @refresh="refresh"
+      />
+    </transition>
     <StatusTile
-      v-else-if="tile.type === 'status'"
+      v-if="tile.type === 'status'"
       :tile="tile"
     />
     <IFrameTile
       v-else-if="tile.type === 'iframe'"
       :tile="tile"
       :zoomLevel="zoomLevel"
-      @test="openEditView"
     />
     <ChartTile
       v-else-if="tile.type === 'piechart'"
@@ -28,7 +29,7 @@
 
 <script>
 import ChartTile from '@/components/tiles/ChartTile'
-import EditTile from '@/components/tiles/EditTile'
+import TileOptions from '@/components/tiles/TileOptions'
 import IFrameTile from '@/components/tiles/IFrameTile'
 import StatusTile from '@/components/tiles/StatusTile'
 import { backgroundCSS, textCSS } from '@/utils/styleHelper'
@@ -56,17 +57,16 @@ export default {
   },
   components: {
     ChartTile,
-    EditTile,
     IFrameTile,
-    StatusTile
+    StatusTile,
+    TileOptions
   },
   methods: {
-    openEditView () {
-      this.isEditView = true
+    toggleEditView () {
+      this.isEditView = !this.isEditView
     },
-    saveTile (event) {
+    refresh (event) {
       setTimeout(() => {
-        this.isEditView = false
         this.$emit('refresh', event)
       }, 50)
     }
@@ -105,7 +105,14 @@ export default {
   @import "../../assets/styles/colors";
   @import "../../assets/styles/functions";
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
   .tile {
+    position: relative;
     cursor: pointer;
     height: calc(100% - 10px);
     width: calc(100% - 10px);
