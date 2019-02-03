@@ -6,11 +6,16 @@ const DashboardSchema = new Schema({
   description: String,
   rows: Number,
   columns: Number,
-  backgroundColor: String,
-  tileColor: String,
   creator: String,
   stars: Number,
-  copies: Number
+  copies: Number,
+  style: {
+    backgroundColor: String,  // Color of the dashboard background
+    textColor: String,        // Default color of text, can be overriden by tile styles
+    tileColor: String,        // Default color of tiles, can be overriden by tile styles
+    primaryColor: String,     // Color of main buttons (save, open fab)
+    secondaryColor: String,   // Color of secondary buttons (back, fab options)
+  }
 })
 
 const Dashboard = mongoose.model('Dashboard', DashboardSchema)
