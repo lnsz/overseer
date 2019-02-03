@@ -3,7 +3,7 @@
     <PieChart
       class="chart"
       :chartdata="tile.chart.data"
-      :textcolor="tile.style.textColor"
+      :textcolor="textColor"
     />
   </div>
 </template>
@@ -25,6 +25,9 @@ export default {
   computed: {
     lastUpdated () {
       return Math.floor((Date.now() - new Date(this.tile.updated)) / 60000)
+    },
+    textColor () {
+      return this.tile.style && this.tile.style.textColor
     }
   }
 }
