@@ -5,7 +5,12 @@ const axios = require('axios')
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
   Tile.find({ dashboard_id: req.params.dashboard_id }, (error, tiles) => {
-    if (error) res.send({ error: error })
+    if (error) console.log(error)
+      if (error) {
+        console.log(error)
+        res.status(500).send(error)
+        return
+      }
     tiles.forEach(tile =>  {
       // TODO: Replace this
       if (tile.type === 'status' && 
@@ -17,7 +22,11 @@ const fetchTiles = (req, res) => {
           .then(() => {
             tile.updated = Date.now()
             tile.save((error) => {
-              if (error) console.log({ error: error })
+              if (error) {
+                console.log(error)
+                res.status(500).send(error)
+                return
+              }
             })
           })
       }
@@ -33,7 +42,11 @@ const createTile = (req, res) => {
     ...req.body,
     updated: Date.now()
   }).save((error) => {
-    if (error) res.send({ error: error })
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
     res.send({
       success: true,
       message: 'Tile created successfully'
@@ -47,11 +60,19 @@ const updateTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
-    if (error) console.log(error)
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
     Object.keys(req.body).forEach( key => { if (req.body) tile[key] = req.body[key] } )
     tile.updated = Date.now()
     tile.save((error) => {
-      if (error) console.log(error)
+      if (error) {
+        console.log(error)
+        res.status(500).send(error)
+        return
+      }
       res.send({ success: true })
     })
   })
@@ -63,7 +84,11 @@ const getTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
-    if (error) res.send({ error: error })
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
     res.send(tile)
   })
 }
@@ -74,7 +99,11 @@ const deleteTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error) => {
-    if (error) res.send({ error: error })
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
     res.send({ success: true })
   })
 }
