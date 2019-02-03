@@ -4,9 +4,9 @@ const Schema = mongoose.Schema
 const TileSchema = new Schema({
   dashboard_id: { type: Schema.ObjectId, ref: 'Dashboard' },
   name: String,
-  url: String,
   description: String,
   updated: Date,
+  url: String,
   type: { 
     type: String,
     enum: ['status', 'iframe', 'piechart']
