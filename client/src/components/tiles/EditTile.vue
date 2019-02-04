@@ -1,58 +1,87 @@
 <template>
   <div class="edit-tile">
-    <div>
-      <div class="select-wrapper">
-        Type:
-        <select
-          v-model="type"
-          class="select-box"
-        >
-          <option>status</option>
-          <option>iframe</option>
-          <option>piechart</option>
-        </select>
+    <div class="tile-settings">
+      <div class="top-bar">
+        <TabBar :tabs="tabs" />
+        <div class="select-wrapper">
+          Type:
+          <select
+            v-model="type"
+            class="select-box"
+          >
+            <option>status</option>
+            <option>iframe</option>
+            <option>piechart</option>
+          </select>
+        </div>
       </div>
-      <div class="input-wrapper">
-        <input
-          v-model="name"
-          placeholder="Name"
-          class="input-box"
-        />
-      </div>
-      <div class="input-wrapper">
-        <input
-          v-model="url"
-          placeholder="URL"
-          class="input-box"
-        />
-      </div>
-      <div class="input-wrapper">
-        <input
-          v-model="description"
-          placeholder="Description"
-          class="input-box"
-        />
-      </div>
-      <div class="input-wrapper">
-        <input
-          v-model="style"
-          placeholder="Style"
-          class="input-box"
-        />
-      </div>
-      <div class="input-wrapper" v-if="type === 'status'">
-        <input
-          v-model="state"
-          placeholder="State"
-          class="input-box"
-        />
-      </div>
-      <div class="input-wrapper" v-if="type === 'piechart'">
-        <input
-          v-model="chartData"
-          placeholder="Chart Data"
-          class="input-box"
-        />
+      <div class="tile-options">
+        <div v-if="currentTab === 'general'">
+          <div class="input-wrapper">
+            Name
+            <input
+              v-model="name"
+              placeholder="Name"
+              class="input-box"
+            />
+          </div>
+          <div class="input-wrapper">
+            URL
+            <input
+              v-model="url"
+              placeholder="URL"
+              class="input-box"
+            />
+          </div>
+          <div class="input-wrapper">
+            Description
+            <input
+              v-model="description"
+              placeholder="Description"
+              class="input-box"
+            />
+          </div>
+        </div>
+        <div v-else-if="currentTab === 'colors'">
+          <div class="input-wrapper">
+            Style
+            <input
+              v-model="style"
+              placeholder="Style"
+              class="input-box"
+            />
+          </div>
+        </div>
+        <div v-else-if="currentTab === 'status'">
+          <div class="input-wrapper">
+            State
+            <input
+              v-model="state"
+              placeholder="State"
+              class="input-box"
+            />
+          </div>
+        </div>
+        <div v-else-if="currentTab === 'chart'">
+          <div class="input-wrapper chart-data-wrapper">
+            <div>Label</div>
+            <div>Color</div>
+            <div>Value</div>
+          </div>
+          <div v-bind:key="data" v-for="(data, index) in chartData">
+            <div :key="index" class="input-wrapper">
+              <div v-bind:key="dataValue" v-for="(dataValue, dataKey) in chartData[index]">
+                <input
+                  :key="dataValue"
+                  v-model="chartData[index][dataKey]"
+                  :placeholder="dataKey"
+                  class="input-box chart-data-box"
+                >
+              </div>
+            </div>
+          </div>
+          <div @click="addData">+</div>
+        </div>
       </div>
     </div>
     <div class="save-button-wrapper">
@@ -69,6 +98,8 @@
 <script>
 import TilesService from '@/services/TilesService'
 
+import TabBar from '@/components/TabBar'
+
 export default {
   name: 'EditTile',
   props: {
@@ -76,6 +107,9 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  components: {
+    TabBar
   },
   data () {
     return {
@@ -104,19 +138,35 @@ export default {
         type: this.type,
         status: { state: this.state },
         style: JSON.parse(this.style),
-        chart: { data: JSON.parse(this.chartData) }
+        chart: { data: this.chartData }
       }).then(() => this.$emit('save', event))
+    },
+    addData () {
+      this.chartData.push({'label': '', 'backgroundColor': '', 'value': ''})
     }
   },
   computed: {
     getChartData () {
-      return this.tile.chart && this.tile.chart.data
+      return this.tile.chart ? this.tile.chart.data : []
     },
     getState () {
       return this.tile.status ? this.tile.status.state : ''
     },
     getStyle () {
       return this.tile.style ? JSON.stringify(this.tile.style) : '{}'
+    },
+    tabs () {
+      switch (this.type) {
+        case 'status':
+          return ['General', 'Status', 'Colors', 'Other']
+        case 'piechart':
+          return ['General', 'Chart', 'Colors', 'Other']
+        default:
+          return ['General', 'Other']
+      }
+    },
+    currentTab () {
+      return this.$route.query.tab
     }
   }
 }
@@ -127,43 +177,73 @@ export default {
   @import "../../assets/styles/functions";
 
   .edit-tile {
+    cursor: auto;
     width: 100%;
     height: 100%;
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     justify-content: space-between;
-    .select-wrapper {
-      line-height: 30px;
+    .top-bar {
       display: flex;
-      justify-content: center;
-      margin: 20px 0 15px 0;
-      .select-box {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        padding: 5px;
-        border-radius: 3px;
-        color: color('text');
-        transition: all 0.2s ease;
-        background: color('background');
-        background: color('background');
-        margin-left: 10px;
+      justify-content: space-between;
+      .select-wrapper {
+        line-height: 39px;
+        display: flex;
+        justify-content: center;
+        margin: 2px 0 5px 0;
+        .select-box {
+          font-size: 16px;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+          padding: 8px;
+          border-radius: 3px;
+          color: color('text');
+          transition: all 0.2s ease;
+          background: color('background');
+          border: 1px solid color('foreground');
+          margin-left: 10px;
+        }
       }
     }
-    .input-wrapper {
+    .tile-settings {
+      flex: 1 1 auto;
+      flex-direction: column;
       display: flex;
-      justify-content: center;
-      margin-top: 8px;
-      .input-box {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        font-family: 'Roboto', sans-serif;
-        transition: all 0.2s ease;
-        color: color('text');
-        background: color('background');
-        border: 1px solid color('foreground');
-        padding: 5px;
-        border-radius: 3px;
-        text-align: center;
-        &:focus {
-          border: 1px solid color('green');
+      .tile-options {
+        border-radius: 0px 3px 3px 3px;
+        flex: 1 1 auto;
+        border: 1px solid color('green');
+        margin-bottom:  10px;
+        .input-wrapper {
+          display: flex;
+          justify-content: space-between;
+          margin: 20px 20px 0 20px;
+          padding-bottom: 20px;
+          border-bottom: 1px solid color('foreground');
+          line-height: 28px;
+          .input-box {
+            width: 30%;
+            margin-left: 20px;
+            font-size: 16px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.2s ease;
+            color: color('text');
+            background: color('background');
+            border: 1px solid color('foreground');
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+            &:focus {
+              border: 1px solid color('green');
+            }
+          }
+          .chart-data-box {
+            width: 80%;
+          }
+        }
+        .chart-data-wrapper {
+          padding: 0 90px 0 90px;
         }
       }
     }

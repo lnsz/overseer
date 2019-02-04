@@ -6,7 +6,7 @@
     >
       <div
         class="modal-content"
-        @click.stop="stopTheEvent"
+        @click.stop
       >
         <slot />
       </div>
@@ -21,9 +21,6 @@ export default {
   methods: {
     closeModal () {
       this.$emit('close')
-    },
-    stopTheEvent (event) {
-      event.stopPropagation()
     }
   }
 }
@@ -45,14 +42,14 @@ export default {
   }
   .modal-content {
     z-index: 100;
-    pointer-events: none;
     position: fixed;
     top: 10%;
     left: 10%;
     height: 80%;
     width: 80%;
-    background: color('foreground');
+    background: color('background');
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
     border-radius: 3px;
+    padding: 10px;
    }
 </style>

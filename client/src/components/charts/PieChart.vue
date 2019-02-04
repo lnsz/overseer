@@ -4,7 +4,7 @@ import { Pie } from 'vue-chartjs'
 export default {
   extends: Pie,
   props: {
-    chartdata: {
+    data: {
       type: Object,
       default: () => {}
     },
@@ -13,13 +13,23 @@ export default {
       default: () => {}
     }
   },
+  methods: {
+    renderPieChart () {
+      Chart.defaults.global.defaultFontColor = this.textColor ? this.textColor : 'white'
+      this.renderChart(this.data, {
+        ...this.options,
+        responsive: true,
+        maintainAspectRatio: false
+      })
+    }
+  },
   mounted () {
-    Chart.defaults.global.defaultFontColor = this.textColor ? this.textColor : 'white'
-    this.renderChart(this.chartdata, {
-      ...this.options,
-      responsive: true,
-      maintainAspectRatio: false
-    })
+    this.renderPieChart()
+  },
+  watch: {
+    data () {
+      this.renderPieChart()
+    }
   }
 }
 </script>

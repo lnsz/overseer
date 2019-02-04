@@ -2,7 +2,7 @@
   <div class="chart-tile">
     <PieChart
       class="chart"
-      :chartdata="tile.chart.data"
+      :data="chartData"
       :textcolor="textColor"
     />
   </div>
@@ -10,6 +10,8 @@
 
 <script>
 import PieChart from '@/components/charts/PieChart'
+
+import { getChartData } from '@/utils/chartHelper'
 
 export default {
   name: 'ChartTile',
@@ -28,6 +30,9 @@ export default {
     },
     textColor () {
       return this.tile.style && this.tile.style.textColor
+    },
+    chartData () {
+      return getChartData(this.tile.chart.data)
     }
   }
 }
