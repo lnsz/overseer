@@ -55,7 +55,6 @@ export default {
     },
     async copyTile (event) {
       const { _id, ...newTile } = this.tile
-      console.log(newTile)
       await TilesService.createTile({
         ...newTile
       }).then(this.$emit('refresh'))

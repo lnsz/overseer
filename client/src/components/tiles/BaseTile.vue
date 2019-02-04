@@ -27,7 +27,10 @@
       v-if="isEditView"
       @close="toggleEditView"
     >
-      <EditTile :tile="tile" />
+      <EditTile
+        :tile="tile"
+        @save="saveTile"
+      />
     </Modal>
   </div>
 </template>
@@ -75,14 +78,19 @@ export default {
     toggleOptionsView () {
       this.isOptionsView = !this.isOptionsView
     },
-    refresh (event) {
-      setTimeout(() => {
-        this.$emit('refresh', event)
-      }, 50)
-    },
     toggleEditView () {
       this.isOptionsView = this.isEditView
       this.isEditView = !this.isEditView
+    },
+    refresh () {
+      setTimeout(() => {
+        this.$emit('refresh')
+      }, 50)
+    },
+    saveTile () {
+      this.isEditView = false
+      this.isOptionsView = false
+      this.refresh()
     }
   },
   computed: {
