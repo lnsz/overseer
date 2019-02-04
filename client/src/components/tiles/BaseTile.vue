@@ -2,15 +2,14 @@
   <div
     class="tile"
     :style="tileStyle"
-    @click="toggleEditView"
+    @click="toggleOptionsView"
   >
-    <transition name="fade">
-      <TileOptions
-        v-if="isEditTile"
-        :tile="tile"
-        @refresh="refresh"
-      />
-    </transition>
+    <TileOptions
+      v-if="isOptionsTile"
+      :tile="tile"
+      @refresh="refresh"
+      @edit="toggleEditView"
+    />
     <StatusTile
       v-if="tile.type === 'status'"
       :tile="tile"
@@ -24,13 +23,21 @@
       v-else-if="tile.type === 'piechart'"
       :tile="tile"
     />
+    <Modal
+      v-if="isEditView"
+      @close="toggleEditView"
+    >
+      <EditTile :tile="tile" />
+    </Modal>
   </div>
 </template>
 
 <script>
 import ChartTile from '@/components/tiles/ChartTile'
+import EditTile from '@/components/tiles/EditTile'
 import TileOptions from '@/components/tiles/TileOptions'
 import IFrameTile from '@/components/tiles/IFrameTile'
+import Modal from '@/components/Modal'
 import StatusTile from '@/components/tiles/StatusTile'
 import { backgroundCSS, textCSS } from '@/utils/styleHelper'
 
@@ -52,28 +59,35 @@ export default {
   },
   data () {
     return {
+      isOptionsView: false,
       isEditView: false
     }
   },
   components: {
     ChartTile,
+    EditTile,
     IFrameTile,
+    Modal,
     StatusTile,
     TileOptions
   },
   methods: {
-    toggleEditView () {
-      this.isEditView = !this.isEditView
+    toggleOptionsView () {
+      this.isOptionsView = !this.isOptionsView
     },
     refresh (event) {
       setTimeout(() => {
         this.$emit('refresh', event)
       }, 50)
+    },
+    toggleEditView () {
+      this.isOptionsView = this.isEditView
+      this.isEditView = !this.isEditView
     }
   },
   computed: {
-    isEditTile () {
-      return this.isEditView || !this.tile.type
+    isOptionsTile () {
+      return this.isOptionsView || !this.tile.type
     },
     tileStyle () {
       return {
@@ -105,12 +119,6 @@ export default {
   @import "../../assets/styles/colors";
   @import "../../assets/styles/functions";
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
   .tile {
     position: relative;
     cursor: pointer;

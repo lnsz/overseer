@@ -85,7 +85,7 @@ export default {
       type: this.tile.type,
       state: this.tile.state,
       style: '',
-      chartData: ''
+      chartData: this.getChartData
     }
   },
   mounted () {
@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     getChartData () {
-      return this.tile.chart ? JSON.stringify(this.tile.chart.data) : '{}'
+      return this.tile.chart && this.tile.chart.data
     },
     getState () {
       return this.tile.status ? this.tile.status.state : ''

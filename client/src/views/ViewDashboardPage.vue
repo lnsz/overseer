@@ -125,16 +125,14 @@ export default {
   },
   methods: {
     async getDashboard () {
-      const response = await DashboardsService.getDashboard({
+      await DashboardsService.getDashboard({
         dashboard_id: this.$route.params.dashboard_id
-      })
-      this.dashboard = response.data
+      }).then((response) => (this.dashboard = response.data))
     },
     async getTiles () {
-      const response = await TilesService.fetchTiles({
+      await TilesService.fetchTiles({
         dashboard_id: this.$route.params.dashboard_id
-      })
-      this.tiles = response.data.tiles
+      }).then((response) => (this.tiles = response.data.tiles))
     },
     async createTile () {
       await TilesService.createTile({
