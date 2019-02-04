@@ -15,10 +15,6 @@ export default {
   @import "assets/styles/colors";
   @import "assets/styles/functions";
 
-  body {
-    margin: 0;
-  }
-
   #app {
     font-family: 'Roboto', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -28,12 +24,28 @@ export default {
     height: 100%;
   }
 
+  // Global Styles
+  // Elements
+  body {
+    margin: 0;
+  }
+
+  // Pseudo Elements
   ::selection {
     background: color('green');
     color: color('text');
   }
 
+  // States
   :focus {
     outline: none;
+  }
+
+  // Transitions
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

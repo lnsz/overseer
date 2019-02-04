@@ -1,40 +1,42 @@
 <template>
-  <div class="edit-tile">
-    <div class="button-wrapper">
-      <div
-        class="button edit"
-        id="edit"
-        @click="editTile"
-      >
-        Edit
+  <transition name="fade">
+    <div class="edit-tile">
+      <div class="button-wrapper">
+        <div
+          class="button edit"
+          id="edit"
+          @click="editTile"
+        >
+          Edit
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <div
+          class="button"
+          id="copy"
+          @click="copyTile"
+        >
+          Copy
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <div
+          class="button"
+          id="delete"
+          @click="deleteTile"
+        >
+          Delete
+        </div>
       </div>
     </div>
-    <div class="button-wrapper">
-      <div
-        class="button"
-        id="copy"
-        @click="copyTile"
-      >
-        Copy
-      </div>
-    </div>
-    <div class="button-wrapper">
-      <div
-        class="button"
-        id="delete"
-        @click="deleteTile"
-      >
-        Delete
-      </div>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import TilesService from '@/services/TilesService'
 
 export default {
-  name: 'EditTile',
+  name: 'TileOptions',
   props: {
     tile: {
       type: Object,
@@ -43,7 +45,7 @@ export default {
   },
   methods: {
     editTile (event) {
-      console.log('edit')
+      this.$emit('edit')
     },
     async deleteTile (event) {
       await TilesService.deleteTile({
@@ -53,6 +55,7 @@ export default {
     },
     async copyTile (event) {
       const { _id, ...newTile } = this.tile
+      console.log(newTile)
       await TilesService.createTile({
         ...newTile
       }).then(this.$emit('refresh'))
@@ -93,7 +96,6 @@ export default {
         border-radius: 3px;
         background-color: color('green');
         color: color('text');
-
       }
       .button:hover {
         transform: translateY(-1px);
