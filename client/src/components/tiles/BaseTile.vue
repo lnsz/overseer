@@ -8,7 +8,7 @@
       v-if="isOptionsTile"
       :tile="tile"
       @refresh="refresh"
-      @edit="toggleEditView"
+      @edit="openEditView"
     />
     <StatusTile
       v-if="tile.type === 'status'"
@@ -16,8 +16,9 @@
     />
     <IFrameTile
       v-else-if="tile.type === 'iframe'"
+      @update="updateTile"
       :tile="tile"
-      :zoomLevel="zoomLevel"
+      :columns="columns"
     />
     <ChartTile
       v-else-if="tile.type === 'piechart'"
@@ -25,17 +26,21 @@
     />
     <Modal
       v-if="isEditView"
-      @close="toggleEditView"
+      @close="closeEditView"
     >
       <EditTile
         :tile="tile"
-        @save="saveTile"
+        @update="updateTile"
       />
     </Modal>
   </div>
 </template>
 
 <script>
+import router from '@/router'
+
+import TilesService from '@/services/TilesService'
+
 import ChartTile from '@/components/tiles/ChartTile'
 import EditTile from '@/components/tiles/EditTile'
 import TileOptions from '@/components/tiles/TileOptions'
@@ -66,6 +71,9 @@ export default {
       isEditView: false
     }
   },
+  mounted () {
+    this.checkEditStatus()
+  },
   components: {
     ChartTile,
     EditTile,
@@ -75,22 +83,40 @@ export default {
     TileOptions
   },
   methods: {
+    async updateTile (newTile) {
+      await TilesService.updateTile(newTile).then(() => {
+        this.isEditView = false
+        this.isOptionsView = false
+        this.refresh()
+      })
+    },
     toggleOptionsView () {
       this.isOptionsView = !this.isOptionsView
     },
-    toggleEditView () {
-      this.isOptionsView = this.isEditView
-      this.isEditView = !this.isEditView
+    checkEditStatus (route = this.$route) {
+      if (route.params.tile_id === this.tile._id) {
+        this.openEditView()
+      } else if (this.isEditView) {
+        this.closeEditView()
+      }
+    },
+    openEditView () {
+      router.push({
+        path: `/dashboards/${this.$route.params.dashboard_id}/tiles/${this.tile._id}/edit`,
+        query: { ...this.$route.query }
+      })
+      this.isOptionsView = false
+      this.isEditView = true
+    },
+    closeEditView () {
+      router.push({
+        path: `/dashboards/${this.$route.params.dashboard_id}/view`
+      })
+      this.isOptionsView = true // Clicking the modal tile will toggle the edit view
+      this.isEditView = false
     },
     refresh () {
-      setTimeout(() => {
-        this.$emit('refresh')
-      }, 50)
-    },
-    saveTile () {
-      this.isEditView = false
-      this.isOptionsView = false
-      this.refresh()
+      this.$emit('refresh', this.tile._id)
     }
   },
   computed: {
@@ -115,9 +141,11 @@ export default {
     },
     textColor () {
       return this.tile.style ? this.tile.style.textColor : null
-    },
-    zoomLevel () {
-      return this.tile.style ? this.tile.style.zoomLevel : this.columns
+    }
+  },
+  watch: {
+    $route (to, from) {
+      this.checkEditStatus(to)
     }
   }
 }
@@ -128,6 +156,7 @@ export default {
   @import "../../assets/styles/functions";
 
   .tile {
+    user-select: none;
     position: relative;
     cursor: pointer;
     height: calc(100% - 10px);

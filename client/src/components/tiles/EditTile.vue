@@ -43,13 +43,15 @@
           </div>
         </div>
         <div v-else-if="currentTab === 'colors'">
-          <div class="input-wrapper">
-            Style
-            <input
-              v-model="style"
-              placeholder="Style"
-              class="input-box"
-            />
+          <div :key="styleKey" v-for="(styleValue, styleKey) in style">
+            <div class="input-wrapper">
+              {{styleKey}}
+              <input
+                v-model="style[styleKey]"
+                :placeholder="style[styleKey]"
+                class="input-box"
+              />
+            </div>
           </div>
         </div>
         <div v-else-if="currentTab === 'status'">
@@ -114,8 +116,6 @@
 </template>
 
 <script>
-import TilesService from '@/services/TilesService'
-
 import TabBar from '@/components/TabBar'
 
 export default {
@@ -145,15 +145,15 @@ export default {
     this.url = this.tile.url
     this.description = this.tile.description
     this.type = this.tile.type
-    this.state = this.getState
-    this.style = this.getStyle
+    this.state = this.tile.state ? this.tile.state.status : ''
+    this.style = { ...this.tile.style }
     this.chartData = this.tile.chart.data.map(x => {
       return { ...x }
     })
   },
   methods: {
-    async saveTile (event) {
-      await TilesService.updateTile({
+    saveTile () {
+      const newTile = {
         dashboard_id: this.$route.params.dashboard_id,
         tile_id: this.tile._id,
         name: this.name,
@@ -161,9 +161,10 @@ export default {
         description: this.description,
         type: this.type,
         status: { state: this.state },
-        style: JSON.parse(this.style),
+        style: this.style,
         chart: { data: this.chartData }
-      }).then(() => this.$emit('save', event))
+      }
+      this.$emit('update', newTile)
     },
     addData () {
       this.chartData.push({'label': '', 'backgroundColor': '', 'value': ''})
@@ -175,9 +176,6 @@ export default {
   computed: {
     getState () {
       return this.tile.status ? this.tile.status.state : ''
-    },
-    getStyle () {
-      return this.tile.style ? JSON.stringify(this.tile.style) : '{}'
     },
     tabs () {
       switch (this.type) {
@@ -236,6 +234,7 @@ export default {
     justify-content: space-between;
     .top-bar {
       display: flex;
+      min-height: 46px;
       justify-content: space-between;
       .select-wrapper {
         line-height: 39px;
@@ -260,6 +259,7 @@ export default {
       flex-direction: column;
       display: flex;
       .tile-options {
+        overflow-y: scroll;
         border-radius: 0px 3px 3px 3px;
         flex: 1 1 auto;
         border: 1px solid color('green');

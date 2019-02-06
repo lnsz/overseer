@@ -17,6 +17,9 @@ const TileSchema = new Schema({
       enum: ['online', 'offline', '']
     },
   },
+  iframe: {
+    zoomLevel: Number
+  },
   chart: {
     data: Object,
     options: Object
@@ -25,10 +28,20 @@ const TileSchema = new Schema({
     textColor: String,
     backgroundColor: String,
     offlineColor: String,
-    onlineColor: String,
-    zoomLevel: Number
+    onlineColor: String
   }
 })
 
+
 const Tile = mongoose.model("Tile", TileSchema)
+const autoPopulate = (next) => {
+  this.populate('style')
+  next()
+}
+
+TileSchema
+  .pre('save', autoPopulate)
+  .pre('find', autoPopulate)
+  .pre('findOne', autoPopulate)
+
 module.exports = Tile

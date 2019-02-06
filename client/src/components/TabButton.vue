@@ -1,9 +1,9 @@
 <template>
   <router-link
-    v-bind:to="{ query: { ...$route.query, tab: name.toLowerCase() } }"
+    :to="{ query: { ...$route.query, tab: name.toLowerCase() } }"
+    :class="{ 'selected': isSelected }"
     tag="button"
     class="tab"
-    v-bind:class="{ 'selected': isSelected }"
   >
     {{name}}
   </router-link>

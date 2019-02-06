@@ -27,6 +27,11 @@ export default new Router({
       component: ViewDashboardPage
     },
     {
+      path: '/dashboards/:dashboard_id/tiles/:tile_id/edit',
+      name: 'ViewDashboardPage',
+      component: ViewDashboardPage
+    },
+    {
       path: '/dashboards/new',
       name: 'NewDashboardPage',
       component: NewDashboardPage
