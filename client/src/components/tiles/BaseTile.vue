@@ -7,7 +7,8 @@
     <TileOptions
       v-if="isOptionsTile"
       :tile="tile"
-      @refresh="refresh"
+      @delete="deleteTile"
+      @copy="copyTile"
       @edit="openEditView"
     />
     <StatusTile
@@ -87,8 +88,20 @@ export default {
       await TilesService.updateTile(newTile).then(() => {
         this.isEditView = false
         this.isOptionsView = false
-        this.refresh()
+        this.emitUpdate()
       })
+    },
+    async copyTile () {
+      const { _id, ...newTile } = this.tile
+      await TilesService.createTile({
+        ...newTile
+      }).then(this.emitRefresh())
+    },
+    async deleteTile () {
+      await TilesService.deleteTile({
+        dashboard_id: this.tile.dashboard_id,
+        tile_id: this.tile._id
+      }).then(this.emitRefresh())
     },
     toggleOptionsView () {
       this.isOptionsView = !this.isOptionsView
@@ -115,8 +128,12 @@ export default {
       this.isOptionsView = true // Clicking the modal tile will toggle the edit view
       this.isEditView = false
     },
-    refresh () {
-      this.$emit('refresh', this.tile._id)
+    emitRefresh () {
+      // Short timeout to force update
+      setTimeout(() => this.$emit('refresh'), 10)
+    },
+    emitUpdate () {
+      this.$emit('update', this.tile._id)
     }
   },
   computed: {

@@ -1,8 +1,8 @@
 <template>
   <div class="status-tile">
-    <div class="status-bar" v-bind:class="tileState"/>
+    <div class="status-bar" :class="tileState"/>
     <div class="text">
-      <div class="title" v-bind:class="tileState">{{tile.name}}</div>
+      <div class="title" :class="tileState">{{tile.name}}</div>
       <div class="url">{{tile.url}}</div>
       <div class="description">{{tile.description}}</div>
     </div>

@@ -1,14 +1,11 @@
 <template>
   <div class="dashboard-list">
-    <div
-      v-bind:key="dashboard.id"
+    <DashboardCard
       v-for="(dashboard, index) in dashboards"
-    >
-      <DashboardCard
-        v-bind:isLast="index == dashboards.length - 1"
-        v-bind:dashboard="dashboard"
-      />
-    </div>
+      :key="dashboard.id"
+      :isLast="index == dashboards.length - 1"
+      :dashboard="dashboard"
+    />
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     <div class="top" />
     <div class="header-content">
       <router-link
-        v-bind:to="{ name: 'HomePage' }"
+        :to="{ name: 'HomePage' }"
         class="title"
         tag="button"
       >

@@ -1,8 +1,10 @@
 <template>
   <div class="tab-bar">
-    <div v-bind:key="tab" v-for="tab in tabs">
-      <TabButton v-bind:name="tab" />
-    </div>
+    <TabButton
+      v-for="tab in tabs"
+      :key="tab"
+      :name="tab"
+    />
   </div>
 </template>
 
