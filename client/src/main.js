@@ -10,6 +10,7 @@ import {
   faStar,
   faCopy,
   faPlus,
+  faMinus,
   faEdit,
   faTimes,
   faBars
@@ -19,6 +20,7 @@ library.add(
   faStar,
   faCopy,
   faPlus,
+  faMinus,
   faEdit,
   faTimes,
   faBars
