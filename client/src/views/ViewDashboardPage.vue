@@ -15,7 +15,7 @@
         v-bind:tile="tile"
         v-bind:columns="dashboard.columns"
         v-bind:rows="dashboard.rows"
-        @refresh="getTiles"
+        @refresh="updateTile"
       />
     </div>
     <button
@@ -133,6 +133,17 @@ export default {
       await TilesService.fetchTiles({
         dashboard_id: this.$route.params.dashboard_id
       }).then((response) => (this.tiles = response.data.tiles))
+    },
+    async updateTile (tileId) {
+      await TilesService.getTile({
+        dashboard_id: this.$route.params.dashboard_id,
+        tile_id: tileId
+      }).then((response) => {
+        // Hack to force an update only on one tile
+        const tileIndex = this.tiles.findIndex(tile => tile._id === tileId)
+        this.tiles.splice(tileIndex, 1)
+        this.tiles.splice(tileIndex, 0, response.data)
+      })
     },
     async createTile () {
       await TilesService.createTile({

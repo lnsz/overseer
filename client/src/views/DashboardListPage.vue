@@ -73,6 +73,7 @@ export default {
   .filters{
     display: flex;
     justify-content: space-between;
+    max-height: 46px;
     margin: 0 30px 0 30px;
   }
   .dashboard-list-page {
