@@ -2,12 +2,12 @@
   <div class="dashboard-list-page">
     <Header />
     <div class="filters">
-      <TabBar v-bind:tabs="tabs" />
+      <TabBar :tabs="tabs" />
       <SearchBox @search="updateFilter" />
     </div>
     <DashboardList
       @delete-dashboard="deleteDashboard"
-      v-bind:dashboards="filteredDashboards"
+      :dashboards="filteredDashboards"
     />
   </div>
 </template>

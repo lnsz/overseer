@@ -1,8 +1,8 @@
 <template>
   <div class="nav-button">
     <router-link
-      v-bind:to="{ name: link }"
-      v-bind:class="{ 'border': border }"
+      :to="{ name: link }"
+      :class="{ 'border': border }"
       class="nav-button-link"
       tag="button"
     >

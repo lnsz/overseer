@@ -20,7 +20,7 @@
       </div>
       <div class="view-dashboard">
         <router-link
-          v-bind:to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
+          :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
           tag="button"
           class="view-dashboard-button"
         >

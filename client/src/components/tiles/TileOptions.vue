@@ -14,7 +14,7 @@
         <div
           class="button"
           id="copy"
-          @click="copyTile"
+          @click="$emit('copy')"
         >
           Copy
         </div>
@@ -23,7 +23,7 @@
         <div
           class="button"
           id="delete"
-          @click="deleteTile"
+          @click="$emit('delete')"
         >
           Delete
         </div>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import TilesService from '@/services/TilesService'
-
 export default {
   name: 'TileOptions',
   props: {
@@ -46,18 +44,6 @@ export default {
   methods: {
     editTile (event) {
       this.$emit('edit')
-    },
-    async deleteTile (event) {
-      await TilesService.deleteTile({
-        dashboard_id: this.tile.dashboard_id,
-        tile_id: this.tile._id
-      }).then(this.$emit('refresh'))
-    },
-    async copyTile (event) {
-      const { _id, ...newTile } = this.tile
-      await TilesService.createTile({
-        ...newTile
-      }).then(this.$emit('refresh'))
     }
   }
 }

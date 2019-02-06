@@ -1,7 +1,7 @@
 <template>
-  <div class="card" v-bind:class="{ 'last': isLast }">
+  <div class="card" :class="{ 'last': isLast }">
     <router-link
-      v-bind:to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
+      :to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
       class="thumbnail link"
       tag="button"
     />
@@ -9,7 +9,7 @@
       <div class="dashboard-name">
         <router-link
           class="link"
-          v-bind:to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
+          :to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
         >
           {{dashboard.name}}
         </router-link>
@@ -17,7 +17,7 @@
       <div class="dashboard-description">
         <router-link
           class="link"
-          v-bind:to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
+          :to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
         >
           {{dashboard.description}}
         </router-link>

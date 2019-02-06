@@ -43,15 +43,17 @@
           </div>
         </div>
         <div v-else-if="currentTab === 'colors'">
-          <div :key="styleKey" v-for="(styleValue, styleKey) in style">
-            <div class="input-wrapper">
-              {{styleKey}}
-              <input
-                v-model="style[styleKey]"
-                :placeholder="style[styleKey]"
-                class="input-box"
-              />
-            </div>
+          <div
+            v-for="(styleValue, styleKey) in style"
+            :key="styleKey"
+            class="input-wrapper"
+          >
+            {{styleKey}}
+            <input
+              v-model="style[styleKey]"
+              :placeholder="style[styleKey]"
+              class="input-box"
+            />
           </div>
         </div>
         <div v-else-if="currentTab === 'status'">
@@ -70,25 +72,31 @@
             <div class="header-item">Color</div>
             <div class="header-item">Value</div>
           </div>
-          <div :key="index" v-for="(data, index) in chartData">
-            <div :key="index" class="input-wrapper">
-              <div class="chart-data-item" :key="dataKey" v-for="(dataValue, dataKey) in chartData[index]">
-                <input
-                  v-model="chartData[index][dataKey]"
-                  :placeholder="dataKey"
-                  class="input-box chart-data-box"
-                >
-              </div>
-              <button
-                class="button remove-data"
-                @click="removeData(index)"
+          <div
+            v-for="(data, index) in chartData"
+            :key="index"
+            class="input-wrapper"
+          >
+            <div
+              v-for="(dataValue, dataKey) in chartData[index]"
+              :key="dataKey"
+              class="chart-data-item"
+            >
+              <input
+                v-model="chartData[index][dataKey]"
+                :placeholder="dataKey"
+                class="input-box chart-data-box"
               >
-                <font-awesome-icon
-                  class="icon"
-                  icon="minus"
-                />
-              </button>
             </div>
+            <button
+              class="button remove-data"
+              @click="removeData(index)"
+            >
+              <font-awesome-icon
+                class="icon"
+                icon="minus"
+              />
+            </button>
           </div>
           <div class="add-data-wrapper">
             <button
