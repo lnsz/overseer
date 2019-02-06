@@ -63,30 +63,48 @@
           </div>
         </div>
         <div v-else-if="currentTab === 'chart'">
-          <div class="input-wrapper chart-data-wrapper">
-            <div>Label</div>
-            <div>Color</div>
-            <div>Value</div>
+          <div class="input-wrapper chart-data-wrapper header">
+            <div class="header-item">Label</div>
+            <div class="header-item">Color</div>
+            <div class="header-item">Value</div>
           </div>
-          <div v-bind:key="data" v-for="(data, index) in chartData">
+          <div :key="index" v-for="(data, index) in chartData">
             <div :key="index" class="input-wrapper">
-              <div v-bind:key="dataValue" v-for="(dataValue, dataKey) in chartData[index]">
+              <div class="chart-data-item" :key="dataKey" v-for="(dataValue, dataKey) in chartData[index]">
                 <input
-                  :key="dataValue"
                   v-model="chartData[index][dataKey]"
                   :placeholder="dataKey"
                   class="input-box chart-data-box"
                 >
               </div>
+              <button
+                class="button remove-data"
+                @click="removeData(index)"
+              >
+                <font-awesome-icon
+                  class="icon"
+                  icon="minus"
+                />
+              </button>
             </div>
           </div>
-          <div @click="addData">+</div>
+          <div class="add-data-wrapper">
+            <button
+              class="button add-data"
+              @click="addData"
+            >
+              <font-awesome-icon
+                class="icon"
+                icon="plus"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="save-button-wrapper">
+    <div class="save-wrapper">
       <div
-        class="save-button"
+        class="button save"
         @click="saveTile"
       >
         Save
@@ -113,19 +131,25 @@ export default {
   },
   data () {
     return {
-      name: this.tile.name,
-      url: this.tile.url,
-      description: this.tile.description,
-      type: this.tile.type,
-      state: this.tile.state,
+      name: '',
+      url: '',
+      description: '',
+      type: '',
+      state: '',
       style: '',
-      chartData: this.getChartData
+      chartData: {}
     }
   },
   mounted () {
-    this.chartData = this.getChartData
-    this.style = this.getStyle
+    this.name = this.tile.name
+    this.url = this.tile.url
+    this.description = this.tile.description
+    this.type = this.tile.type
     this.state = this.getState
+    this.style = this.getStyle
+    this.chartData = this.tile.chart.data.map(x => {
+      return { ...x }
+    })
   },
   methods: {
     async saveTile (event) {
@@ -143,12 +167,12 @@ export default {
     },
     addData () {
       this.chartData.push({'label': '', 'backgroundColor': '', 'value': ''})
+    },
+    removeData (index) {
+      this.chartData.splice(index)
     }
   },
   computed: {
-    getChartData () {
-      return this.tile.chart ? this.tile.chart.data : []
-    },
     getState () {
       return this.tile.status ? this.tile.status.state : ''
     },
@@ -176,6 +200,32 @@ export default {
   @import "../../assets/styles/colors";
   @import "../../assets/styles/functions";
 
+  .button {
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(236, 204, 204, 0.5);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 8px 15px 8px 15px;
+    font-size: 20px;
+    border: none;
+    text-decoration: none;
+    border-radius: 3px;
+    background-color: color('green');
+    color: color('text');
+  }
+  .button:hover {
+    transform: translateY(-1px);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
+    background-color: shade(color('green'), 20%);
+  }
+  .button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  }
   .edit-tile {
     cursor: auto;
     width: 100%;
@@ -238,45 +288,46 @@ export default {
               border: 1px solid color('green');
             }
           }
-          .chart-data-box {
-            width: 80%;
+          .chart-data-item {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            .chart-data-box {
+              width: 80%;
+              margin: 0;
+            }
+          }
+         .remove-data {
+            margin-bottom: 0px;
+            font-size: 12px;
+            background-color: color('red');
+          }
+          .remove-data:hover {
+            background-color: shade(color('red'), 20%);
           }
         }
         .chart-data-wrapper {
-          padding: 0 90px 0 90px;
+          padding: 0px;
+        }
+        .header {
+          padding-right: 40px;
+          .header-item {
+            width: 100%;
+            text-align: center;
+          }
+        }
+        .add-data-wrapper {
+          padding-top: 10px;
+          display: flex;
+          justify-content: center;
+          flex-direction: row;
         }
       }
     }
-    .save-button-wrapper {
+    .save-wrapper {
       display: flex;
       justify-content: center;
       flex-direction: row;
-      .save-button {
-        margin-bottom: 10px;
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
-        font-family: 'Roboto', sans-serif;
-        letter-spacing: 1px;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        transition: all 0.2s ease;
-        cursor: pointer;
-        padding: 8px 15px 8px 15px;
-        font-size: 20px;
-        border: none;
-        text-decoration: none;
-        border-radius: 3px;
-        background-color: color('green');
-        color: color('text');
-      }
-      .save-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-        background-color: shade(color('green'), 20%);
-      }
-      .save-button:active {
-        transform: translateY(1px);
-        box-shadow: none;
-        box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-      }
     }
   }
 

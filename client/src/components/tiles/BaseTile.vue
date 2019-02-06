@@ -117,7 +117,7 @@ export default {
       return this.tile.style ? this.tile.style.textColor : null
     },
     zoomLevel () {
-      return this.tile.zoomLevel ? this.tile.zoomLevel : this.columns
+      return this.tile.style ? this.tile.style.zoomLevel : this.columns
     }
   }
 }

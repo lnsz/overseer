@@ -1,43 +1,43 @@
 #!/bin/sh
 
-[ "$ENV_FILE" ]             || ENV_FILE='./.env'
+[ "$ENV_FILE" ]              || ENV_FILE='./.env'
 
-[ ! -f "$ENV_FILE" ]        || . "$ENV_FILE"
+[ ! -f "$ENV_FILE" ]         || . "$ENV_FILE"
 
 # Networking
-[ "$LOCAL_IP" ]             || LOCAL_IP="$(/sbin/ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)"
+[ "$LOCAL_IP" ]              || LOCAL_IP="$(/sbin/ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)"
 
 # File paths
-[ "$DOCKER_COMPOSE" ]       || DOCKER_COMPOSE='docker-compose.yml'
-[ "$GIT_ROOT" ]             || GIT_ROOT="$(pwd)"
+[ "$DOCKER_COMPOSE" ]        || DOCKER_COMPOSE='docker-compose.yml'
+[ "$GIT_ROOT" ]              || GIT_ROOT="$(pwd)"
 
 # Client variables
-[ "$CLIENT_NAME" ]          || CLIENT_NAME='overseer_client'
-[ "$CLIENT_IMAGE"]          || CLIENT_IMAGE='overseer/client'
-[ "$CLIENT_TAG"]            || CLIENT_TAG='latest'
-[ "$CLIENT_PATH" ]          || CLIENT_PATH="$GIT_ROOT/client"
-[ "$CLIENT_NODE_MODULES"]   || CLIENT_NODE_MODULES='overseer_client_node_modules'
-[ "$CLIENT_IP"]             || CLIENT_IP="$LOCAL_IP"
-[ "$CLIENT_HP" ]            || CLIENT_HP='4000'
-[ "$CLIENT_CP" ]            || CLIENT_CP='4000'
+[ "$CLIENT_NAME" ]           || CLIENT_NAME='overseer_client'
+[ "$CLIENT_IMAGE" ]          || CLIENT_IMAGE='overseer/client'
+[ "$CLIENT_TAG" ]            || CLIENT_TAG='latest'
+[ "$CLIENT_PATH" ]           || CLIENT_PATH="$GIT_ROOT/client"
+[ "$CLIENT_NODE_MODULES" ]   || CLIENT_NODE_MODULES='overseer_client_node_modules'
+[ "$CLIENT_IP" ]             || CLIENT_IP="$LOCAL_IP"
+[ "$CLIENT_HP" ]             || CLIENT_HP='4000'
+[ "$CLIENT_CP" ]             || CLIENT_CP='4000'
 
 # Server variables
-[ "$SERVER_NAME"]           || SERVER_NAME='overseer_server'
-[ "$SERVER_IMAGE"]          || SERVER_IMAGE='overseer/server'
-[ "$SERVER_TAG"]            || SERVER_TAG='latest'
-[ "$SERVER_PATH" ]          || SERVER_PATH="$GIT_ROOT/server"
-[ "$SERVER_NODE_MODULES"]   || SERVER_NODE_MODULES='overseer_server_node_modules'
-[ "$SERVER_IP"]             || SERVER_IP="$LOCAL_IP"
-[ "$SERVER_HP" ]            || SERVER_HP='4001'
-[ "$SERVER_CP" ]            || SERVER_CP='8000'
+[ "$SERVER_NAME" ]           || SERVER_NAME='overseer_server'
+[ "$SERVER_IMAGE" ]          || SERVER_IMAGE='overseer/server'
+[ "$SERVER_TAG" ]            || SERVER_TAG='latest'
+[ "$SERVER_PATH" ]           || SERVER_PATH="$GIT_ROOT/server"
+[ "$SERVER_NODE_MODULES" ]   || SERVER_NODE_MODULES='overseer_server_node_modules'
+[ "$SERVER_IP" ]             || SERVER_IP="$LOCAL_IP"
+[ "$SERVER_HP" ]             || SERVER_HP='4001'
+[ "$SERVER_CP" ]             || SERVER_CP='8000'
 
 # Database variables
-[ "$DATABASE_NAME"]         || DATABASE_NAME='overseer_db'
-[ "$DATABASE_IMAGE"]        || DATABASE_IMAGE='mongo'
-[ "$DATABASE_TAG"]          || DATABASE_TAG='4.0.5'
-[ "$DATABASE_VOLUME_NAME"]  || DATABASE_VOLUME_NAME='overseer_db_volume'
-[ "$DATABASE_HP" ]          || DATABASE_HP='27017'
-[ "$DATABASE_CP" ]          || DATABASE_CP='27017'
+[ "$DATABASE_NAME" ]         || DATABASE_NAME='overseer_db'
+[ "$DATABASE_IMAGE" ]        || DATABASE_IMAGE='mongo'
+[ "$DATABASE_TAG" ]          || DATABASE_TAG='4.0.5'
+[ "$DATABASE_VOLUME_NAME" ]  || DATABASE_VOLUME_NAME='overseer_db_volume'
+[ "$DATABASE_HP" ]           || DATABASE_HP='27017'
+[ "$DATABASE_CP" ]           || DATABASE_CP='27017'
 
 ARGS="$@"
 
