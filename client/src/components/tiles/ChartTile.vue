@@ -11,7 +11,7 @@
 <script>
 import PieChart from '@/components/charts/PieChart'
 
-import { getChartData } from '@/utils/chartHelper'
+import { getChartData } from '@/utils/chartUtils'
 
 export default {
   name: 'ChartTile',

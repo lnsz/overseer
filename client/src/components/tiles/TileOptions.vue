@@ -42,7 +42,7 @@ export default {
     }
   },
   methods: {
-    editTile (event) {
+    editTile () {
       this.$emit('edit')
     }
   }

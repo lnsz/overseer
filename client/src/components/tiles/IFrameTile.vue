@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { iframeCSS } from '@/utils/styleHelper'
+import { iframeCSS } from '@/utils/styleUtils'
 
 export default {
   name: 'IFrameTile',
@@ -61,7 +61,7 @@ export default {
           zoomLevel: this.zoomLevel
         }
       }
-      this.$emit('update', newTile)
+      this.$parent.$emit('update', newTile)
     },
     zoomIn () {
       this.zoomLevel += 0.25

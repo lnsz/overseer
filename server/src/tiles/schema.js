@@ -7,6 +7,12 @@ const TileSchema = new Schema({
   description: String,
   updated: Date,
   url: String,
+  layout: {
+    width: Number,
+    height: Number,
+    x: Number,
+    y: Number
+  },
   type: { 
     type: String,
     enum: ['status', 'iframe', 'piechart']
