@@ -15,10 +15,10 @@ const TileSchema = new Schema({
   },
   type: { 
     type: String,
-    enum: ['status', 'iframe', 'image', 'piechart']
+    enum: ['status', 'iframe', 'image', 'piechart', 'text']
   },
   status: {
-    state: { 
+    state: {
       type: String,
       enum: ['online', 'offline', '']
     },

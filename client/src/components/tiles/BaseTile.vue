@@ -25,6 +25,11 @@
       :tile="tile"
       :columns="columns"
     />
+    <TextTile
+      v-else-if="tile.type === 'text'"
+      :tile="tile"
+      :columns="columns"
+    />
     <ChartTile
       v-else-if="tile.type === 'piechart'"
       :tile="tile"
@@ -40,6 +45,7 @@ import TileOptions from '@/components/tiles/TileOptions'
 import IFrameTile from '@/components/tiles/IFrameTile'
 import ImageTile from '@/components/tiles/ImageTile'
 import StatusTile from '@/components/tiles/StatusTile'
+import TextTile from '@/components/tiles/TextTile'
 import { backgroundCSS, textCSS } from '@/utils/styleUtils'
 
 export default {
@@ -68,6 +74,7 @@ export default {
     IFrameTile,
     ImageTile,
     StatusTile,
+    TextTile,
     TileOptions
   },
   methods: {

@@ -7,6 +7,7 @@ const DashboardSchema = new Schema({
   creator: String,
   stars: Number,
   copies: Number,
+  refreshTimer: Number,
   style: {
     color: {
       backgroundColor: String,  // Color of the dashboard background

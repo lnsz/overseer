@@ -6,7 +6,6 @@
       <SearchBox @search="updateFilter" />
     </div>
     <DashboardList
-      @delete-dashboard="deleteDashboard"
       :dashboards="filteredDashboards"
     />
   </div>

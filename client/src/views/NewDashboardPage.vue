@@ -47,6 +47,7 @@ export default {
         creator: this.creator,
         stars: this.stars,
         copies: this.copies,
+        refreshTimer: 30000,
         style: {
           layout: {
             rows: this.rows,
