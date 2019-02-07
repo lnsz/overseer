@@ -11,6 +11,7 @@
           >
             <option>status</option>
             <option>iframe</option>
+            <option>image</option>
             <option>piechart</option>
           </select>
         </div>
@@ -172,7 +173,7 @@ export default {
         style: this.style,
         chart: { data: this.chartData }
       }
-      this.$emit('update', newTile)
+      this.$emit('update-tile', newTile)
       this.$emit('close')
     },
     addData () {
@@ -212,10 +213,10 @@ export default {
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1px;
-    text-shadow: 0 1px 2px rgba(236, 204, 204, 0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     transition: all 0.2s ease;
     cursor: pointer;
-    padding: 8px 15px 8px 15px;
+    padding: 10px 20px 10px 20px;
     font-size: 20px;
     border: none;
     text-decoration: none;
@@ -232,6 +233,9 @@ export default {
     transform: translateY(1px);
     box-shadow: none;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  }
+  .icon {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
   }
   .edit-tile {
     color: color('text');
@@ -269,7 +273,7 @@ export default {
       flex-direction: column;
       display: flex;
       .tile-options {
-        overflow-y: scroll;
+        overflow-y: auto;
         border-radius: 0px 3px 3px 3px;
         flex: 1 1 auto;
         border: 1px solid color('green');
@@ -283,7 +287,6 @@ export default {
           line-height: 28px;
           .input-box {
             width: 30%;
-            margin-left: 20px;
             font-size: 16px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             font-family: 'Roboto', sans-serif;
@@ -302,6 +305,7 @@ export default {
             width: 100%;
             display: flex;
             justify-content: center;
+
             .chart-data-box {
               width: 80%;
               margin: 0;
@@ -327,7 +331,7 @@ export default {
           }
         }
         .add-data-wrapper {
-          padding-top: 10px;
+          padding: 10px 40px 0 0;
           display: flex;
           justify-content: center;
           flex-direction: row;

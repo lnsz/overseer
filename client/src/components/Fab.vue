@@ -17,6 +17,7 @@
     </button>
     <button
       class="fab-option edit"
+      @click="$emit('edit-dashboard')"
       @mouseover="setHovering(true)"
       @mouseleave="setHovering(false)"
       :class="{

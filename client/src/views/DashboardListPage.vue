@@ -42,11 +42,6 @@ export default {
       const response = await DashboardsService.fetchDashboards()
       this.dashboards = response.data.dashboards
     },
-    async deleteDashboard (id) {
-      await DashboardsService.deleteDashboard({ dashboard_id: id })
-      this.getDashboards()
-      this.$router.push({ name: 'DashboardListPage' })
-    },
     async updateFilter (event) {
       this.dashboardFilter = event.target.value
     }

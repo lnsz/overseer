@@ -61,7 +61,7 @@ export default {
           zoomLevel: this.zoomLevel
         }
       }
-      this.$parent.$emit('update', newTile)
+      this.$parent.$emit('update-tile', newTile)
     },
     zoomIn () {
       this.zoomLevel += 0.25

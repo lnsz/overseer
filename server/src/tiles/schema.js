@@ -15,7 +15,7 @@ const TileSchema = new Schema({
   },
   type: { 
     type: String,
-    enum: ['status', 'iframe', 'piechart']
+    enum: ['status', 'iframe', 'image', 'piechart']
   },
   status: {
     state: { 

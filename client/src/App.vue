@@ -35,6 +35,11 @@ export default {
     background: color('green');
     color: color('text');
   }
+  ::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
   // States
   :focus {
