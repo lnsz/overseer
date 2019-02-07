@@ -6,6 +6,7 @@
     }"
     @mousemove="updateTimer"
     @click="updateTimer"
+    :style="dashboardStyle"
   >
     <grid-layout
       :layout.sync="layout"
@@ -16,8 +17,8 @@
       :is-resizable="true"
       :is-mirrored="false"
       :autoSize="false"
-      :vertical-compact="true"
-      :margin="[0, 0]"
+      :vertical-compact="verticalCompact"
+      :margin="margin"
       :use-css-transforms="true"
       @layout-updated="updateAllTileLayouts"
     >
@@ -36,29 +37,41 @@
         <BaseTile
           v-if="tiles[item.i]"
           :tile="tiles[item.i]"
-          :columns="dashboard.columns"
-          :rows="dashboard.rows"
-          @edit="openEditView"
-          @update="updateTile"
+          :columns="layoutStyle.columns"
+          :rows="layoutStyle.rows"
+          @edit="openTileEditView"
+          @update-tile="updateTile"
           @refresh="fetchTiles"
         />
         <div class="drag" />
       </grid-item>
     </grid-layout>
     <Modal
-      v-if="isEditView"
-      @close="closeEditView"
+      v-if="isTileEditView"
+      @close="closeTileEditView"
     >
       <EditTile
         :tile="editTile"
-        @update="updateTile"
-        @close="closeEditView"
+        @update-tile="updateTile"
+        @close="closeTileEditView"
       />
     </Modal>
     <Fab
-      :isCursorVisible="isCursorVisible"
+      :isCursorVisible="isCursorVisible && !isDashboardEditView && !isTileEditView"
       @create-tile="createTile"
+      @edit-dashboard="openDashboardEditView"
     />
+    <Modal
+      v-if="isDashboardEditView"
+      @close="closeDashboardEditView"
+    >
+      <EditDashboard
+        :dashboard="dashboard"
+        @update-dashboard="updateDashboard"
+        @delete-dashboard="deleteDashboard"
+        @close="closeDashboardEditView"
+      />
+    </Modal>
   </div>
 </template>
 
@@ -71,9 +84,10 @@ import VueGridLayout from 'vue-grid-layout'
 import TilesService from '@/services/TilesService'
 import BaseTile from '@/components/tiles/BaseTile'
 import EditTile from '@/components/tiles/EditTile'
+import EditDashboard from '@/components/EditDashboard'
 import Modal from '@/components/Modal'
 import Fab from '@/components/Fab'
-import { backgroundCSS, rowsCSS, columnsCSS } from '@/utils/styleUtils'
+import { backgroundCSS } from '@/utils/styleUtils'
 import {
   gridValues,
   rowHeight,
@@ -88,7 +102,8 @@ export default {
     return {
       dashboard: {},
       tiles: [],
-      isEditView: false,
+      isTileEditView: false,
+      isDashboardEditView: false,
       movementTimer: 3000,
       movementTimeout: null,
       isCursorVisible: true,
@@ -101,6 +116,7 @@ export default {
   components: {
     BaseTile,
     EditTile,
+    EditDashboard,
     Fab,
     Modal,
     GridLayout: VueGridLayout.GridLayout,
@@ -133,6 +149,11 @@ export default {
         this.layout = getLayout(this.tiles)
       })
     },
+    async deleteDashboard () {
+      await DashboardsService.deleteDashboard({ dashboard_id: this.dashboard._id }).then(() => {
+        this.$router.push({ name: 'DashboardListPage' })
+      })
+    },
     async getTile (tileId) {
       await TilesService.getTile({
         dashboard_id: this.$route.params.dashboard_id,
@@ -148,8 +169,8 @@ export default {
       await TilesService.createTile({
         dashboard_id: this.$route.params.dashboard_id,
         layout: {
-          width: getTileWidth(this.dashboard.columns),
-          height: getTileHeight(this.dashboard.rows),
+          width: getTileWidth(this.layoutStyle.columns),
+          height: getTileHeight(this.layoutStyle.rows),
           x: 0,
           y: 0
         }
@@ -177,6 +198,9 @@ export default {
     async updateTile (newTile) {
       await TilesService.updateTile(newTile).then(() => this.getTile(newTile.tile_id))
     },
+    async updateDashboard (newDashboard) {
+      await DashboardsService.updateDashboard(newDashboard).then(() => this.getDashboard())
+    },
     updateTimer () {
       this.isCursorVisible = true
       clearTimeout(this.movementTimeout)
@@ -187,50 +211,72 @@ export default {
     },
     checkEditStatus (route = this.$route) {
       if (this.editTile) {
-        this.openEditView()
-      } else if (this.isEditView) {
-        this.closeEditView()
+        this.openTileEditView()
+      } else if (this.isTileEditView) {
+        this.closeTileEditView()
+      } else if (this.editDashboard) {
+        this.openDashboardEditView()
+      } else if (this.isDashboardEditView) {
+        this.closeDashboardEditView()
       }
     },
-    openEditView (tile = this.editTile) {
+    openTileEditView (tile = this.editTile) {
       router.push({
         path: `/dashboards/${this.dashboard._id}/tiles/${tile._id}/edit`,
+        params: { dashboard_id: this.dashboard._id, tile_id: tile._id },
         query: { ...this.$route.query }
       })
-      // this.isOptionsView = false
-      this.isEditView = true
+      this.isTileEditView = true
     },
-    closeEditView () {
+    closeTileEditView () {
       router.push({
         path: `/dashboards/${this.dashboard._id}/view`
       })
-      // this.isOptionsView = true // Clicking the modal tile will toggle the edit view
-      this.isEditView = false
+      this.isTileEditView = false
+    },
+    openDashboardEditView () {
+      router.push({
+        path: `/dashboards/${this.dashboard._id}/edit`,
+        query: { ...this.$route.query }
+      })
+      this.isDashboardEditView = true
+    },
+    closeDashboardEditView () {
+      router.push({
+        path: `/dashboards/${this.dashboard._id}/view`
+      })
+      this.isDashboardEditView = false
     }
   },
   computed: {
     dashboardStyle () {
       return {
-        ...this.columns,
-        ...this.rows,
         ...this.background
       }
     },
-    columns () {
-      return columnsCSS(this.dashboard.columns)
+    colorStyle () {
+      return (this.dashboard.style && this.dashboard.style.color) ? this.dashboard.style.color : {}
     },
-    rows () {
-      return rowsCSS(this.dashboard.rows)
+    layoutStyle () {
+      return (this.dashboard.style && this.dashboard.style.layout) ? this.dashboard.style.layout : {}
     },
-    maxTiles () {
-      return this.dashboard.rows * this.dashboard.columns
+    verticalCompact () {
+      return (this.layoutStyle.verticalCompact != null && this.layoutStyle.verticalCompact)
+    },
+    margin () {
+      const marginX = this.layoutStyle && this.layoutStyle.marginX != null ? this.layoutStyle.marginX : 0
+      const marginY = this.layoutStyle && this.layoutStyle.marginY != null ? this.layoutStyle.marginY : 0
+      return [marginX, marginY]
     },
     background () {
-      return this.dashboard.style && backgroundCSS(this.dashboard.style.backgroundColor)
+      return backgroundCSS(this.colorStyle.backgroundColor)
     },
     editTile () {
       return (this.$route.params)
         ? this.tiles.find(tile => this.$route.params.tile_id === tile._id) : null
+    },
+    editDashboard () {
+      return this.$route.path.includes('edit')
     }
   },
   watch: {

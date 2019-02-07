@@ -13,7 +13,7 @@
           <input class="field number-field" type="number" placeholder="Rows" v-model="rows">
           <input class="field number-field" type="number" placeholder="Columns" v-model="columns">
         </div>
-        <button class="app_dashboard_btn" @click="createDashboard">Create</button>
+        <button class="button" @click="createDashboard">Create</button>
       </div>
     </div>
   </div>
@@ -47,8 +47,12 @@ export default {
         creator: this.creator,
         stars: this.stars,
         copies: this.copies,
-        rows: this.rows,
-        columns: this.columns
+        style: {
+          layout: {
+            rows: this.rows,
+            columns: this.columns
+          }
+        }
       })
       this.$router.push({ query: { tab: 'best' }, name: 'DashboardListPage' })
     }
@@ -60,6 +64,33 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
+  .button {
+    margin-top: 15px;
+    align-self: center;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 10px 20px 10px 20px;
+    font-size: 20px;
+    border: none;
+    text-decoration: none;
+    border-radius: 3px;
+    background-color: color('green');
+    color: color('text');
+  }
+  .button:hover {
+    transform: translateY(-1px);
+    box-shadow: 3px 3px 11px rgba(0, 0, 0, 1);
+    background-color: shade(color('green'), 20%);
+  }
+  .button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  }
   .filters{
     display: flex;
     justify-content: space-between;

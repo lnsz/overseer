@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import DashboardListPage from '@/views/DashboardListPage'
 import NewDashboardPage from '@/views/NewDashboardPage'
 import ViewDashboardPage from '@/views/ViewDashboardPage'
-import EditDashboard from '@/views/EditDashboard'
 import HomePage from '@/views/HomePage'
 
 Vue.use(Router)
@@ -23,23 +22,19 @@ export default new Router({
     },
     {
       path: '/dashboards/:dashboard_id/view',
+      alias: '/dashboards/:dashboard_id/edit',
       name: 'ViewDashboardPage',
       component: ViewDashboardPage
     },
     {
       path: '/dashboards/:dashboard_id/tiles/:tile_id/edit',
-      name: 'ViewDashboardPage',
+      name: 'EditTilePage',
       component: ViewDashboardPage
     },
     {
       path: '/dashboards/new',
       name: 'NewDashboardPage',
       component: NewDashboardPage
-    },
-    {
-      path: '/dashboards/:dashboard_id/edit',
-      name: 'EditDashboard',
-      component: EditDashboard
     }
   ]
 })

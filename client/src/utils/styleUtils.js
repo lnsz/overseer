@@ -26,17 +26,3 @@ export const iframeCSS = (zoomLevel) => {
     '-webkit-transform-origin': '0 0'
   }
 }
-
-export const rowsCSS = (rows) => {
-  return {
-    'grid-template-rows':
-      `repeat(${rows}, ${100 / rows}%)`
-  }
-}
-
-export const columnsCSS = (columns) => {
-  return {
-    'grid-template-columns':
-      `repeat(${columns}, ${100 / columns}%)`
-  }
-}

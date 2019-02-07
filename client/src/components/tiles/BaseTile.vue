@@ -20,6 +20,11 @@
       :tile="tile"
       :columns="columns"
     />
+    <ImageTile
+      v-else-if="tile.type === 'image'"
+      :tile="tile"
+      :columns="columns"
+    />
     <ChartTile
       v-else-if="tile.type === 'piechart'"
       :tile="tile"
@@ -33,6 +38,7 @@ import TilesService from '@/services/TilesService'
 import ChartTile from '@/components/tiles/ChartTile'
 import TileOptions from '@/components/tiles/TileOptions'
 import IFrameTile from '@/components/tiles/IFrameTile'
+import ImageTile from '@/components/tiles/ImageTile'
 import StatusTile from '@/components/tiles/StatusTile'
 import { backgroundCSS, textCSS } from '@/utils/styleUtils'
 
@@ -60,6 +66,7 @@ export default {
   components: {
     ChartTile,
     IFrameTile,
+    ImageTile,
     StatusTile,
     TileOptions
   },
