@@ -106,6 +106,7 @@ export default {
       isDashboardEditView: false,
       movementTimer: 3000,
       movementTimeout: null,
+      refreshTimeout: null,
       isCursorVisible: true,
       windowHeight: 0,
       layout: [],
@@ -128,10 +129,14 @@ export default {
       this.windowHeight = window.innerHeight
     })
     this.fabTimeout = setTimeout(
-      () => (this.isCursorVisible = false),
+      () => {
+        this.isCursorVisible = false
+        this.refresh()
+      },
       this.movementTimer
     )
     this.getDashboard()
+      .then(() => (document.title = this.dashboard.name))
       .then(() => this.fetchTiles())
       .then(() => this.checkEditStatus())
   },
@@ -201,11 +206,21 @@ export default {
     async updateDashboard (newDashboard) {
       await DashboardsService.updateDashboard(newDashboard).then(() => this.getDashboard())
     },
+    refresh () {
+      this.refreshTimeout = setTimeout(() => {
+        this.fetchTiles()
+        this.refresh()
+      }, this.dashboard.refreshTimer)
+    },
     updateTimer () {
       this.isCursorVisible = true
       clearTimeout(this.movementTimeout)
+      clearTimeout(this.refreshTimeout)
       this.movementTimeout = setTimeout(
-        () => (this.isCursorVisible = false),
+        () => {
+          this.isCursorVisible = false
+          this.refresh()
+        },
         this.movementTimer
       )
     },

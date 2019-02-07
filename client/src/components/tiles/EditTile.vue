@@ -13,6 +13,7 @@
             <option>iframe</option>
             <option>image</option>
             <option>piechart</option>
+            <option>text</option>
           </select>
         </div>
       </div>
@@ -44,15 +45,19 @@
           </div>
         </div>
         <div v-else-if="currentTab === 'colors'">
-          <div
-            v-for="(styleValue, styleKey) in style"
-            :key="styleKey"
-            class="input-wrapper"
-          >
-            {{styleKey}}
+          <div class="input-wrapper">
+            Background Color
             <input
-              v-model="style[styleKey]"
-              :placeholder="style[styleKey]"
+              v-model="backgroundColor"
+              placeholder="Background Color"
+              class="input-box"
+            />
+          </div>
+          <div class="input-wrapper">
+            Text Color
+            <input
+              v-model="textColor"
+              placeholder="Text Color"
               class="input-box"
             />
           </div>
@@ -146,6 +151,8 @@ export default {
       type: '',
       state: '',
       style: '',
+      backgroundColor: '',
+      textColor: '',
       chartData: {}
     }
   },
@@ -155,10 +162,13 @@ export default {
     this.description = this.tile.description
     this.type = this.tile.type
     this.state = this.tile.state ? this.tile.state.status : ''
-    this.style = { ...this.tile.style }
+    if (this.tile.style) {
+      this.backgroundColor = this.tile.style.backgroundColor
+      this.textColor = this.tile.style.textColor
+    }
     this.chartData = this.tile.chart ? this.tile.chart.data.map(x => {
       return { ...x }
-    }) : {}
+    }) : []
   },
   methods: {
     saveTile () {
@@ -170,7 +180,10 @@ export default {
         description: this.description,
         type: this.type,
         status: { state: this.state },
-        style: this.style,
+        style: {
+          backgroundColor: this.backgroundColor,
+          textColor: this.textColor
+        },
         chart: { data: this.chartData }
       }
       this.$emit('update-tile', newTile)
@@ -193,6 +206,8 @@ export default {
           return ['General', 'Status', 'Colors', 'Other']
         case 'piechart':
           return ['General', 'Chart', 'Colors', 'Other']
+        case 'text':
+          return ['General', 'Colors', 'Other']
         default:
           return ['General', 'Other']
       }

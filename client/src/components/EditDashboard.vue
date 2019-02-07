@@ -30,6 +30,15 @@
               class="input-box"
             />
           </div>
+          <div class="input-wrapper">
+            Refresh Time
+            <input
+              v-model="refreshTimer"
+              type="number"
+              placeholder="Refresh Time"
+              class="input-box"
+            />
+          </div>
         </div>
         <div v-else-if="currentTab === 'colors'">
           <div class="input-wrapper">
@@ -177,6 +186,7 @@ export default {
       tileColor: '',
       primaryColor: '',
       secondaryColor: '',
+      refreshTimer: 30000,
       rows: 3,
       columns: 3,
       marginX: 0,
@@ -189,6 +199,7 @@ export default {
     this.name = this.dashboard.name
     this.url = this.dashboard.url
     this.description = this.dashboard.description
+    this.refreshTimer = this.dashboard.refreshTimer
     if (this.dashboard.style) {
       if (this.dashboard.style.color) {
         this.backgroundColor = this.dashboard.style.color.backgroundColor
@@ -216,6 +227,7 @@ export default {
         creator: this.creator,
         stars: this.stars,
         copies: this.copies,
+        refreshTimer: this.refreshTimer,
         style: {
           color: {
             backgroundColor: this.backgroundColor,
