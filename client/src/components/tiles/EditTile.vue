@@ -155,9 +155,9 @@ export default {
     this.type = this.tile.type
     this.state = this.tile.state ? this.tile.state.status : ''
     this.style = { ...this.tile.style }
-    this.chartData = this.tile.chart.data.map(x => {
+    this.chartData = this.tile.chart ? this.tile.chart.data.map(x => {
       return { ...x }
-    })
+    }) : {}
   },
   methods: {
     saveTile () {
@@ -173,6 +173,7 @@ export default {
         chart: { data: this.chartData }
       }
       this.$emit('update', newTile)
+      this.$emit('close')
     },
     addData () {
       this.chartData.push({'label': '', 'backgroundColor': '', 'value': ''})
@@ -233,6 +234,7 @@ export default {
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
   }
   .edit-tile {
+    color: color('text');
     cursor: auto;
     width: 100%;
     height: 100%;
