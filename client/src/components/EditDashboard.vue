@@ -5,7 +5,7 @@
         <TabBar :tabs="tabs" />
       </div>
       <div class="tile-options">
-        <div v-if="currentTab === 'general'">
+        <div v-if="tab === 'general'">
           <div class="input-wrapper">
             Name
             <input
@@ -40,10 +40,11 @@
             />
           </div>
         </div>
-        <div v-else-if="currentTab === 'colors'">
+        <div v-else-if="tab === 'colors'">
           <div class="input-wrapper">
             Background Color
             <input
+              type="color"
               v-model="backgroundColor"
               placeholder="Background Color"
               class="input-box"
@@ -82,7 +83,7 @@
             />
           </div>
         </div>
-        <div v-else-if="currentTab === 'layout'">
+        <div v-else-if="tab === 'layout'">
           <div class="input-wrapper">
             Rows
             <input
@@ -138,7 +139,7 @@
             />
           </div>
         </div>
-        <div v-else-if="currentTab === 'admin'">
+        <div v-else-if="tab === 'admin'">
           <div class="button-wrapper">
             <div
               class="button delete"
@@ -177,7 +178,7 @@ export default {
   },
   data () {
     return {
-      tabs: ['General', 'Colors', 'Layout', 'Admin'],
+      tabs: ['general', 'colors', 'layout', 'admin'],
       name: '',
       url: '',
       description: '',
@@ -255,7 +256,7 @@ export default {
     }
   },
   computed: {
-    currentTab () {
+    tab () {
       return this.$route.query.tab
     }
   }

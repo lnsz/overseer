@@ -43,6 +43,7 @@ export default {
     margin: 2px -1px -1px 0;
     padding: 12px 22px 13px 22px;
     border: 1px solid color('green');
+    text-transform: capitalize;
   }
   .tab:hover {
     background: color('foreground');

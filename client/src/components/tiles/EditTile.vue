@@ -203,13 +203,13 @@ export default {
     tabs () {
       switch (this.type) {
         case 'status':
-          return ['General', 'Status', 'Colors', 'Other']
+          return ['general', 'status', 'colors', 'other']
         case 'piechart':
-          return ['General', 'Chart', 'Colors', 'Other']
+          return ['general', 'chart', 'colors', 'other']
         case 'text':
-          return ['General', 'Colors', 'Other']
+          return ['general', 'colors', 'other']
         default:
-          return ['General', 'Other']
+          return ['general', 'other']
       }
     },
     currentTab () {
