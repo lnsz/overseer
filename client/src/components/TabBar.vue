@@ -20,10 +20,10 @@ export default {
   },
   mounted () {
     if (this.tabs.length > 0 &&
-        (!this.$router.query ||
-        !(this.$router.query.tab in this.tabs))) {
+        (!this.$route.query ||
+        !(this.tabs.includes(this.$route.query.tab)))) {
       router.replace({
-        query: { ...this.$router.query, tab: this.tabs[0].toLowerCase() }
+        query: { ...this.$route.query, tab: this.tabs[0].toLowerCase() }
       })
     }
   },
