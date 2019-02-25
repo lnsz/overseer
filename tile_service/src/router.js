@@ -14,7 +14,7 @@ const fetchTiles = (req, res) => {
     tiles.forEach(tile =>  {
       // TODO: Replace this
       if (tile.type === 'status' && 
-        ((Date.now() - tile.updated.getTime()) / 60000 > 1)
+        (((Date.now() - tile.updated.getTime()) / 60000 > 1) || !tile.status.state)
       ) {
         axios.get(tile.url)
           .then(() => tile.status.state = "online")
