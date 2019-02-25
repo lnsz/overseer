@@ -153,7 +153,7 @@ export default {
       style: '',
       backgroundColor: '',
       textColor: '',
-      chartData: {}
+      chartData: []
     }
   },
   mounted () {
@@ -161,7 +161,7 @@ export default {
     this.url = this.tile.url
     this.description = this.tile.description
     this.type = this.tile.type
-    this.state = this.tile.state ? this.tile.state.status : ''
+    this.state = this.tile.status ? this.tile.status.state : ''
     if (this.tile.style) {
       this.backgroundColor = this.tile.style.backgroundColor
       this.textColor = this.tile.style.textColor

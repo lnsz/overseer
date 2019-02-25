@@ -20,6 +20,5 @@ db.once('open', (callback) => {
   console.log('Connection Succeeded')
 })
 
-app.use('/api', require('./dashboards/router'))
-app.use('/api', require('./tiles/router'))
-app.listen(process.env.PORT || 8081)
+app.use('/api', require('./router'))
+app.listen(process.env.PORT || 8000)

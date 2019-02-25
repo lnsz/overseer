@@ -44,7 +44,6 @@
           <div class="input-wrapper">
             Background Color
             <input
-              type="color"
               v-model="backgroundColor"
               placeholder="Background Color"
               class="input-box"

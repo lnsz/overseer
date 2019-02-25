@@ -1,43 +1,87 @@
 #!/bin/sh
 
-[ "$ENV_FILE" ]              || ENV_FILE='./.env'
+#####################
+# ENV
+#####################
+[ "$ENV_FILE" ]                        || ENV_FILE='./.env'
+[ ! -f "$ENV_FILE" ]                   || . "$ENV_FILE"
 
-[ ! -f "$ENV_FILE" ]         || . "$ENV_FILE"
+#####################
+# NETWORKING
+#####################
+[ "$LOCAL_IP" ]                        || LOCAL_IP="$(/sbin/ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)"
 
-# Networking
-[ "$LOCAL_IP" ]              || LOCAL_IP="$(/sbin/ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -1)"
+#####################
+# FILE PATHS
+#####################
+[ "$DOCKER_COMPOSE" ]                  || DOCKER_COMPOSE='docker-compose.yml'
+[ "$GIT_ROOT" ]                        || GIT_ROOT="$(pwd)"
 
-# File paths
-[ "$DOCKER_COMPOSE" ]        || DOCKER_COMPOSE='docker-compose.yml'
-[ "$GIT_ROOT" ]              || GIT_ROOT="$(pwd)"
+#####################
+# CLIENT
+#####################
+[ "$CLIENT_NAME" ]                     || CLIENT_NAME='overseer_client'
+[ "$CLIENT_IMAGE" ]                    || CLIENT_IMAGE='overseer/client'
+[ "$CLIENT_TAG" ]                      || CLIENT_TAG='latest'
+[ "$CLIENT_PATH" ]                     || CLIENT_PATH="$GIT_ROOT/client"
+[ "$CLIENT_NODE_MODULES" ]             || CLIENT_NODE_MODULES='overseer_client_node_modules'
+[ "$CLIENT_IP" ]                       || CLIENT_IP="$LOCAL_IP"
+[ "$CLIENT_HP" ]                       || CLIENT_HP='4000'
+[ "$CLIENT_CP" ]                       || CLIENT_CP='4000'
 
-# Client variables
-[ "$CLIENT_NAME" ]           || CLIENT_NAME='overseer_client'
-[ "$CLIENT_IMAGE" ]          || CLIENT_IMAGE='overseer/client'
-[ "$CLIENT_TAG" ]            || CLIENT_TAG='latest'
-[ "$CLIENT_PATH" ]           || CLIENT_PATH="$GIT_ROOT/client"
-[ "$CLIENT_NODE_MODULES" ]   || CLIENT_NODE_MODULES='overseer_client_node_modules'
-[ "$CLIENT_IP" ]             || CLIENT_IP="$LOCAL_IP"
-[ "$CLIENT_HP" ]             || CLIENT_HP='4000'
-[ "$CLIENT_CP" ]             || CLIENT_CP='4000'
+######################
+# GATEWAY
+###################### 
+[ "$GATEWAY_NAME" ]                    || GATEWAY_NAME='overseer_gateway'
+[ "$GATEWAY_IMAGE" ]                   || GATEWAY_IMAGE='overseer/gateway'
+[ "$GATEWAY_TAG" ]                     || GATEWAY_TAG='latest'
+[ "$GATEWAY_PATH" ]                    || GATEWAY_PATH="$GIT_ROOT/gateway"
+[ "$GATEWAY_NODE_MODULES" ]            || GATEWAY_NODE_MODULES='overseer_gateway_node_modules'
+[ "$GATEWAY_IP" ]                      || GATEWAY_IP="$LOCAL_IP"
+[ "$GATEWAY_HP" ]                      || GATEWAY_HP='41000'
+[ "$GATEWAY_CP" ]                      || GATEWAY_CP='8000'
 
-# Server variables
-[ "$SERVER_NAME" ]           || SERVER_NAME='overseer_server'
-[ "$SERVER_IMAGE" ]          || SERVER_IMAGE='overseer/server'
-[ "$SERVER_TAG" ]            || SERVER_TAG='latest'
-[ "$SERVER_PATH" ]           || SERVER_PATH="$GIT_ROOT/server"
-[ "$SERVER_NODE_MODULES" ]   || SERVER_NODE_MODULES='overseer_server_node_modules'
-[ "$SERVER_IP" ]             || SERVER_IP="$LOCAL_IP"
-[ "$SERVER_HP" ]             || SERVER_HP='4001'
-[ "$SERVER_CP" ]             || SERVER_CP='8000'
+######################
+# DASHBOARD_SERVICE
+######################
+# Server
+[ "$DASHBOARD_SERVICE_NAME" ]          || DASHBOARD_SERVICE_NAME='overseer_dashboard_service'
+[ "$DASHBOARD_SERVICE_IMAGE" ]         || DASHBOARD_SERVICE_IMAGE='overseer/dashboard_service'
+[ "$DASHBOARD_SERVICE_TAG" ]           || DASHBOARD_SERVICE_TAG='latest'
+[ "$DASHBOARD_SERVICE_PATH" ]          || DASHBOARD_SERVICE_PATH="$GIT_ROOT/dashboard_service"
+[ "$DASHBOARD_SERVICE_NODE_MODULES" ]  || DASHBOARD_SERVICE_NODE_MODULES='overseer_dashboard_service_node_modules'
+[ "$DASHBOARD_SERVICE_IP" ]            || DASHBOARD_SERVICE_IP="$LOCAL_IP"
+[ "$DASHBOARD_SERVICE_HP" ]            || DASHBOARD_SERVICE_HP='41010'
+[ "$DASHBOARD_SERVICE_CP" ]            || DASHBOARD_SERVICE_CP='8000'
 
-# Database variables
-[ "$DATABASE_NAME" ]         || DATABASE_NAME='overseer_db'
-[ "$DATABASE_IMAGE" ]        || DATABASE_IMAGE='mongo'
-[ "$DATABASE_TAG" ]          || DATABASE_TAG='4.0.5'
-[ "$DATABASE_VOLUME_NAME" ]  || DATABASE_VOLUME_NAME='overseer_db_volume'
-[ "$DATABASE_HP" ]           || DATABASE_HP='27017'
-[ "$DATABASE_CP" ]           || DATABASE_CP='27017'
+# Database
+[ "$DASHBOARD_DB_NAME" ]               || DASHBOARD_DB_NAME='overseer_dashboard_db'
+[ "$DASHBOARD_DB_IMAGE" ]              || DASHBOARD_DB_IMAGE='mongo'
+[ "$DASHBOARD_DB_TAG" ]                || DASHBOARD_DB_TAG='4.0.5'
+[ "$DASHBOARD_DB_VOLUME_NAME" ]        || DASHBOARD_DB_VOLUME_NAME='overseer_dashboard_db_volume'
+[ "$DASHBOARD_DB_HP" ]                 || DASHBOARD_DB_HP='41011'
+[ "$DASHBOARD_DB_CP" ]                 || DASHBOARD_DB_CP='41011'
+
+#####################
+# TILE_SERVICE
+#####################
+# Server
+[ "$TILE_SERVICE_NAME" ]               || TILE_SERVICE_NAME='overseer_tile_service'
+[ "$TILE_SERVICE_IMAGE" ]              || TILE_SERVICE_IMAGE='overseer/tile_service'
+[ "$TILE_SERVICE_TAG" ]                || TILE_SERVICE_TAG='latest'
+[ "$TILE_SERVICE_PATH" ]               || TILE_SERVICE_PATH="$GIT_ROOT/tile_service"
+[ "$TILE_SERVICE_NODE_MODULES" ]       || TILE_SERVICE_NODE_MODULES='overseer_tile_service_node_modules'
+[ "$TILE_SERVICE_IP" ]                 || TILE_SERVICE_IP="$LOCAL_IP"
+[ "$TILE_SERVICE_HP" ]                 || TILE_SERVICE_HP='41020'
+[ "$TILE_SERVICE_CP" ]                 || TILE_SERVICE_CP='8000'
+
+# Database
+[ "$TILE_DB_NAME" ]                    || TILE_DB_NAME='overseer_tile_db'
+[ "$TILE_DB_IMAGE" ]                   || TILE_DB_IMAGE='mongo'
+[ "$TILE_DB_TAG" ]                     || TILE_DB_TAG='4.0.5'
+[ "$TILE_DB_VOLUME_NAME" ]             || TILE_DB_VOLUME_NAME='overseer_tile_db_volume'
+[ "$TILE_DB_HP" ]                      || TILE_DB_HP='41021'
+[ "$TILE_DB_CP" ]                      || TILE_DB_CP='41021'
 
 ARGS="$@"
 
@@ -47,17 +91,23 @@ stop_container() {
   echo "Container '$1' stopped"
 }
 
-clear_containers() {
+stop_overseer() {
   stop_container "$CLIENT_NAME"
-  stop_container "$SERVER_NAME"
-  stop_container "$DATABASE_NAME"
+  stop_container "$GATEWAY_NAME"
+  stop_container "$DASHBOARD_SERVICE_NAME"
+  stop_container "$DASHBOARD_DB_NAME"
+  stop_container "$TILE_SERVICE_NAME"
+  stop_container "$TILE_DB_NAME"
 }
 
 setup() {
-  clear_containers
-  docker volume create "$DATABASE_VOLUME_NAME"
+  stop_overseer
   docker volume create "$CLIENT_NODE_MODULES"
-  docker volume create "$SERVER_NODE_MODULES"
+  docker volume create "$GATEWAY_NODE_MODULES"
+  docker volume create "$DASHBOARD_SERVICE_NODE_MODULES"
+  docker volume create "$TILE_SERVICE_NODE_MODULES"
+  docker volume create "$DASHBOARD_DB_VOLUME_NAME"
+  docker volume create "$TILE_DB_VOLUME_NAME"
 }
 
 create_compose_file() {
@@ -73,46 +123,102 @@ services:
       - '${CLIENT_HP}:${CLIENT_CP}'
     environment:
       - PORT=${CLIENT_CP}
-      - API_URL=http://${SERVER_IP}:${SERVER_HP}/
+      - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
     volumes:
       - ${CLIENT_PATH}:/data
-      - ${SERVER_NODE_MODULES}:/data/node_modules
+      - ${CLIENT_NODE_MODULES}:/data/node_modules
 
-  ${SERVER_NAME}:
-    container_name: ${SERVER_NAME}
-    image: ${SERVER_IMAGE}:${SERVER_TAG}
-    build: ${SERVER_PATH}/docker
+  ${GATEWAY_NAME}:
+    container_name: ${GATEWAY_NAME}
+    image: ${GATEWAY_IMAGE}:${GATEWAY_TAG}
+    build: ${GATEWAY_PATH}/docker
     ports:
-      - '${SERVER_HP}:${SERVER_CP}'
-      - '9229:9229'
+      - '${GATEWAY_HP}:${GATEWAY_CP}'
     environment:
-      - PORT=${SERVER_CP}
-      - DATABASE_URL=${DATABASE_NAME}:${DATABASE_HP}
-    depends_on: 
-      - ${DATABASE_NAME}
+      - PORT=${GATEWAY_CP}
+      - DASHBOARD_SERVICE_IP=${LOCAL_IP}
+      - DASHBOARD_SERVICE_HP=${DASHBOARD_SERVICE_HP}
+      - TILE_SERVICE_IP=${LOCAL_IP}
+      - TILE_SERVICE_HP=${TILE_SERVICE_HP}
     volumes:
-      - ${SERVER_PATH}:/data
-      - ${SERVER_NODE_MODULES}:/data/node_modules
+      - ${GATEWAY_PATH}:/data
+      - ${GATEWAY_NODE_MODULES}:/data/node_modules
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
       - "./src/app.js" 
     
-  ${DATABASE_NAME}:
-    container_name: ${DATABASE_NAME}
-    image: ${DATABASE_IMAGE}:${DATABASE_TAG}
+  ${DASHBOARD_SERVICE_NAME}:
+    container_name: ${DASHBOARD_SERVICE_NAME}
+    image: ${DASHBOARD_SERVICE_IMAGE}:${DASHBOARD_SERVICE_TAG}
+    build: ${DASHBOARD_SERVICE_PATH}/docker
     ports:
-      - '${DATABASE_HP}:${DATABASE_CP}'
+      - '${DASHBOARD_SERVICE_HP}:${DASHBOARD_SERVICE_CP}'
+    environment:
+      - PORT=${DASHBOARD_SERVICE_CP}
+      - DATABASE_URL=${DASHBOARD_DB_NAME}:${DASHBOARD_DB_HP}
+    depends_on: 
+      - ${DASHBOARD_DB_NAME}
     volumes:
-      - ${DATABASE_VOLUME_NAME}:/data/db
+      - ${DASHBOARD_SERVICE_PATH}:/data
+      - ${DASHBOARD_SERVICE_NODE_MODULES}:/data/node_modules
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--legacy-watch"
+      - "--inspect=0.0.0.0"
+      - "./src/app.js" 
+
+  ${DASHBOARD_DB_NAME}:
+    container_name: ${DASHBOARD_DB_NAME}
+    image: ${DASHBOARD_DB_IMAGE}:${DASHBOARD_DB_TAG}
+    command: mongod --port ${DASHBOARD_DB_CP}
+    ports:
+      - '${DASHBOARD_DB_HP}:${DASHBOARD_DB_CP}'
+    volumes:
+      - ${DASHBOARD_DB_VOLUME_NAME}:/data/db
+    
+  ${TILE_SERVICE_NAME}:
+    container_name: ${TILE_SERVICE_NAME}
+    image: ${TILE_SERVICE_IMAGE}:${TILE_SERVICE_TAG}
+    build: ${TILE_SERVICE_PATH}/docker
+    ports:
+      - '${TILE_SERVICE_HP}:${TILE_SERVICE_CP}'
+    environment:
+      - PORT=${TILE_SERVICE_CP}
+      - DATABASE_URL=${TILE_DB_NAME}:${TILE_DB_HP}
+    depends_on: 
+      - ${TILE_DB_NAME}
+    volumes:
+      - ${TILE_SERVICE_PATH}:/data
+      - ${TILE_SERVICE_NODE_MODULES}:/data/node_modules
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--legacy-watch"
+      - "--inspect=0.0.0.0"
+      - "./src/app.js" 
+
+  ${TILE_DB_NAME}:
+    container_name: ${TILE_DB_NAME}
+    image: ${TILE_DB_IMAGE}:${TILE_DB_TAG}
+    command: mongod --port ${TILE_DB_CP}
+    ports:
+      - '${TILE_DB_HP}:${TILE_DB_CP}'
+    volumes:
+      - ${TILE_DB_VOLUME_NAME}:/data/db
 
 volumes:
-  ${DATABASE_VOLUME_NAME}:
+  ${DASHBOARD_DB_VOLUME_NAME}:
+    external: true
+  ${TILE_DB_VOLUME_NAME}:
     external: true
   ${CLIENT_NODE_MODULES}:
     external: true
-  ${SERVER_NODE_MODULES}:
+  ${GATEWAY_NODE_MODULES}:
+    external: true
+  ${DASHBOARD_SERVICE_NODE_MODULES}:
+    external: true
+  ${TILE_SERVICE_NODE_MODULES}:
     external: true
 EOT
 }
@@ -133,23 +239,22 @@ dev_overseer() {
   docker-compose logs -f
 }
 
-stop_overseer() {
-  clear_containers
-}
-
 reset_overseer() {
-  clear_containers
+  stop_overseer
   clear_node_modules
   delete_database
 }
 
 clear_node_modules() {
-  docker volume rm "$CLIENT_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $CLIENT_NODE_MODULES" 
-  docker volume rm "$SERVER_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $SERVER_NODE_MODULES"
+  docker volume rm "$CLIENT_NODE_MODULES"            > /dev/null 2>&1 && echo "Removed $CLIENT_NODE_MODULES" 
+  docker volume rm "$GATEWAY_NODE_MODULES"           > /dev/null 2>&1 && echo "Removed $GATEWAY_NODE_MODULES"
+  docker volume rm "$DASHBOARD_SERVICE_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $DASHBOARD_SERVICE_NODE_MODULES"
+  docker volume rm "$TILE_SERVICE_NODE_MODULES"      > /dev/null 2>&1 && echo "Removed $TILE_SERVICE_NODE_MODULES"
 }
 
 delete_database() {
-  docker volume rm "$DATABASE_VOLUME_NAME" > /dev/null 2>&1 && echo "Removed $DATABASE_VOLUME_NAME"
+  docker volume rm "$DASHBOARD_DB_VOLUME_NAME" > /dev/null 2>&1 && echo "Removed $DASHBOARD_DB_VOLUME_NAME"
+  docker volume rm "$TILE_DB_VOLUME_NAME"      > /dev/null 2>&1 && echo "Removed $TILE_DB_VOLUME_NAME"
 }
 
 create_compose_file
@@ -163,4 +268,10 @@ elif [ "${ARGS#*dev}" != "$ARGS" ]; then
   dev_overseer
 elif [ "${ARGS#*reset}" != "$ARGS" ]; then
   reset_overseer
+elif [ "${ARGS#*reset}" != "$ARGS" ]; then
+  stop_overseer
+  delete_database
+elif [ "${ARGS#*npm}" != "$ARGS" ]; then
+  stop_overseer
+  clear_node_modules
 fi
