@@ -13,7 +13,8 @@ import {
   faMinus,
   faEdit,
   faTimes,
-  faBars
+  faBars,
+  faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
@@ -23,7 +24,8 @@ library.add(
   faMinus,
   faEdit,
   faTimes,
-  faBars
+  faBars,
+  faArrowLeft
 )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -56,6 +56,20 @@
         @close="closeTileEditView"
       />
     </Modal>
+    <div
+      v-if="isCursorVisible && !isDashboardEditView && !isTileEditView"
+    >
+      <router-link
+        :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
+        tag="button"
+        class="back-button"
+      >
+        <font-awesome-icon
+          class="icon"
+          icon="arrow-left"
+        />
+      </router-link>
+    </div>
     <Fab
       :isCursorVisible="isCursorVisible && !isDashboardEditView && !isTileEditView"
       @create-tile="createTile"
@@ -334,6 +348,17 @@ export default {
       &:hover > .drag {
         opacity: 0.3;
       }
+    }
+    .back-button {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
   }
 </style>
