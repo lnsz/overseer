@@ -83,6 +83,27 @@
 [ "$TILE_DB_HP" ]                      || TILE_DB_HP='41021'
 [ "$TILE_DB_CP" ]                      || TILE_DB_CP='41021'
 
+######################
+# DASHBOARD_SERVICE
+######################
+# Server
+[ "$USER_SERVICE_NAME" ]               || USER_SERVICE_NAME='overseer_user_service'
+[ "$USER_SERVICE_IMAGE" ]              || USER_SERVICE_IMAGE='overseer/user_service'
+[ "$USER_SERVICE_TAG" ]                || USER_SERVICE_TAG='latest'
+[ "$USER_SERVICE_PATH" ]               || USER_SERVICE_PATH="$GIT_ROOT/user_service"
+[ "$USER_SERVICE_NODE_MODULES" ]       || USER_SERVICE_NODE_MODULES='overseer_user_service_node_modules'
+[ "$USER_SERVICE_IP" ]                 || USER_SERVICE_IP="$LOCAL_IP"
+[ "$USER_SERVICE_HP" ]                 || USER_SERVICE_HP='41030'
+[ "$USER_SERVICE_CP" ]                 || USER_SERVICE_CP='8000'
+
+# Database
+[ "$USER_DB_NAME" ]                    || USER_DB_NAME='overseer_user_db'
+[ "$USER_DB_IMAGE" ]                   || USER_DB_IMAGE='mongo'
+[ "$USER_DB_TAG" ]                     || USER_DB_TAG='4.0.5'
+[ "$USER_DB_VOLUME_NAME" ]             || USER_DB_VOLUME_NAME='overseer_user_db_volume'
+[ "$USER_DB_HP" ]                      || USER_DB_HP='41031'
+[ "$USER_DB_CP" ]                      || USER_DB_CP='41031'
+
 ARGS="$@"
 
 stop_container() {
@@ -98,6 +119,8 @@ stop_overseer() {
   stop_container "$DASHBOARD_DB_NAME"
   stop_container "$TILE_SERVICE_NAME"
   stop_container "$TILE_DB_NAME"
+  stop_container "$USER_SERVICE_NAME"
+  stop_container "$USER_DB_NAME"
 }
 
 setup() {
@@ -106,8 +129,10 @@ setup() {
   docker volume create "$GATEWAY_NODE_MODULES"
   docker volume create "$DASHBOARD_SERVICE_NODE_MODULES"
   docker volume create "$TILE_SERVICE_NODE_MODULES"
+  docker volume create "$USER_SERVICE_NODE_MODULES"
   docker volume create "$DASHBOARD_DB_VOLUME_NAME"
   docker volume create "$TILE_DB_VOLUME_NAME"
+  docker volume create "$USER_DB_VOLUME_NAME"
 }
 
 create_compose_file() {
@@ -140,6 +165,8 @@ services:
       - DASHBOARD_SERVICE_HP=${DASHBOARD_SERVICE_HP}
       - TILE_SERVICE_IP=${LOCAL_IP}
       - TILE_SERVICE_HP=${TILE_SERVICE_HP}
+      - USER_SERVICE_IP=${LOCAL_IP}
+      - USER_SERVICE_HP=${USER_SERVICE_HP}
     volumes:
       - ${GATEWAY_PATH}:/data
       - ${GATEWAY_NODE_MODULES}:/data/node_modules
@@ -207,10 +234,41 @@ services:
     volumes:
       - ${TILE_DB_VOLUME_NAME}:/data/db
 
+  ${USER_SERVICE_NAME}:
+    container_name: ${USER_SERVICE_NAME}
+    image: ${USER_SERVICE_IMAGE}:${USER_SERVICE_TAG}
+    build: ${USER_SERVICE_PATH}/docker
+    ports:
+      - '${USER_SERVICE_HP}:${USER_SERVICE_CP}'
+    environment:
+      - PORT=${USER_SERVICE_CP}
+      - DATABASE_URL=${USER_DB_NAME}:${USER_DB_HP}
+    depends_on: 
+      - ${USER_DB_NAME}
+    volumes:
+      - ${USER_SERVICE_PATH}:/data
+      - ${USER_SERVICE_NODE_MODULES}:/data/node_modules
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--legacy-watch"
+      - "--inspect=0.0.0.0"
+      - "./src/app.js" 
+
+  ${USER_DB_NAME}:
+    container_name: ${USER_DB_NAME}
+    image: ${TILE_DB_IMAGE}:${USER_DB_TAG}
+    command: mongod --port ${USER_DB_CP}
+    ports:
+      - '${USER_DB_HP}:${USER_DB_CP}'
+    volumes:
+      - ${USER_DB_VOLUME_NAME}:/data/db
+
 volumes:
   ${DASHBOARD_DB_VOLUME_NAME}:
     external: true
   ${TILE_DB_VOLUME_NAME}:
+    external: true
+  ${USER_DB_VOLUME_NAME}:
     external: true
   ${CLIENT_NODE_MODULES}:
     external: true
@@ -219,6 +277,8 @@ volumes:
   ${DASHBOARD_SERVICE_NODE_MODULES}:
     external: true
   ${TILE_SERVICE_NODE_MODULES}:
+    external: true
+  ${USER_SERVICE_NODE_MODULES}:
     external: true
 EOT
 }
@@ -250,11 +310,13 @@ clear_node_modules() {
   docker volume rm "$GATEWAY_NODE_MODULES"           > /dev/null 2>&1 && echo "Removed $GATEWAY_NODE_MODULES"
   docker volume rm "$DASHBOARD_SERVICE_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $DASHBOARD_SERVICE_NODE_MODULES"
   docker volume rm "$TILE_SERVICE_NODE_MODULES"      > /dev/null 2>&1 && echo "Removed $TILE_SERVICE_NODE_MODULES"
+  docker volume rm "$USER_SERVICE_NODE_MODULES"      > /dev/null 2>&1 && echo "Removed $USER_SERVICE_NODE_MODULES"
 }
 
 delete_database() {
   docker volume rm "$DASHBOARD_DB_VOLUME_NAME" > /dev/null 2>&1 && echo "Removed $DASHBOARD_DB_VOLUME_NAME"
   docker volume rm "$TILE_DB_VOLUME_NAME"      > /dev/null 2>&1 && echo "Removed $TILE_DB_VOLUME_NAME"
+  docker volume rm "$USER_DB_VOLUME_NAME"      > /dev/null 2>&1 && echo "Removed $USER_DB_VOLUME_NAME"
 }
 
 create_compose_file
