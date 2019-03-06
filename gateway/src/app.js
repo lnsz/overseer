@@ -10,4 +10,5 @@ app.use(cors())
 
 app.use('/api', require('./dashboards/router'))
 app.use('/api', require('./tiles/router'))
+app.use('/api', require('./users/router'))
 app.listen(process.env.PORT || 8000)
