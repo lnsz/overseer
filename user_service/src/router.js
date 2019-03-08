@@ -1,5 +1,6 @@
 const User = require('./schema')
 const router  = require('express').Router()
+const passport = require('passport')
 
 // Fetch all user
 const fetchUser = (req, res) => {
