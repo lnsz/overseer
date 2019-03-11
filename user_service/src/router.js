@@ -3,29 +3,74 @@ const router  = require('express').Router()
 const passport = require('passport')
 
 // Fetch all user
-const fetchUser = (req, res) => {
-  res.send({ success: true })
+const getUser = (req, res) => {
+  User.findOne({
+    username: req.params.username
+  }, (error, user) => {
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
+    res.send(user)
+  })
 }
 
 // Create a user
 const createUser = (req, res) => {
-  res.send({ success: true })
+  new User({
+    ...req.body
+  }).save(error => {
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
+    res.send({ success: true })
+  })
 }
 
 // Update a user
 const updateUser = (req, res) => {
+  User.findOne({
+    username: req.params.username
+  }, (error, user) => {
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
+    Object.keys(req.body).forEach( key => { if (req.body) tile[key] = req.body[key] } )
+    user.save(error => {
+      if (error) {
+        console.log(error)
+        res.status(500).send(error)
+        return
+      }
+      res.send({ success: true })
+    })
+  })
   res.send({ success: true })
 }
 
 // Delete a user
 const deleteUser = (req, res) => {
-  res.send({ success: true })
+  User.remove({
+    username: req.params.username
+  }, error => {
+    if (error) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
+    res.send({ success: true })
+  })
 }
 
 router
-  .get('/user/:user_id', fetchUser)
+  .get('/users/:username', getUser)
   .post('/users', createUser)
-  .put('/users/:user_id', updateUser)
-  .delete('/users/:user_id', deleteUser)
+  .put('/users/:username', updateUser)
+  .delete('/users/:username', deleteUser)
 
 module.exports = router
