@@ -18,7 +18,8 @@
     "mongoose": "^5.0.2",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.9",
-    "passport": "0.4.0"
+    "passport": "0.4.0",
+    "passport-local": "~1.0.0"
   },
   "devDependencies": {
     "eslint": "^5.12.1",
