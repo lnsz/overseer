@@ -1,14 +1,15 @@
 const router  = require('express').Router()
 const axios = require('axios')
+const passport = require('passport')
 const userService = `http://${process.env.USER_SERVICE_IP}:${process.env.USER_SERVICE_HP}`
 
 // Fetch user
 const fetchUser = (req, res) => {
   axios.get(`${userService}${req.originalUrl}`)
-    .then((response) => {
+    .then(response => {
       res.send(response.data)
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error)
       res.status(500).send(error)
     })
@@ -17,10 +18,10 @@ const fetchUser = (req, res) => {
 // Create a user
 const createUser = (req, res) => {
   axios.post(`${userService}${req.originalUrl}`, req.body)
-    .then((response) => {
+    .then(response => {
       res.send(response.data)
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error)
       res.status(500).send(error)
     })
@@ -29,10 +30,10 @@ const createUser = (req, res) => {
 // Update a user
 const updateUser = (req, res) => {
   axios.put(`${userService}${req.originalUrl}`, req.body)
-    .then((response) => {
+    .then(response => {
       res.send(response.data)
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error)
       res.status(500).send(error)
     })
@@ -41,10 +42,10 @@ const updateUser = (req, res) => {
 // Delete a user
 const deleteUser = (req, res) => {
   axios.delete(`${userService}${req.originalUrl}`)
-    .then((response) => {
+    .then(response => {
       res.send(response.data)
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error)
       res.status(500).send(error)
     })

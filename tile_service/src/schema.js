@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const TileSchema = new Schema({
-  dashboard_id: { type: Schema.ObjectId, ref: 'Dashboard' },
+  dashboard_id: String,
   name: String,
   description: String,
   updated: Date,
