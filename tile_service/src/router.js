@@ -21,7 +21,7 @@ const fetchTiles = (req, res) => {
           .catch(() => tile.status.state = "offline")
           .then(() => {
             tile.updated = Date.now()
-            tile.save((error) => {
+            tile.save(error => {
               if (error) {
                 console.log(error)
                 res.status(500).send(error)
@@ -41,7 +41,7 @@ const createTile = (req, res) => {
     dashboard_id: req.params.dashboard_id, 
     ...req.body,
     updated: Date.now()
-  }).save((error) => {
+  }).save(error => {
     if (error) {
       console.log(error)
       res.status(500).send(error)
@@ -67,7 +67,7 @@ const updateTile = (req, res) => {
     }
     Object.keys(req.body).forEach( key => { if (req.body) tile[key] = req.body[key] } )
     tile.updated = Date.now()
-    tile.save((error) => {
+    tile.save(error => {
       if (error) {
         console.log(error)
         res.status(500).send(error)
@@ -98,7 +98,7 @@ const deleteTile = (req, res) => {
   Tile.remove({
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
-  }, (error) => {
+  }, error => {
     if (error) {
       console.log(error)
       res.status(500).send(error)
