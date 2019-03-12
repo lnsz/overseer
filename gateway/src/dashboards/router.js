@@ -10,7 +10,7 @@ const fetchDashboards = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error)
+      res.status(500).send(error.response.data)
     })
 }
 
@@ -22,7 +22,7 @@ const createDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error)
+      res.status(500).send(error.response.data)
     })
 }
 
@@ -34,7 +34,7 @@ const updateDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error)
+      res.status(500).send(error.response.data)
     })
 }
 
@@ -46,7 +46,7 @@ const getDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error)
+      res.status(500).send(error.response.data)
     })
 }
 
@@ -58,7 +58,7 @@ const deleteDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error)
+      res.status(500).send(error.response.data)
     })
 }
 

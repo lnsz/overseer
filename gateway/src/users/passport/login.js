@@ -1,5 +1,4 @@
 const LocalStrategy = require('passport-local').Strategy;
-const passport = require('passport')
 const axios = require('axios')
 const userService = `http://${process.env.USER_SERVICE_IP}:${process.env.USER_SERVICE_HP}`
 
@@ -11,7 +10,7 @@ module.exports = passport => {
     (username, password, done) => { 
       axios.get (`${userService}/api/users/${username}`)
         .then(response => {
-          if (response.body.user.password !== password){
+          if (response.body.user.password !== password) {
             console.log('Invalid Password');
             return done(null, false, { message: 'Invalid Password' });
           }
