@@ -3,18 +3,20 @@ const axios = require('axios')
 const userService = `http://${process.env.USER_SERVICE_IP}:${process.env.USER_SERVICE_HP}`
 
 module.exports = passport => {
-  passport.use('login',
+  passport.use(
     new LocalStrategy({
-      passReqToCallback : true
+      usernameField: 'username',
+      passwordField: 'password'
     },
     (username, password, done) => { 
       axios.get (`${userService}/api/users/${username}`)
         .then(response => {
-          if (response.body.user.password !== password) {
+          console.log(response.data)
+          if (response.data.password !== password) {
             console.log('Invalid Password');
             return done(null, false, { message: 'Invalid Password' });
           }
-          return done(null, user);
+          return done(null, response.data);
         })
         .catch(error => {
           console.log(`User Not Found with username '${username}'`);

@@ -15,32 +15,33 @@ app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/api', require('./dashboards/router'))
-app.use('/api', require('./tiles/router'))
-app.use('/api', require('./users/router'))
-
-const login = (req, res) => {
-  console.log(req.body.username)
-  req.user = req.body.username
-  req.username = req.body.username
-  req.password = req.body.password
-  passport.authenticate('login', (error, user, info) => {
-    console.log(user)
-    console.log(info)
-    if (error) {
-      console.log(error)
-      res.status(500).send(error)
-      return
-    }
-    res.send({ success: true })
-  })(req.body.username, req.body.password)
-}
+// const login = () => {
+//   passport.authenticate('local', (error, user, info) => {
+//     console.log(user)
+//     console.log(info)
+//     if (error) {
+//       console.log(error)
+//       res.status(500).send(error)
+//       return
+//     }
+//     res.send({ success: true })
+//   })(req.body.username, req.body.password)
+// }
 
 const logout = (req, res) => {
   req.logout()
   res.send({ success: true })
 }
 
-app.post('/login', login)
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+  }))
 app.post('/logout', logout)
+
+app.use('/api', require('./dashboards/router'))
+app.use('/api', require('./tiles/router'))
+app.use('/api', require('./users/router'))
+
 app.listen(process.env.PORT || 8000)
