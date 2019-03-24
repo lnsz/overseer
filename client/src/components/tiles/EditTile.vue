@@ -94,43 +94,36 @@
                 class="input-box chart-data-box"
               >
             </div>
-            <button
-              class="button remove-data"
+            <ActionButton
               @click="removeData(index)"
+              color="red"
+              size="small"
             >
               <font-awesome-icon
                 class="icon"
                 icon="minus"
               />
-            </button>
+            </ActionButton>
+
           </div>
           <div class="add-data-wrapper">
-            <button
-              class="button add-data"
-              @click="addData"
-            >
+            <ActionButton @click="addData">
               <font-awesome-icon
                 class="icon"
                 icon="plus"
               />
-            </button>
+            </ActionButton>
           </div>
         </div>
       </div>
     </div>
-    <div class="save-wrapper">
-      <div
-        class="button save"
-        @click="saveTile"
-      >
-        Save
-      </div>
-    </div>
+    <ActionButton @click="saveTile" text="Save" />
   </div>
 </template>
 
 <script>
 import TabBar from '@/components/TabBar'
+import ActionButton from '@/components/ActionButton'
 
 export default {
   name: 'EditTile',
@@ -141,6 +134,7 @@ export default {
     }
   },
   components: {
+    ActionButton,
     TabBar
   },
   data () {
@@ -223,40 +217,14 @@ export default {
   @import "../../assets/styles/colors";
   @import "../../assets/styles/functions";
 
-  .button {
-    margin-bottom: 10px;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 1px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 10px 20px 10px 20px;
-    font-size: 20px;
-    border: none;
-    text-decoration: none;
-    border-radius: 3px;
-    background-color: color('green');
-    color: color('text');
-  }
-  .button:hover {
-    transform: translateY(-1px);
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-    background-color: shade(color('green'), 20%);
-  }
-  .button:active {
-    transform: translateY(1px);
-    box-shadow: none;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-  }
   .icon {
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
   }
   .edit-tile {
     color: color('text');
     cursor: auto;
-    width: 100%;
-    height: 100%;
+    width: 60vw;
+    height: 80vh;
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -301,7 +269,7 @@ export default {
           border-bottom: 1px solid color('foreground');
           line-height: 28px;
           .input-box {
-            width: 30%;
+            width: 50%;
             font-size: 16px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             font-family: 'Roboto', sans-serif;
@@ -325,14 +293,6 @@ export default {
               width: 80%;
               margin: 0;
             }
-          }
-         .remove-data {
-            margin-bottom: 0px;
-            font-size: 12px;
-            background-color: color('red');
-          }
-          .remove-data:hover {
-            background-color: shade(color('red'), 20%);
           }
         }
         .chart-data-wrapper {

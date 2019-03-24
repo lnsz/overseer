@@ -4,7 +4,6 @@ import DashboardListPage from '@/views/DashboardListPage'
 import NewDashboardPage from '@/views/NewDashboardPage'
 import ViewDashboardPage from '@/views/ViewDashboardPage'
 import HomePage from '@/views/HomePage'
-import RegisterPage from '@/views/RegisterPage'
 
 Vue.use(Router)
 
@@ -15,11 +14,6 @@ export default new Router({
       path: '/',
       name: 'HomePage',
       component: HomePage
-    },
-    {
-      path: '/register',
-      name: 'RegisterPage',
-      component: RegisterPage
     },
     {
       path: '/dashboards',

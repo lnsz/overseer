@@ -29,6 +29,9 @@ export default {
   body {
     margin: 0;
   }
+  a, a:visited, a:hover, a:active, a:focus {
+    text-decoration: none;
+  }
 
   // Pseudo Elements
   ::selection {

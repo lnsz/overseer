@@ -139,30 +139,21 @@
           </div>
         </div>
         <div v-else-if="tab === 'admin'">
-          <div class="button-wrapper">
-            <div
-              class="button delete"
-              @click="deleteDashboard"
-            >
-              Delete
-            </div>
-          </div>
+          <ActionButton
+            @click="deleteDashboard"
+            text="Delete"
+            color="red"
+          />
         </div>
       </div>
     </div>
-    <div class="button-wrapper">
-      <div
-        class="button save"
-        @click="saveDashboard"
-      >
-        Save
-      </div>
-    </div>
+    <ActionButton @click="saveDashboard" text="Save" />
   </div>
 </template>
 
 <script>
 import TabBar from '@/components/TabBar'
+import ActionButton from '@/components/ActionButton'
 
 export default {
   name: 'EditDashboard',
@@ -173,7 +164,8 @@ export default {
     }
   },
   components: {
-    TabBar
+    TabBar,
+    ActionButton
   },
   data () {
     return {
@@ -266,44 +258,11 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
-  .button {
-    margin-bottom: 10px;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 1px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 10px 20px 10px 20px;
-    font-size: 20px;
-    border: none;
-    text-decoration: none;
-    border-radius: 3px;
-    background-color: color('green');
-    color: color('text');
-    &.delete {
-      margin-top: 50px;
-      background-color: color('red');
-      &:hover {
-        background-color: shade(color('red'), 20%);
-      }
-    }
-  }
-  .button:hover {
-    transform: translateY(-1px);
-    box-shadow: 3px 3px 11px rgba(0, 0, 0, 1);
-    background-color: shade(color('green'), 20%);
-  }
-  .button:active {
-    transform: translateY(1px);
-    box-shadow: none;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-  }
   .edit-tile {
     color: color('text');
     cursor: auto;
-    width: 100%;
-    height: 100%;
+    width: 60vw;
+    height: 80vh;
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -318,6 +277,7 @@ export default {
       flex-direction: column;
       display: flex;
       .tile-options {
+        padding: 20px;
         overflow-y: auto;
         border-radius: 0px 3px 3px 3px;
         flex: 1 1 auto;
@@ -326,12 +286,12 @@ export default {
         .input-wrapper {
           display: flex;
           justify-content: space-between;
-          margin: 20px 20px 0 20px;
+          margin-top: 20px;
           padding-bottom: 20px;
           border-bottom: 1px solid color('foreground');
           line-height: 28px;
           .input-box {
-            width: 30%;
+            width: 50%;
             font-size: 16px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             font-family: 'Roboto', sans-serif;
@@ -348,11 +308,6 @@ export default {
           }
         }
       }
-    }
-    .button-wrapper {
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
     }
   }
 </style>

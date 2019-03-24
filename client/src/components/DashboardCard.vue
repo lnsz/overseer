@@ -3,7 +3,6 @@
     <router-link
       :to="{ name: 'ViewDashboardPage', params: { dashboard_id: dashboard._id } }"
       class="thumbnail link"
-      tag="button"
     />
     <div class="text">
       <div class="dashboard-name">
@@ -102,7 +101,6 @@ export default {
     border: none;
     cursor: pointer;
     color: color('text');
-    text-decoration: none;
   }
   .dashboard-name {
     font-size: 20px;

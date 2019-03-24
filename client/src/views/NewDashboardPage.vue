@@ -23,6 +23,8 @@
 import DashboardsService from '@/services/DashboardsService'
 import Header from '@/components/Header'
 
+import { goToPage } from '@/utils/routerUtils'
+
 export default {
   name: 'NewDashboardPage',
   components: {
@@ -55,7 +57,7 @@ export default {
           }
         }
       })
-      this.$router.push({ query: { tab: 'best' }, name: 'DashboardListPage' })
+      goToPage(this, 'DashboardListPage', { tab: 'best' })
     }
   }
 }
