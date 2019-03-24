@@ -61,7 +61,6 @@
     >
       <router-link
         :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
-        tag="button"
         class="back-button"
       >
         <font-awesome-icon
@@ -101,6 +100,8 @@ import EditTile from '@/components/tiles/EditTile'
 import EditDashboard from '@/components/EditDashboard'
 import Modal from '@/components/Modal'
 import Fab from '@/components/Fab'
+
+import { goToPage } from '@/utils/routerUtils'
 import { backgroundCSS } from '@/utils/styleUtils'
 import {
   gridValues,
@@ -170,7 +171,7 @@ export default {
     },
     async deleteDashboard () {
       await DashboardsService.deleteDashboard({ dashboard_id: this.dashboard._id }).then(() => {
-        this.$router.push({ name: 'DashboardListPage' })
+        goToPage(this, 'DashboardListPage', { tab: 'best' })
       })
     },
     async getTile (tileId) {

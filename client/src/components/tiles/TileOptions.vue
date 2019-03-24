@@ -1,40 +1,21 @@
 <template>
   <transition name="fade">
     <div class="edit-tile">
-      <div class="button-wrapper">
-        <div
-          class="button edit"
-          id="edit"
-          @click="editTile"
-        >
-          Edit
-        </div>
-      </div>
-      <div class="button-wrapper">
-        <div
-          class="button"
-          id="copy"
-          @click="$emit('copy')"
-        >
-          Copy
-        </div>
-      </div>
-      <div class="button-wrapper">
-        <div
-          class="button"
-          id="delete"
-          @click="$emit('delete')"
-        >
-          Delete
-        </div>
-      </div>
+      <ActionButton @click="editTile" text="Edit" />
+      <ActionButton @click="$emit('copy')" text="Copy" />
+      <ActionButton @click="$emit('delete')" text="Delete" color="red" />
     </div>
   </transition>
 </template>
 
 <script>
+import ActionButton from '@/components/ActionButton'
+
 export default {
   name: 'TileOptions',
+  components: {
+    ActionButton
+  },
   props: {
     tile: {
       type: Object,
@@ -62,40 +43,6 @@ export default {
     justify-content: space-evenly;
     background: rgba(0, 0, 0, 0.7);
     z-index: 1;
-    .button-wrapper {
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-      .button {
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
-        font-family: 'Roboto', sans-serif;
-        letter-spacing: 1px;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        transition: all 0.2s ease;
-        cursor: pointer;
-        padding: 8px 15px 8px 15px;
-        font-size: 20px;
-        border: none;
-        text-decoration: none;
-        border-radius: 3px;
-        background-color: color('green');
-        color: color('text');
-      }
-      .button:hover {
-        transform: translateY(-1px);
-        box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-        background-color: shade(color('green'), 20%);
-      }
-      .button:active {
-        transform: translateY(1px);
-        box-shadow: none;
-        box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-      }
-      #delete {
-        background-color: color('red');
-      }
-    }
   }
 
 </style>

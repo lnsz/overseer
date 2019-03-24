@@ -2,7 +2,6 @@
   <router-link
     :to="{ query: { ...$route.query, tab: name.toLowerCase() } }"
     :class="{ 'selected': isSelected }"
-    tag="button"
     class="tab"
   >
     {{name}}

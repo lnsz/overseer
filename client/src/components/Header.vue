@@ -5,7 +5,6 @@
       <router-link
         :to="{ name: 'HomePage' }"
         class="title"
-        tag="button"
       >
         Overseer
       </router-link>

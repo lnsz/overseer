@@ -3,15 +3,16 @@
     <NavButton text="About" />
     <NavButton text="New Dashboard" link="NewDashboardPage" />
     <NavButton
-      @click="openRegisterView"
+      @click="isRegisterView = true"
       text="Sign Up"
       border
     />
     <NavButton text="Login" />
     <Modal
       v-if="isRegisterView"
-      @close="closeRegisterView"
+      @close="isRegisterView = false"
     >
+      <Register />
     </Modal>
     <div class="mobile-nav-bar">
       <div class="hamburger" />
@@ -24,12 +25,14 @@
 <script>
 import NavButton from '@/components/NavButton'
 import Modal from '@/components/Modal'
+import Register from '@/components/Register'
 
 export default {
   name: 'NavBar',
   components: {
     NavButton,
-    Modal
+    Modal,
+    Register
   },
   data () {
     return {
@@ -37,15 +40,6 @@ export default {
     }
   },
   methods: {
-    openRegisterView () {
-      console.log(this.$route)
-      this.isRegsiterView = true
-    },
-    closeRegisterView () {
-      this.isRegisterView = false
-    }
-  },
-  watch: {
   }
 }
 </script>

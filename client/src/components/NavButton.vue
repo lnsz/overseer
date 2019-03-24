@@ -1,21 +1,20 @@
 <template>
   <div
-    class="nav-button"
+    class="nav-button-wrapper"
     @click="$emit('click')"
   >
     <router-link
       v-if="link"
       :to="{ name: link }"
       :class="{ 'border': border }"
-      class="nav-button-link"
-      tag="button"
+      class="nav-button"
     >
       {{text}}
     </router-link>
     <div
       v-else
       :class="{ 'border': border }"
-      class="nav-button-link"
+      class="nav-button"
     >
       {{text}}
     </div>
@@ -33,7 +32,7 @@ export default {
     },
     link: {
       type: String,
-      default: null
+      default: ''
     },
     border: {
       type: Boolean,
@@ -47,7 +46,11 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
-  .nav-button-link {
+  .nav-button-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .nav-button {
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1px;
     transition: all 0.2s ease;
@@ -59,7 +62,7 @@ export default {
     color: color('text');
     padding: 8px 10px 8px 10px;
   }
-  .nav-button-link:hover {
+  .nav-button:hover {
     text-decoration: underline;
   }
   .border {

@@ -19,13 +19,11 @@
         </div>
       </div>
       <div class="view-dashboard">
-        <router-link
-          :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
-          tag="button"
-          class="view-dashboard-button"
-        >
-          Explore Dashboards
-        </router-link>
+        <ActionButton
+          @click="goToDashboardListPage"
+          text="Explore Dashboards"
+          link="DashboardListPage"
+        />
       </div>
       <div class="extra" />
     </div>
@@ -34,11 +32,23 @@
 
 <script>
 import Header from '@/components/Header'
+import ActionButton from '@/components/ActionButton'
+
+import { goToPage, openPageInNewTab } from '@/utils/routerUtils'
 
 export default {
   name: 'HomePage',
   components: {
-    Header
+    Header,
+    ActionButton
+  },
+  methods: {
+    goToDashboardListPage () {
+      goToPage(this, 'DashboardListPage', { tab: 'best' })
+    },
+    openDashboardListPageInNewTab () {
+      openPageInNewTab(this, 'DashboardListPage', { tab: 'best' })
+    }
   }
 }
 </script>
@@ -82,31 +92,6 @@ export default {
     display: flex;
     justify-content: center;
     padding: 50px;
-  }
-  .view-dashboard-button {
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 1px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 15px;
-    font-size: 20px;
-    border: none;
-    text-decoration: none;
-    border-radius: 3px;
-    background-color: color('green');
-    color: color('text');
-  }
-  .view-dashboard-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-    background-color: shade(color('green'), 20%);
-  }
-  .view-dashboard-button:active {
-    transform: translateY(1px);
-    box-shadow: none;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
   }
   .extra {
     height: 500px;
