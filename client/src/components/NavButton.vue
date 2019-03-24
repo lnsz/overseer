@@ -1,6 +1,10 @@
 <template>
-  <div class="nav-button">
+  <div
+    class="nav-button"
+    @click="$emit('click')"
+  >
     <router-link
+      v-if="link"
       :to="{ name: link }"
       :class="{ 'border': border }"
       class="nav-button-link"
@@ -8,6 +12,13 @@
     >
       {{text}}
     </router-link>
+    <div
+      v-else
+      :class="{ 'border': border }"
+      class="nav-button-link"
+    >
+      {{text}}
+    </div>
   </div>
 
 </template>
@@ -22,7 +33,7 @@ export default {
     },
     link: {
       type: String,
-      default: 'HomePage'
+      default: null
     },
     border: {
       type: Boolean,
