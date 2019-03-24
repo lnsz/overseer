@@ -240,18 +240,18 @@ export default {
     },
     checkEditStatus (route = this.$route) {
       if (this.editTile) {
-        this.openTileEditView()
+        this.isTileEditView = true
       } else if (this.isTileEditView) {
-        this.closeTileEditView()
+        this.isTileEditView = false
       } else if (this.editDashboard) {
-        this.openDashboardEditView()
+        this.isDashboardEditView = true
       } else if (this.isDashboardEditView) {
-        this.closeDashboardEditView()
+        this.isDashboardEditView = false
       }
     },
     openTileEditView (tile = this.editTile) {
       router.push({
-        path: `/dashboards/${this.dashboard._id}/tiles/${tile._id}/edit`,
+        path: `/dashboards/${this.dashboard._id}/tiles/${tile._id}/edit?tab=general`,
         params: { dashboard_id: this.dashboard._id, tile_id: tile._id },
         query: { ...this.$route.query }
       })
@@ -265,7 +265,7 @@ export default {
     },
     openDashboardEditView () {
       router.push({
-        path: `/dashboards/${this.dashboard._id}/edit`,
+        path: `/dashboards/${this.dashboard._id}/edit?tab=general`,
         query: { ...this.$route.query }
       })
       this.isDashboardEditView = true

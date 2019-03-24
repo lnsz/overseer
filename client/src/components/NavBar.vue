@@ -2,8 +2,17 @@
   <div class="nav-bar">
     <NavButton text="About" />
     <NavButton text="New Dashboard" link="NewDashboardPage" />
-    <NavButton text="Sign Up" border link="RegisterPage" />
+    <NavButton
+      @click="openRegisterView"
+      text="Sign Up"
+      border
+    />
     <NavButton text="Login" />
+    <Modal
+      v-if="isRegisterView"
+      @close="closeRegisterView"
+    >
+    </Modal>
     <div class="mobile-nav-bar">
       <div class="hamburger" />
       <div class="hamburger" />
@@ -14,11 +23,29 @@
 
 <script>
 import NavButton from '@/components/NavButton'
+import Modal from '@/components/Modal'
 
 export default {
   name: 'NavBar',
   components: {
-    NavButton
+    NavButton,
+    Modal
+  },
+  data () {
+    return {
+      isRegisterView: false
+    }
+  },
+  methods: {
+    openRegisterView () {
+      console.log(this.$route)
+      this.isRegsiterView = true
+    },
+    closeRegisterView () {
+      this.isRegisterView = false
+    }
+  },
+  watch: {
   }
 }
 </script>
