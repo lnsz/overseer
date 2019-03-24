@@ -161,6 +161,8 @@ services:
       - '${GATEWAY_HP}:${GATEWAY_CP}'
     environment:
       - PORT=${GATEWAY_CP}
+      - CLIENT_IP=${LOCAL_IP}
+      - CLIENT_HP=${CLIENT_HP}
       - DASHBOARD_SERVICE_IP=${LOCAL_IP}
       - DASHBOARD_SERVICE_HP=${DASHBOARD_SERVICE_HP}
       - TILE_SERVICE_IP=${LOCAL_IP}
