@@ -11,7 +11,6 @@ module.exports = passport => {
     (username, password, done) => { 
       axios.get (`${userService}/api/users/${username}`)
         .then(response => {
-          console.log(response.data)
           if (response.data.password !== password) {
             console.log('Invalid Password');
             return done(null, false, { message: 'Invalid Password' });

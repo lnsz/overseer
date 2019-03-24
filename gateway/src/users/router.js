@@ -1,10 +1,14 @@
 const router  = require('express').Router()
 const axios = require('axios')
-const passport = require('passport')
 const userService = `http://${process.env.USER_SERVICE_IP}:${process.env.USER_SERVICE_HP}`
+
+const getStatus = (req, res) => {
+  res.send({ user: req.user, isAuthenticated: req.isAuthenticated() })
+}
 
 // Fetch user
 const getUser = (req, res) => {
+  console.log(req.user)
   console.log(req.isAuthenticated())
   axios.get(`${userService}${req.originalUrl}`)
     .then(response => {
@@ -54,6 +58,7 @@ const deleteUser = (req, res) => {
 
 
 router
+  .get('/users', getStatus)
   .get('/users/:username', getUser)
   .post('/users', createUser)
   .put('/users/:username', updateUser)

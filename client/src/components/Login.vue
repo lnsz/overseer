@@ -1,12 +1,10 @@
 <template>
-  <div class="register-page">
+  <div class="login-page">
     <div class="form-container">
       <div class="form" style="z-index: 1;">
-        <input class="field text-field" type="text" placeholder="Name" v-model="name" />
-        <input class="field text-field" type="text" placeholder="Email" v-model="email" />
         <input class="field text-field" type="text" placeholder="Username" v-model="username" />
         <input class="field text-field" type="password" placeholder="Password" v-model="password" />
-        <ActionButton @click="register" text="Sign Up" />
+        <ActionButton @click="login" text="Login" />
       </div>
     </div>
   </div>
@@ -18,30 +16,25 @@ import UserService from '@/services/UserService'
 import ActionButton from '@/components/ActionButton'
 
 export default {
-  name: 'Register',
+  name: 'Login',
   components: {
     ActionButton
   },
   data () {
     return {
-      email: '',
-      name: '',
       username: '',
       password: ''
     }
   },
   methods: {
-    async register () {
-      await UserService.createUser({
-        name: this.name,
-        email: this.email,
+    async login () {
+      let res = await UserService.login({
         username: this.username,
         password: this.password
       })
-      await UserService.login({
-        username: this.username,
-        password: this.password
-      })
+      if (res.data && res.data.success) {
+        this.$emit('login')
+      }
     }
   }
 }
@@ -51,7 +44,7 @@ export default {
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
 
-  .register-page {
+  .login-page {
     display: flex;
     flex-direction: column;
     flex: 1;

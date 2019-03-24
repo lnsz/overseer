@@ -4,15 +4,35 @@
     <NavButton text="New Dashboard" link="NewDashboardPage" />
     <NavButton
       @click="isRegisterView = true"
+      v-if="!user"
       text="Sign Up"
       border
     />
-    <NavButton text="Login" />
+    <NavButton
+      @click="isLoginView = true"
+      v-if="!user"
+      text="Login"
+    />
+    <NavButton
+      v-if="user"
+      :text="user.username"
+    />
+    <NavButton
+      @click="logout"
+      v-if="user"
+      text="Logout"
+    />
     <Modal
       v-if="isRegisterView"
       @close="isRegisterView = false"
     >
       <Register />
+    </Modal>
+    <Modal
+      v-if="isLoginView"
+      @close="isLoginView = false"
+    >
+      <Login @login="() => { isLoginView = false; getUserStatus() }" />
     </Modal>
     <div class="mobile-nav-bar">
       <div class="hamburger" />
@@ -23,23 +43,41 @@
 </template>
 
 <script>
-import NavButton from '@/components/NavButton'
+import UserService from '@/services/UserService'
+
+import Login from '@/components/Login'
 import Modal from '@/components/Modal'
+import NavButton from '@/components/NavButton'
 import Register from '@/components/Register'
 
 export default {
   name: 'NavBar',
   components: {
-    NavButton,
+    Login,
     Modal,
+    NavButton,
     Register
+  },
+  mounted () {
+    this.getUserStatus()
   },
   data () {
     return {
-      isRegisterView: false
+      isRegisterView: false,
+      isLoginView: false,
+      user: null
     }
   },
   methods: {
+    async getUserStatus () {
+      let status = await UserService.getStatus()
+      console.log(status)
+      if (status && status.data) this.user = status.data.user
+    },
+    async logout () {
+      await UserService.logout()
+      await this.getUserStatus()
+    }
   }
 }
 </script>
