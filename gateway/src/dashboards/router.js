@@ -10,19 +10,21 @@ const fetchDashboards = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
 // Create a dashboard
 const createDashboard = (req, res) => {
-  axios.post(`${dashboardService}${req.originalUrl}`, req.body)
+  let body = { ...req.body }
+  if (req.user && req.user.username) body["creator"] = req.user.username
+  axios.post(`${dashboardService}${req.originalUrl}`, body)
     .then((response) => {
       res.send(response.data)
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -34,7 +36,7 @@ const updateDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -46,7 +48,7 @@ const getDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -58,7 +60,7 @@ const deleteDashboard = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 

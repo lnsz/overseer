@@ -2,7 +2,7 @@
   <div class="edit-tile">
     <div class="tile-settings">
       <div class="top-bar">
-        <TabBar :tabs="tabs" />
+        <TabBar v-if="tabs" :tabs="tabs" />
         <div class="select-wrapper">
           Type:
           <select
@@ -202,9 +202,8 @@ export default {
           return ['general', 'chart', 'colors', 'other']
         case 'text':
           return ['general', 'colors', 'other']
-        default:
-          return ['general', 'other']
       }
+      return null
     },
     currentTab () {
       return this.$route.query.tab

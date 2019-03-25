@@ -252,7 +252,7 @@ export default {
     },
     openTileEditView (tile = this.editTile) {
       router.push({
-        path: `/dashboards/${this.dashboard._id}/tiles/${tile._id}/edit?tab=general`,
+        path: `/dashboards/${this.dashboard._id}/tiles/${tile._id}/edit`,
         params: { dashboard_id: this.dashboard._id, tile_id: tile._id },
         query: { ...this.$route.query }
       })
@@ -266,7 +266,7 @@ export default {
     },
     openDashboardEditView () {
       router.push({
-        path: `/dashboards/${this.dashboard._id}/edit?tab=general`,
+        path: `/dashboards/${this.dashboard._id}/edit`,
         query: { ...this.$route.query }
       })
       this.isDashboardEditView = true

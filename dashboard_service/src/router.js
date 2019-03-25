@@ -16,6 +16,8 @@ const fetchDashboards = (req, res) => {
 // Create a dashboard
 const createDashboard = (req, res) => {
   new Dashboard({
+    stars: 0,
+    copies: 0,
     ...req.body
   }).save((error) => {
     if (error) {
