@@ -6,10 +6,7 @@
       <div class="form">
         <input class="field text-field" type="text" placeholder="Name" v-model="name">
         <textarea class="field text-field" rows="10" placeholder="Description" v-model="description"></textarea>
-        <input class="field text-field" type="text" placeholder="Creator" v-model="creator">
         <div class="number-fields">
-          <input class="field number-field" type="number" placeholder="Stars" v-model="stars">
-          <input class="field number-field" type="number" placeholder="Copies" v-model="copies">
           <input class="field number-field" type="number" placeholder="Rows" v-model="rows">
           <input class="field number-field" type="number" placeholder="Columns" v-model="columns">
         </div>
@@ -34,9 +31,6 @@ export default {
     return {
       name: '',
       description: '',
-      creator: '',
-      stars: '',
-      copies: '',
       rows: '',
       columns: ''
     }
@@ -46,10 +40,6 @@ export default {
       await DashboardsService.createDashboard({
         name: this.name,
         description: this.description,
-        creator: this.creator,
-        stars: this.stars,
-        copies: this.copies,
-        refreshTimer: 30000,
         style: {
           layout: {
             rows: this.rows,

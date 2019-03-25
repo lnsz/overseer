@@ -18,6 +18,12 @@ export default {
   components: {
     TabButton
   },
+  props: {
+    tabs: {
+      type: Array,
+      default: () => []
+    }
+  },
   mounted () {
     if (this.tabs.length > 0 &&
         (!this.$route.query ||
@@ -25,12 +31,6 @@ export default {
       router.replace({
         query: { ...this.$route.query, tab: this.tabs[0].toLowerCase() }
       })
-    }
-  },
-  props: {
-    tabs: {
-      type: Array,
-      default: () => []
     }
   }
 }

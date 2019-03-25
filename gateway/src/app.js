@@ -39,11 +39,11 @@ const logout = (req, res) => {
 }
 
 app.post('/api/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  passport.authenticate('local', function(err, user) {
     if (err) { return res.send({ success: false, message: err }); }
-    if (!user) { return res.send({ success: false, message: "Incorrect username or password"}); }
+    if (!user) { return res.send({ success: false, error: "Incorrect username or password"}); }
     req.logIn(user, function(err) {
-      if (err) { return res.send({ success: false, message: err }); }
+      if (err) { return res.send({ success: false, error: err }); }
       return res.send({ success: true });
     });
   })(req, res, next);

@@ -2,6 +2,7 @@
   <div class="login-page">
     <div class="form-container">
       <div class="form" style="z-index: 1;">
+        {{error}}
         <input class="field text-field" type="text" placeholder="Username" v-model="username" />
         <input class="field text-field" type="password" placeholder="Password" v-model="password" />
         <ActionButton @click="login" text="Login" />
@@ -23,7 +24,8 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      error: ''
     }
   },
   methods: {
@@ -34,6 +36,8 @@ export default {
       })
       if (res.data && res.data.success) {
         this.$emit('login')
+      } else {
+        this.error = res.data.message
       }
     }
   }

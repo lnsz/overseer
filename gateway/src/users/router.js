@@ -8,15 +8,13 @@ const getStatus = (req, res) => {
 
 // Fetch user
 const getUser = (req, res) => {
-  console.log(req.user)
-  console.log(req.isAuthenticated())
   axios.get(`${userService}${req.originalUrl}`)
     .then(response => {
       res.send(response.data)
     })
     .catch(error => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -28,7 +26,7 @@ const createUser = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -40,7 +38,7 @@ const updateUser = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 
@@ -52,7 +50,7 @@ const deleteUser = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(500).send(error.response.data)
+      res.send({ error: error.response.data })
     })
 }
 

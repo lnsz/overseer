@@ -2,6 +2,7 @@
   <div class="register-page">
     <div class="form-container">
       <div class="form" style="z-index: 1;">
+        {{error}}
         <input class="field text-field" type="text" placeholder="Name" v-model="name" />
         <input class="field text-field" type="text" placeholder="Email" v-model="email" />
         <input class="field text-field" type="text" placeholder="Username" v-model="username" />
@@ -27,21 +28,34 @@ export default {
       email: '',
       name: '',
       username: '',
-      password: ''
+      password: '',
+      error: ''
     }
   },
   methods: {
     async register () {
-      await UserService.createUser({
+      let res = await UserService.createUser({
         name: this.name,
         email: this.email,
         username: this.username,
         password: this.password
       })
-      await UserService.login({
-        username: this.username,
-        password: this.password
-      })
+      if (res.data && res.data.success) {
+        res = await UserService.login({
+          username: this.username,
+          password: this.password
+        })
+        if (res.data && res.data.success) {
+          this.$emit('login')
+        } else {
+          this.error = res.data.error
+        }
+      } else {
+        if (res.data && res.data.error && res.data.error.errors) {
+          let errors = res.data.error.errors
+          this.error = errors[Object.keys(errors)[0]].message
+        }
+      }
     }
   }
 }

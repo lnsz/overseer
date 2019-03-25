@@ -26,7 +26,7 @@
       v-if="isRegisterView"
       @close="isRegisterView = false"
     >
-      <Register />
+      <Register @login="() => { isRegisterView = false; getUserStatus() }" />
     </Modal>
     <Modal
       v-if="isLoginView"
@@ -58,7 +58,7 @@ export default {
     NavButton,
     Register
   },
-  mounted () {
+  created () {
     this.getUserStatus()
   },
   data () {
@@ -71,7 +71,6 @@ export default {
   methods: {
     async getUserStatus () {
       let status = await UserService.getStatus()
-      console.log(status)
       if (status && status.data) this.user = status.data.user
     },
     async logout () {
