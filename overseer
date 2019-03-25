@@ -24,7 +24,6 @@
 [ "$CLIENT_IMAGE" ]                    || CLIENT_IMAGE='overseer/client'
 [ "$CLIENT_TAG" ]                      || CLIENT_TAG='latest'
 [ "$CLIENT_PATH" ]                     || CLIENT_PATH="$GIT_ROOT/client"
-[ "$CLIENT_NODE_MODULES" ]             || CLIENT_NODE_MODULES='overseer_client_node_modules'
 [ "$CLIENT_IP" ]                       || CLIENT_IP="$LOCAL_IP"
 [ "$CLIENT_HP" ]                       || CLIENT_HP='4000'
 [ "$CLIENT_CP" ]                       || CLIENT_CP='4000'
@@ -36,7 +35,6 @@
 [ "$GATEWAY_IMAGE" ]                   || GATEWAY_IMAGE='overseer/gateway'
 [ "$GATEWAY_TAG" ]                     || GATEWAY_TAG='latest'
 [ "$GATEWAY_PATH" ]                    || GATEWAY_PATH="$GIT_ROOT/gateway"
-[ "$GATEWAY_NODE_MODULES" ]            || GATEWAY_NODE_MODULES='overseer_gateway_node_modules'
 [ "$GATEWAY_IP" ]                      || GATEWAY_IP="$LOCAL_IP"
 [ "$GATEWAY_HP" ]                      || GATEWAY_HP='41000'
 [ "$GATEWAY_CP" ]                      || GATEWAY_CP='8000'
@@ -49,7 +47,6 @@
 [ "$DASHBOARD_SERVICE_IMAGE" ]         || DASHBOARD_SERVICE_IMAGE='overseer/dashboard_service'
 [ "$DASHBOARD_SERVICE_TAG" ]           || DASHBOARD_SERVICE_TAG='latest'
 [ "$DASHBOARD_SERVICE_PATH" ]          || DASHBOARD_SERVICE_PATH="$GIT_ROOT/dashboard_service"
-[ "$DASHBOARD_SERVICE_NODE_MODULES" ]  || DASHBOARD_SERVICE_NODE_MODULES='overseer_dashboard_service_node_modules'
 [ "$DASHBOARD_SERVICE_IP" ]            || DASHBOARD_SERVICE_IP="$LOCAL_IP"
 [ "$DASHBOARD_SERVICE_HP" ]            || DASHBOARD_SERVICE_HP='41010'
 [ "$DASHBOARD_SERVICE_CP" ]            || DASHBOARD_SERVICE_CP='8000'
@@ -70,7 +67,6 @@
 [ "$TILE_SERVICE_IMAGE" ]              || TILE_SERVICE_IMAGE='overseer/tile_service'
 [ "$TILE_SERVICE_TAG" ]                || TILE_SERVICE_TAG='latest'
 [ "$TILE_SERVICE_PATH" ]               || TILE_SERVICE_PATH="$GIT_ROOT/tile_service"
-[ "$TILE_SERVICE_NODE_MODULES" ]       || TILE_SERVICE_NODE_MODULES='overseer_tile_service_node_modules'
 [ "$TILE_SERVICE_IP" ]                 || TILE_SERVICE_IP="$LOCAL_IP"
 [ "$TILE_SERVICE_HP" ]                 || TILE_SERVICE_HP='41020'
 [ "$TILE_SERVICE_CP" ]                 || TILE_SERVICE_CP='8000'
@@ -91,7 +87,6 @@
 [ "$USER_SERVICE_IMAGE" ]              || USER_SERVICE_IMAGE='overseer/user_service'
 [ "$USER_SERVICE_TAG" ]                || USER_SERVICE_TAG='latest'
 [ "$USER_SERVICE_PATH" ]               || USER_SERVICE_PATH="$GIT_ROOT/user_service"
-[ "$USER_SERVICE_NODE_MODULES" ]       || USER_SERVICE_NODE_MODULES='overseer_user_service_node_modules'
 [ "$USER_SERVICE_IP" ]                 || USER_SERVICE_IP="$LOCAL_IP"
 [ "$USER_SERVICE_HP" ]                 || USER_SERVICE_HP='41030'
 [ "$USER_SERVICE_CP" ]                 || USER_SERVICE_CP='8000'
@@ -125,11 +120,6 @@ stop_overseer() {
 
 setup() {
   stop_overseer
-  docker volume create "$CLIENT_NODE_MODULES"
-  docker volume create "$GATEWAY_NODE_MODULES"
-  docker volume create "$DASHBOARD_SERVICE_NODE_MODULES"
-  docker volume create "$TILE_SERVICE_NODE_MODULES"
-  docker volume create "$USER_SERVICE_NODE_MODULES"
   docker volume create "$DASHBOARD_DB_VOLUME_NAME"
   docker volume create "$TILE_DB_VOLUME_NAME"
   docker volume create "$USER_DB_VOLUME_NAME"
@@ -143,20 +133,26 @@ services:
   ${CLIENT_NAME}:
     container_name: ${CLIENT_NAME}
     image: ${CLIENT_IMAGE}:${CLIENT_TAG}
-    build: ${CLIENT_PATH}/docker
+    build:
+      context: ${CLIENT_PATH}
+      dockerfile: ${CLIENT_PATH}/docker/Dockerfile
     ports:
       - '${CLIENT_HP}:${CLIENT_CP}'
     environment:
       - PORT=${CLIENT_CP}
       - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
     volumes:
-      - ${CLIENT_PATH}:/data
-      - ${CLIENT_NODE_MODULES}:/data/node_modules
+      - ${CLIENT_PATH}/src:/data/src
+      - ${CLIENT_PATH}/test:/data/test
+      - ${CLIENT_PATH}/build:/data/build
+      - ${CLIENT_PATH}/config:/data/config
 
   ${GATEWAY_NAME}:
     container_name: ${GATEWAY_NAME}
     image: ${GATEWAY_IMAGE}:${GATEWAY_TAG}
-    build: ${GATEWAY_PATH}/docker
+    build:
+      context: ${GATEWAY_PATH}
+      dockerfile: ${GATEWAY_PATH}/docker/Dockerfile
     ports:
       - '${GATEWAY_HP}:${GATEWAY_CP}'
     environment:
@@ -170,8 +166,7 @@ services:
       - USER_SERVICE_IP=${LOCAL_IP}
       - USER_SERVICE_HP=${USER_SERVICE_HP}
     volumes:
-      - ${GATEWAY_PATH}:/data
-      - ${GATEWAY_NODE_MODULES}:/data/node_modules
+      - ${GATEWAY_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--legacy-watch"
@@ -181,7 +176,9 @@ services:
   ${DASHBOARD_SERVICE_NAME}:
     container_name: ${DASHBOARD_SERVICE_NAME}
     image: ${DASHBOARD_SERVICE_IMAGE}:${DASHBOARD_SERVICE_TAG}
-    build: ${DASHBOARD_SERVICE_PATH}/docker
+    build:
+      context: ${DASHBOARD_SERVICE_PATH}
+      dockerfile: ${DASHBOARD_SERVICE_PATH}/docker/Dockerfile
     ports:
       - '${DASHBOARD_SERVICE_HP}:${DASHBOARD_SERVICE_CP}'
     environment:
@@ -190,8 +187,7 @@ services:
     depends_on: 
       - ${DASHBOARD_DB_NAME}
     volumes:
-      - ${DASHBOARD_SERVICE_PATH}:/data
-      - ${DASHBOARD_SERVICE_NODE_MODULES}:/data/node_modules
+      - ${DASHBOARD_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--legacy-watch"
@@ -210,7 +206,9 @@ services:
   ${TILE_SERVICE_NAME}:
     container_name: ${TILE_SERVICE_NAME}
     image: ${TILE_SERVICE_IMAGE}:${TILE_SERVICE_TAG}
-    build: ${TILE_SERVICE_PATH}/docker
+    build:
+      context: ${TILE_SERVICE_PATH}
+      dockerfile: ${TILE_SERVICE_PATH}/docker/Dockerfile
     ports:
       - '${TILE_SERVICE_HP}:${TILE_SERVICE_CP}'
     environment:
@@ -219,8 +217,7 @@ services:
     depends_on: 
       - ${TILE_DB_NAME}
     volumes:
-      - ${TILE_SERVICE_PATH}:/data
-      - ${TILE_SERVICE_NODE_MODULES}:/data/node_modules
+      - ${TILE_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--legacy-watch"
@@ -239,7 +236,9 @@ services:
   ${USER_SERVICE_NAME}:
     container_name: ${USER_SERVICE_NAME}
     image: ${USER_SERVICE_IMAGE}:${USER_SERVICE_TAG}
-    build: ${USER_SERVICE_PATH}/docker
+    build:
+      context: ${USER_SERVICE_PATH}
+      dockerfile: ${USER_SERVICE_PATH}/docker/Dockerfile
     ports:
       - '${USER_SERVICE_HP}:${USER_SERVICE_CP}'
     environment:
@@ -248,8 +247,7 @@ services:
     depends_on: 
       - ${USER_DB_NAME}
     volumes:
-      - ${USER_SERVICE_PATH}:/data
-      - ${USER_SERVICE_NODE_MODULES}:/data/node_modules
+      - ${USER_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--legacy-watch"
@@ -271,16 +269,6 @@ volumes:
   ${TILE_DB_VOLUME_NAME}:
     external: true
   ${USER_DB_VOLUME_NAME}:
-    external: true
-  ${CLIENT_NODE_MODULES}:
-    external: true
-  ${GATEWAY_NODE_MODULES}:
-    external: true
-  ${DASHBOARD_SERVICE_NODE_MODULES}:
-    external: true
-  ${TILE_SERVICE_NODE_MODULES}:
-    external: true
-  ${USER_SERVICE_NODE_MODULES}:
     external: true
 EOT
 }
@@ -307,14 +295,6 @@ reset_overseer() {
   delete_database
 }
 
-clear_node_modules() {
-  docker volume rm "$CLIENT_NODE_MODULES"            > /dev/null 2>&1 && echo "Removed $CLIENT_NODE_MODULES" 
-  docker volume rm "$GATEWAY_NODE_MODULES"           > /dev/null 2>&1 && echo "Removed $GATEWAY_NODE_MODULES"
-  docker volume rm "$DASHBOARD_SERVICE_NODE_MODULES" > /dev/null 2>&1 && echo "Removed $DASHBOARD_SERVICE_NODE_MODULES"
-  docker volume rm "$TILE_SERVICE_NODE_MODULES"      > /dev/null 2>&1 && echo "Removed $TILE_SERVICE_NODE_MODULES"
-  docker volume rm "$USER_SERVICE_NODE_MODULES"      > /dev/null 2>&1 && echo "Removed $USER_SERVICE_NODE_MODULES"
-}
-
 delete_database() {
   docker volume rm "$DASHBOARD_DB_VOLUME_NAME" > /dev/null 2>&1 && echo "Removed $DASHBOARD_DB_VOLUME_NAME"
   docker volume rm "$TILE_DB_VOLUME_NAME"      > /dev/null 2>&1 && echo "Removed $TILE_DB_VOLUME_NAME"
@@ -335,7 +315,4 @@ elif [ "${ARGS#*reset}" != "$ARGS" ]; then
 elif [ "${ARGS#*reset}" != "$ARGS" ]; then
   stop_overseer
   delete_database
-elif [ "${ARGS#*npm}" != "$ARGS" ]; then
-  stop_overseer
-  clear_node_modules
 fi
