@@ -37,7 +37,7 @@ export default {
       if (res.data && res.data.success) {
         this.$emit('login')
       } else {
-        this.error = res.data.message
+        this.error = res.data.error
       }
     }
   }

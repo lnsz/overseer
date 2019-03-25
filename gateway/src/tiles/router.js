@@ -1,10 +1,9 @@
 const router = require('express').Router()
 const axios = require('axios')
-const tileService = `http://${process.env.TILE_SERVICE_IP}:${process.env.TILE_SERVICE_HP}`
 
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
-  axios.get(`${tileService}${req.originalUrl}`)
+  axios.get(`${process.env.TILE_SERVICE_URL}${req.originalUrl}`)
     .then((response) => {
       res.send(response.data)
     })
@@ -16,7 +15,7 @@ const fetchTiles = (req, res) => {
 
 // Create a tile
 const createTile = (req, res) => {
-  axios.post(`${tileService}${req.originalUrl}`, req.body)
+  axios.post(`${process.env.TILE_SERVICE_URL}${req.originalUrl}`, req.body)
     .then((response) => {
       res.send(response.data)
     })
@@ -28,7 +27,7 @@ const createTile = (req, res) => {
 
 // Update a tile
 const updateTile = (req, res) => {
-  axios.put(`${tileService}${req.originalUrl}`, req.body)
+  axios.put(`${process.env.TILE_SERVICE_URL}${req.originalUrl}`, req.body)
     .then((response) => {
       res.send(response.data)
     })
@@ -40,7 +39,7 @@ const updateTile = (req, res) => {
 
 // Fetch single tile
 const getTile = (req, res) => {
-  axios.get(`${tileService}${req.originalUrl}`)
+  axios.get(`${process.env.TILE_SERVICE_URL}${req.originalUrl}`)
     .then((response) => {
       res.send(response.data)
     })
@@ -52,7 +51,7 @@ const getTile = (req, res) => {
 
 // Delete a tile
 const deleteTile = (req, res) => {
-  axios.delete(`${tileService}${req.originalUrl}`)
+  axios.delete(`${process.env.TILE_SERVICE_URL}${req.originalUrl}`)
     .then((response) => {
       res.send(response.data)
     })

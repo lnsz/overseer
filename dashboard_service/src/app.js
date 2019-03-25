@@ -16,9 +16,12 @@ mongoose.connect(`mongodb://${DATABASE_URL}`)
 
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error'))
-db.once('open', (callback) => {
+db.once('open', () => {
   console.log('Connection Succeeded')
 })
 
 app.use('/api', require('./router'))
-app.listen(process.env.PORT || 8000)
+
+app.listen(process.env.PORT || 8000, () => {
+  console.log(`Server running on ${process.env.SERVICE_URL}`)
+})
