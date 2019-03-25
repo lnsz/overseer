@@ -1,6 +1,5 @@
 const router  = require('express').Router()
 const axios = require('axios')
-const userService = `http://${process.env.USER_SERVICE_IP}:${process.env.USER_SERVICE_HP}`
 
 const getStatus = (req, res) => {
   res.send({ user: req.user, isAuthenticated: req.isAuthenticated() })
@@ -8,7 +7,7 @@ const getStatus = (req, res) => {
 
 // Fetch user
 const getUser = (req, res) => {
-  axios.get(`${userService}${req.originalUrl}`)
+  axios.get(`${process.env.USER_SERVICE_URL}${req.originalUrl}`)
     .then(response => {
       res.send(response.data)
     })
@@ -20,7 +19,7 @@ const getUser = (req, res) => {
 
 // Create a user
 const createUser = (req, res) => {
-  axios.post(`${userService}${req.originalUrl}`, req.body)
+  axios.post(`${process.env.USER_SERVICE_URL}${req.originalUrl}`, req.body)
     .then(response => {
       res.send(response.data)
     })
@@ -32,7 +31,7 @@ const createUser = (req, res) => {
 
 // Update a user
 const updateUser = (req, res) => {
-  axios.put(`${userService}${req.originalUrl}`, req.body)
+  axios.put(`${process.env.USER_SERVICE_URL}${req.originalUrl}`, req.body)
     .then(response => {
       res.send(response.data)
     })
@@ -44,7 +43,7 @@ const updateUser = (req, res) => {
 
 // Delete a user
 const deleteUser = (req, res) => {
-  axios.delete(`${userService}${req.originalUrl}`)
+  axios.delete(`${process.env.USER_SERVICE_URL}${req.originalUrl}`)
     .then(response => {
       res.send(response.data)
     })
