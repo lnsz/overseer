@@ -33,6 +33,14 @@ app.use('/', Arena(
   }
 ))
 
+app.post('/webhooks', (req, res, next) => {
+  const { payload, urls } = req.body;
+  res.json({
+    payload,
+    urls
+  });
+});
+
 app.listen(process.env.PORT || 8000, () => {
   console.log(`Server running on ${process.env.SERVICE_URL}`)
 })

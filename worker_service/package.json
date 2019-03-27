@@ -17,8 +17,10 @@
     "bull-arena": "2.6.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
+    "ioredis": "4.9.0",
     "morgan": "^1.9.1",
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "uuid": "3.3.2"
   },
   "devDependencies": {
     "eslint": "^5.12.1",
