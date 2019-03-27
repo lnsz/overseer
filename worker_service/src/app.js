@@ -5,6 +5,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 const Arena = require('bull-arena')
 const { queues, NOTIFY_URL } = require('./queues')
+const { setWebhook, getWebhook } = require('./db')
 
 const app = express()
 app.use(morgan('combined'))
@@ -13,11 +14,9 @@ app.use(cors())
 
 const getRedisConfig = (redisUrl) => {
   const redisConfig = url.parse(redisUrl)
+  console.log(redisConfig)
   return {
     host: redisConfig.hostname || 'localhost',
-    port: Number(redisConfig.port || 6379),
-    database: (redisConfig.pathname || '/0').substr(1) || '0',
-    password: redisConfig.auth ? redisConfig.auth.split(':')[1] : undefined
   }
 }
 
@@ -33,12 +32,39 @@ app.use('/', Arena(
   }
 ))
 
-app.post('/webhooks', (req, res, next) => {
+app.post('/webhooks', async (req, res, next) => {
   const { payload, urls } = req.body;
-  res.json({
-    payload,
-    urls
-  });
+  try {
+    const id = await setWebhook(payload, urls);
+    return res.json({
+      id
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/webhooks/notify', async (req, res, next) => {
+  const { id } = req.body;
+  try {
+    const { payload, urls } = await getWebhook(id);
+    console.log(payload, urls)
+    urls.forEach(url => {
+      queues[NOTIFY_URL].add({
+        payload,
+        url,
+        id
+      });
+    });
+    return res.status(200).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/example', (req, res) => {
+  console.log(`Hit example with ${JSON.stringify(req.body)}`);
+  return res.sendStatus(200);
 });
 
 app.listen(process.env.PORT || 8000, () => {
