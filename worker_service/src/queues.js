@@ -7,7 +7,7 @@ const queues = {
     NOTIFY_URL,
     {
       redis: {
-        host: process.env.DATABASE_URL.split(':')[0]
+        host: process.env.DATABASE_NAME
       }
     }
   )

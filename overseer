@@ -113,15 +113,17 @@
 # WORKER_SERVICE
 ######################
 # Server
-[ "$WORKER_SERVICE_NAME" ]             || WORKER_SERVICE_NAME='overseer_worker_service'
+[ "$WORKER_QUEUE_SERVICE_NAME" ]       || WORKER_QUEUE_SERVICE_NAME='overseer_worker_queue_service'
+[ "$WORKER_RUNNER_SERVICE_NAME" ]      || WORKER_RUNNER_SERVICE_NAME='overseer_worker_runner_service'
 [ "$WORKER_SERVICE_IMAGE" ]            || WORKER_SERVICE_IMAGE='overseer/worker_service'
 [ "$WORKER_SERVICE_TAG" ]              || WORKER_SERVICE_TAG='latest'
 [ "$WORKER_SERVICE_PATH" ]             || WORKER_SERVICE_PATH="$GIT_ROOT/worker_service"
 [ "$WORKER_SERVICE_IP" ]               || WORKER_SERVICE_IP="$LOCAL_IP"
-[ "$WORKER_SERVICE_HP" ]               || WORKER_SERVICE_HP='41040'
+[ "$WORKER_QUEUE_SERVICE_HP" ]         || WORKER_QUEUE_SERVICE_HP='41040'
+[ "$WORKER_RUNNER_SERVICE_HP" ]        || WORKER_RUNNER_SERVICE_HP='41140'
 [ "$WORKER_SERVICE_CP" ]               || WORKER_SERVICE_CP='8000'
 [ "$WORKER_SERVICE_PROTOCOL" ]         || WORKER_SERVICE_PROTOCOL='http'
-[ "$WORKER_SERVICE_URL" ]              || WORKER_SERVICE_URL="$WORKER_SERVICE_PROTOCOL://$WORKER_SERVICE_IP:$WORKER_SERVICE_HP"
+[ "$WORKER_SERVICE_URL" ]              || WORKER_SERVICE_URL="$WORKER_SERVICE_PROTOCOL://$WORKER_SERVICE_IP:$WORKER_QUEUE_SERVICE_HP"
 
 # Database
 [ "$WORKER_DB_NAME" ]                  || WORKER_DB_NAME='overseer_worker_db'
@@ -148,7 +150,8 @@ stop_overseer() {
   stop_container "$TILE_DB_NAME"
   stop_container "$USER_SERVICE_NAME"
   stop_container "$USER_DB_NAME"
-  stop_container "$WORKER_SERVICE_NAME"
+  stop_container "$WORKER_QUEUE_SERVICE_NAME"
+  stop_container "$WORKER_RUNNER_SERVICE_NAME"
   stop_container "$WORKER_DB_NAME"
 }
 
@@ -299,18 +302,19 @@ services:
       - ${USER_DB_VOLUME_NAME}:/data/db
     command: mongod --port ${USER_DB_CP}
 
-  ${WORKER_SERVICE_NAME}:
-    container_name: ${WORKER_SERVICE_NAME}
+  ${WORKER_QUEUE_SERVICE_NAME}:
+    container_name: ${WORKER_QUEUE_SERVICE_NAME}
     image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
     build:
       context: ${WORKER_SERVICE_PATH}
       dockerfile: ${WORKER_SERVICE_PATH}/docker/Dockerfile
     ports:
-      - '${WORKER_SERVICE_HP}:${WORKER_SERVICE_CP}'
+      - '${WORKER_QUEUE_SERVICE_HP}:${WORKER_SERVICE_CP}'
     environment:
       - PORT=${WORKER_SERVICE_CP}
       - SERVICE_URL=${WORKER_SERVICE_URL}
-      - DATABASE_URL=${WORKER_DB_NAME}:${WORKER_DB_HP}
+      - DATABASE_NAME=${WORKER_DB_NAME}
+      - DATABASE_PORT=${WORKER_DB_HP}
     depends_on: 
       - ${WORKER_DB_NAME}
     volumes:
@@ -320,6 +324,29 @@ services:
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
       - "./src/app.js" 
+
+  ${WORKER_RUNNER_SERVICE_NAME}:
+    container_name: ${WORKER_RUNNER_SERVICE_NAME}
+    image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
+    build:
+      context: ${WORKER_SERVICE_PATH}
+      dockerfile: ${WORKER_SERVICE_PATH}/docker/Dockerfile
+    ports:
+      - '${WORKER_RUNNER_SERVICE_HP}:${WORKER_SERVICE_CP}'
+    environment:
+      - PORT=${WORKER_SERVICE_CP}
+      - SERVICE_URL=${WORKER_SERVICE_URL}
+      - DATABASE_NAME=${WORKER_DB_NAME}
+      - DATABASE_PORT=${WORKER_DB_HP}
+    depends_on: 
+      - ${WORKER_DB_NAME}
+    volumes:
+      - ${WORKER_SERVICE_PATH}/src:/data/src
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--legacy-watch"
+      - "--inspect=0.0.0.0"
+      - "./src/worker.js" 
 
   ${WORKER_DB_NAME}:
     container_name: ${WORKER_DB_NAME}
