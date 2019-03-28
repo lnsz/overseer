@@ -14,7 +14,6 @@ app.use(cors())
 
 const getRedisConfig = (redisUrl) => {
   const redisConfig = url.parse(redisUrl)
-  console.log(redisConfig)
   return {
     host: redisConfig.hostname || 'localhost',
   }
@@ -26,7 +25,7 @@ app.use('/', Arena(
       {
         name: NOTIFY_URL,
         hostId: 'Worker',
-        redis: getRedisConfig(`redis://${process.env.DATABASE_URL}`)
+        redis: getRedisConfig(`redis://${process.env.DATABASE_NAME}:${process.env.DATABASE_PORT}`)
       }
     ]
   }
@@ -64,7 +63,12 @@ app.post('/webhooks/notify', async (req, res, next) => {
 
 app.post('/example', (req, res) => {
   console.log(`Hit example with ${JSON.stringify(req.body)}`);
-  return res.sendStatus(200);
+  return res.status(200).send({ success: true });
+});
+
+app.post('/example2', (req, res) => {
+  console.log(`Hit example2 with ${JSON.stringify(req.body)}`);
+  return res.status(200).send({ success: false });
 });
 
 app.listen(process.env.PORT || 8000, () => {

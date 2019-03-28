@@ -2,7 +2,7 @@ const Redis = require('ioredis');
 const uuidV4 = require('uuid');
 
 const redis = new Redis({
-  host: process.env.DATABASE_URL.split(':')[0]
+  host: process.env.DATABASE_NAME
 });
 
 const WEBHOOK_PREFIX = 'webhook:';
@@ -31,7 +31,5 @@ async function getWebhook(id) {
     urls
   };
 }
-
-const db = { setWebhook, getWebhook }
 
 module.exports = { setWebhook, getWebhook }
