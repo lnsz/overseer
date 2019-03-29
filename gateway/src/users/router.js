@@ -24,7 +24,7 @@ const createUser = (req, res) => {
       res.send(response.data)
     })
     .catch(error => {
-      console.log(error)
+      console.log(error.response)
       res.send({ error: error.response.data })
     })
 }

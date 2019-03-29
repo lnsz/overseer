@@ -35,7 +35,7 @@ const createDashboard = (req, res) => {
 // Update a dashboard
 const updateDashboard = (req, res) => {
   Dashboard.findById(req.params.dashboard_id, (error, dashboard) => {
-    if (error) {
+    if (error || !dashboard) {
       console.log(error)
       res.status(500).send(error)
       return

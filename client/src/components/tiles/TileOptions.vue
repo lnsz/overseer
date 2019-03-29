@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="edit-tile">
-      <ActionButton 
+      <ActionButton
         :size="tile.layout.height < 10 ? 'small' : 'normal'"
         @click="editTile"
         text="Edit"
