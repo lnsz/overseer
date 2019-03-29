@@ -5,7 +5,7 @@
     @click="toggleOptionsView"
   >
     <TileOptions
-      v-if="isOptionsTile"
+      v-if="isOptionsTile && !locked"
       :tile="tile"
       @delete="deleteTile"
       @copy="copyTile"
@@ -19,6 +19,7 @@
       v-else-if="tile.type === 'iframe'"
       :tile="tile"
       :columns="columns"
+      :locked="locked"
     />
     <ImageTile
       v-else-if="tile.type === 'image'"
@@ -62,6 +63,10 @@ export default {
     rows: {
       type: Number,
       default: 1
+    },
+    locked: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -82,20 +87,22 @@ export default {
       const { _id, ...newTile } = this.tile
       await TilesService.createTile({
         ...newTile
-      }).then(this.emitRefresh())
+      })
+      this.emitRefresh()
     },
     async deleteTile () {
       await TilesService.deleteTile({
         dashboard_id: this.tile.dashboard_id,
         tile_id: this.tile._id
-      }).then(this.emitRefresh())
+      })
+      this.emitRefresh()
     },
     toggleOptionsView () {
-      this.isOptionsView = !this.isOptionsView
+      if (!this.locked) this.isOptionsView = !this.isOptionsView
     },
     emitRefresh () {
       // Short timeout to force update
-      setTimeout(() => this.$emit('refresh'), 10)
+      setTimeout(() => this.$emit('refresh'), 50)
     }
   },
   computed: {

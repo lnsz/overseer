@@ -73,6 +73,22 @@
         icon="star"
       />
     </button>
+    <button
+      class="fab-option lock"
+      @click="$emit('toggle-lock')"
+      @mouseover="setHovering(true)"
+      @mouseleave="setHovering(false)"
+      :class="{
+        'visible': isVisible,
+        'active': isActive,
+        'locked': locked
+      }"
+    >
+      <font-awesome-icon
+        class="icon"
+        icon="lock"
+      />
+    </button>
   </div>
 </template>
 
@@ -81,6 +97,10 @@ export default {
   name: 'Fab',
   props: {
     isCursorVisible: {
+      type: Boolean,
+      default: false
+    },
+    locked: {
       type: Boolean,
       default: false
     }
@@ -215,6 +235,11 @@ export default {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
     background-color: tint(color('foreground'), 20%);
   }
+  .fab-option.lock.active:hover {
+    transform: translate(-500px, -151px);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
+    background-color: tint(color('foreground'), 20%);
+  }
   .fab-option.edit.active:active {
     transform: translate(-100px, -149px);
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
@@ -235,6 +260,11 @@ export default {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
     background-color: color('yellow');
   }
+  .fab-option.lock.active:active {
+    transform: translate(-500px, -149px);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
+    background-color: color('yellow');
+  }
   .fab-option.edit.active {
     transform: translate(-100px, -150px);
   }
@@ -246,6 +276,18 @@ export default {
   }
   .fab-option.star.active {
     transform: translate(-400px, -150px);
+  }
+  .fab-option.lock.active {
+    transform: translate(-500px, -150px);
+  }
+  .fab-option.lock.locked {
+    background-color: color('yellow');
+  }
+  .fab-option.lock.locked:active {
+    background-color: tint(color('foreground'), 20%);
+  }
+  .fab-option.lock.locked:hover {
+    background-color: tint(color('yellow'), 20%);
   }
 
 </style>

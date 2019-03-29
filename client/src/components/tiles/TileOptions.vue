@@ -1,9 +1,22 @@
 <template>
   <transition name="fade">
     <div class="edit-tile">
-      <ActionButton @click="editTile" text="Edit" />
-      <ActionButton @click="$emit('copy')" text="Copy" />
-      <ActionButton @click="$emit('delete')" text="Delete" color="red" />
+      <ActionButton 
+        :size="tile.layout.height < 10 ? 'small' : 'normal'"
+        @click="editTile"
+        text="Edit"
+      />
+      <ActionButton
+        :size="tile.layout.height < 10 ? 'small' : 'normal'"
+        @click="$emit('copy')"
+        text="Copy"
+      />
+      <ActionButton
+        :size="tile.layout.height < 10 ? 'small' : 'normal'"
+        @click="$emit('delete')"
+        text="Delete"
+        color="red"
+      />
     </div>
   </transition>
 </template>

@@ -200,10 +200,8 @@ export default {
           return ['general', 'status', 'colors', 'other']
         case 'piechart':
           return ['general', 'chart', 'colors', 'other']
-        case 'text':
-          return ['general', 'colors', 'other']
       }
-      return null
+      return ['general', 'colors', 'other']
     },
     currentTab () {
       return this.$route.query.tab
