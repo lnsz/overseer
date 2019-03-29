@@ -22,7 +22,7 @@ const createUser = (req, res) => {
   }).save(error => {
     if (error) {
       console.log(error)
-      res.status(500).send(error)
+      res.status(403).send(error)
       return
     }
     res.send({ success: true })
@@ -34,7 +34,7 @@ const updateUser = (req, res) => {
   User.findOne({
     username: req.params.username
   }, (error, user) => {
-    if (error) {
+    if (error || !user) {
       console.log(error)
       res.status(500).send(error)
       return

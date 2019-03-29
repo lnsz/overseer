@@ -5,12 +5,11 @@ const axios = require('axios')
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
   Tile.find({ dashboard_id: req.params.dashboard_id }, (error, tiles) => {
-    if (error) console.log(error)
-      if (error) {
-        console.log(error)
-        res.status(500).send(error)
-        return
-      }
+    if (error || !tiles) {
+      console.log(error)
+      res.status(500).send(error)
+      return
+    }
     tiles.forEach(tile =>  {
       // TODO: Replace this
       if (tile.type === 'status' && 
@@ -60,7 +59,7 @@ const updateTile = (req, res) => {
     _id: req.params.tile_id,
     dashboard_id: req.params.dashboard_id
   }, (error, tile) => {
-    if (error) {
+    if (error || !tile) {
       console.log(error)
       res.status(500).send(error)
       return

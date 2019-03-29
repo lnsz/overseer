@@ -253,7 +253,7 @@ export default {
   .fab-option.copy.active:active {
     transform: translate(-300px, -149px);
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
-    background-color: tint(color('foreground'), 20%);
+    background-color: color('blue');
   }
   .fab-option.star.active:active {
     transform: translate(-400px, -149px);
