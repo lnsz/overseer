@@ -8,6 +8,7 @@ const DashboardSchema = new Schema({
   stars: { type: Number, default: 0 },
   copies: { type: Number, default: 0 },
   refreshTimer: { type: Number, default: 30000 },
+  locked: { type: Boolean, default: false },
   style: {
     color: {
       backgroundColor: String,  // Color of the dashboard background

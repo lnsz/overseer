@@ -39,11 +39,15 @@
           :tile="tiles[item.i]"
           :columns="layoutStyle.columns"
           :rows="layoutStyle.rows"
+          :locked="dashboard.locked"
           @edit="openTileEditView"
           @update-tile="updateTile"
           @refresh="fetchTiles"
         />
-        <div class="drag" />
+        <div
+          v-if="!dashboard.locked"
+          class="drag"
+        />
       </grid-item>
     </grid-layout>
     <Modal
@@ -71,8 +75,10 @@
     </div>
     <Fab
       :isCursorVisible="isCursorVisible && !isDashboardEditView && !isTileEditView"
+      :locked="dashboard.locked"
       @create-tile="createTile"
       @edit-dashboard="openDashboardEditView"
+      @toggle-lock="toggleLock"
     />
     <Modal
       v-if="isDashboardEditView"
@@ -157,33 +163,31 @@ export default {
   },
   methods: {
     async getDashboard () {
-      await DashboardsService.getDashboard({
+      let res = await DashboardsService.getDashboard({
         dashboard_id: this.$route.params.dashboard_id
-      }).then((response) => (this.dashboard = response.data))
+      })
+      this.dashboard = res.data
     },
     async fetchTiles () {
-      await TilesService.fetchTiles({
+      let res = await TilesService.fetchTiles({
         dashboard_id: this.$route.params.dashboard_id
-      }).then((response) => {
-        this.tiles = response.data.tiles
-        this.layout = getLayout(this.tiles)
       })
+      this.tiles = res.data.tiles
+      this.layout = getLayout(this.tiles)
     },
     async deleteDashboard () {
-      await DashboardsService.deleteDashboard({ dashboard_id: this.dashboard._id }).then(() => {
-        goToPage(this, 'DashboardListPage', { tab: 'best' })
-      })
+      await DashboardsService.deleteDashboard({ dashboard_id: this.dashboard._id })
+      goToPage(this, 'DashboardListPage', { tab: 'best' })
     },
     async getTile (tileId) {
-      await TilesService.getTile({
+      let res = await TilesService.getTile({
         dashboard_id: this.$route.params.dashboard_id,
         tile_id: tileId
-      }).then((response) => {
-        // Hack to force an update only on one tile
-        const tileIndex = this.tiles.findIndex(tile => tile._id === tileId)
-        this.tiles.splice(tileIndex, 1)
-        this.tiles.splice(tileIndex, 0, response.data)
       })
+      // Hack to force an update only on one tile
+      const tileIndex = this.tiles.findIndex(tile => tile._id === tileId)
+      this.tiles.splice(tileIndex, 1)
+      this.tiles.splice(tileIndex, 0, res.data)
     },
     async createTile () {
       await TilesService.createTile({
@@ -194,7 +198,15 @@ export default {
           x: 0,
           y: 0
         }
-      }).then(() => this.fetchTiles())
+      })
+      this.fetchTiles()
+    },
+    async toggleLock () {
+      this.dashboard.locked = !this.dashboard.locked
+      await DashboardsService.updateDashboard({
+        dashboard_id: this.dashboard._id,
+        locked: this.dashboard.locked
+      })
     },
     updateAllTileLayouts (newLayout) {
       newLayout.forEach(tile => {
@@ -216,10 +228,12 @@ export default {
       this.updateTile(newTile)
     },
     async updateTile (newTile) {
-      await TilesService.updateTile(newTile).then(() => this.getTile(newTile.tile_id))
+      await TilesService.updateTile(newTile)
+      this.getTile(newTile.tile_id)
     },
     async updateDashboard (newDashboard) {
-      await DashboardsService.updateDashboard(newDashboard).then(() => this.getDashboard())
+      await DashboardsService.updateDashboard(newDashboard)
+      this.getDashboard()
     },
     refresh () {
       this.refreshTimeout = setTimeout(() => {

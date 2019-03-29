@@ -27,7 +27,10 @@
       :src="tile.url"
       :style="iframeStyle"
     />
-    <div class="edit" />
+    <div
+      v-if="!locked"
+      class="edit"
+    />
   </div>
 </template>
 
@@ -44,6 +47,10 @@ export default {
     columns: {
       type: Number,
       default: 1
+    },
+    locked: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -64,11 +71,11 @@ export default {
       this.$parent.$emit('update-tile', newTile)
     },
     zoomIn () {
-      this.zoomLevel += 0.25
+      this.zoomLevel += 0.1
       this.updateZoomLevel()
     },
     zoomOut () {
-      this.zoomLevel -= 0.25
+      this.zoomLevel -= 0.1
       this.updateZoomLevel()
     }
   },
@@ -96,6 +103,7 @@ export default {
     &:hover > .zoom-button {
       opacity: 1;
     }
+    overflow: hidden;
     .zoom-button {
       opacity: 0;
       box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
@@ -138,7 +146,6 @@ export default {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      position: relative;
     }
     .edit {
       position: absolute;
