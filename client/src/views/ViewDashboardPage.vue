@@ -60,25 +60,24 @@
         @close="closeTileEditView"
       />
     </Modal>
-    <div
-      v-if="isCursorVisible && !isDashboardEditView && !isTileEditView"
+    <router-link
+      v-if="isButtonVisible"
+      :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
+      class="back-button"
     >
-      <router-link
-        :to="{ query: { tab: 'best' }, name: 'DashboardListPage' }"
-        class="back-button"
-      >
-        <font-awesome-icon
-          class="icon"
-          icon="arrow-left"
-        />
-      </router-link>
-    </div>
+      <font-awesome-icon
+        @mouseover="setHovering(true)"
+        @mouseleave="setHovering(false)"
+        class="icon"
+        icon="arrow-left"
+      />
+    </router-link>
     <Fab
-      :isCursorVisible="isCursorVisible && !isDashboardEditView && !isTileEditView"
+      :isVisible="isButtonVisible"
       :locked="dashboard.locked"
-      @create-tile="createTile"
-      @edit-dashboard="openDashboardEditView"
-      @toggle-lock="toggleLock"
+      :buttons="fabButtons"
+      @mouse-over="setHovering(true)"
+      @mouse-leave="setHovering(false)"
     />
     <Modal
       v-if="isDashboardEditView"
@@ -129,6 +128,7 @@ export default {
       movementTimeout: null,
       refreshTimeout: null,
       isCursorVisible: true,
+      isHoveringButton: false,
       windowHeight: 0,
       layout: [],
       gridValues: gridValues,
@@ -151,7 +151,7 @@ export default {
     })
     this.fabTimeout = setTimeout(
       () => {
-        this.isCursorVisible = false
+        this.isCursorVisible = this.isHoveringButton
         this.refresh()
       },
       this.movementTimer
@@ -247,7 +247,7 @@ export default {
       clearTimeout(this.refreshTimeout)
       this.movementTimeout = setTimeout(
         () => {
-          this.isCursorVisible = false
+          this.isCursorVisible = this.isHoveringButton
           this.refresh()
         },
         this.movementTimer
@@ -290,6 +290,9 @@ export default {
         path: `/dashboards/${this.dashboard._id}/view`
       })
       this.isDashboardEditView = false
+    },
+    setHovering (value) {
+      this.isHoveringButton = value
     }
   },
   computed: {
@@ -321,6 +324,36 @@ export default {
     },
     editDashboard () {
       return this.$route.path.includes('edit')
+    },
+    isButtonVisible () {
+      return this.isCursorVisible || this.isDashboardEditView || this.isTileEditView
+    },
+    fabButtons () {
+      return [
+        {
+          name: this.dashboard.locked ? 'Lock Dashboard' : 'Unlock Dashboard',
+          icon: this.dashboard.locked ? 'lock' : 'lock-open',
+          click: this.toggleLock
+        },
+        {
+          name: 'Star Dashboard',
+          icon: 'star'
+        },
+        {
+          name: 'Copy Dashboard',
+          icon: 'copy'
+        },
+        {
+          name: 'Add Tile',
+          icon: 'plus',
+          click: this.createTile
+        },
+        {
+          name: 'Edit Dashboard',
+          icon: 'edit',
+          click: this.openDashboardEditView
+        }
+      ]
     }
   },
   watch: {
