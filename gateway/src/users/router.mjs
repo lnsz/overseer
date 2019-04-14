@@ -1,5 +1,5 @@
-const router  = require('express').Router()
-const axios = require('axios')
+import express from 'express'
+import axios from 'axios'
 
 const getStatus = (req, res) => {
   res.send({ user: req.user, isAuthenticated: req.isAuthenticated() })
@@ -53,12 +53,32 @@ const deleteUser = (req, res) => {
     })
 }
 
+const login = (passport) => {
+  return (req, res, next) => {
+    passport.authenticate('local', function(err, user) {
+      if (err) { return res.send({ success: false, message: err }) }
+      if (!user) { return res.send({ success: false, error: "Incorrect username or password"}) }
+      req.login(user, function(err) {
+        if (err) { return res.send({ success: false, error: err }) }
+        return res.send({ success: true })
+      })
+    })(req, res, next)
+  }
+}
 
-router
-  .get('/users', getStatus)
-  .get('/users/:username', getUser)
-  .post('/users', createUser)
-  .put('/users/:username', updateUser)
-  .delete('/users/:username', deleteUser)
+const logout = (req, res) => {
+  req.logout()
+  res.send({ success: true })
+}
 
-module.exports = router
+const router = (passport) => {
+  return express.Router()
+    .post('/login', login(passport))
+    .post('/logout', logout)
+    .get('/users', getStatus)
+    .get('/users/:username', getUser)
+    .post('/users', createUser)
+    .put('/users/:username', updateUser)
+    .delete('/users/:username', deleteUser)
+}
+export default router

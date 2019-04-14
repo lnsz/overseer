@@ -1,5 +1,5 @@
-const User = require('./schema')
-const router  = require('express').Router()
+import { User } from './schema.mjs'
+import express from 'express'
 
 // Fetch all user
 const getUser = (req, res) => {
@@ -66,10 +66,8 @@ const deleteUser = (req, res) => {
   })
 }
 
-router
+export default express.Router()
   .get('/users/:username', getUser)
   .post('/users', createUser)
   .put('/users/:username', updateUser)
   .delete('/users/:username', deleteUser)
-
-module.exports = router

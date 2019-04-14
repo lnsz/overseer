@@ -1,5 +1,5 @@
-const router  = require('express').Router()
-const axios = require('axios')
+import express from 'express'
+import axios from 'axios'
 
 // Fetch all dashboards
 const fetchDashboards = (req, res) => {
@@ -63,11 +63,9 @@ const deleteDashboard = (req, res) => {
     })
 }
 
-router
+export default express.Router()
   .get('/dashboards', fetchDashboards)
   .get('/dashboards/:dashboard_id', getDashboard)
   .post('/dashboards', createDashboard)
   .put('/dashboards/:dashboard_id', updateDashboard)
   .delete('/dashboards/:dashboard_id', deleteDashboard)
-
-module.exports = router

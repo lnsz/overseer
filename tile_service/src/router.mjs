@@ -1,6 +1,6 @@
-const Tile = require('./schema')
-const router = require('express').Router()
-const axios = require('axios')
+import { Tile } from './schema.mjs'
+import express from 'express'
+import axios from 'axios'
 
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
@@ -107,11 +107,9 @@ const deleteTile = (req, res) => {
   })
 }
 
-router
+export default express.Router()
   .get('/dashboards/:dashboard_id/tiles', fetchTiles)
   .get('/dashboards/:dashboard_id/tiles/:tile_id', getTile)
   .post('/dashboards/:dashboard_id/tiles', createTile)
   .put('/dashboards/:dashboard_id/tiles/:tile_id', updateTile)
   .delete('/dashboards/:dashboard_id/tiles/:tile_id', deleteTile)
-
-module.exports = router

@@ -1,5 +1,5 @@
-const Dashboard = require('./schema')
-const router  = require('express').Router()
+import { Dashboard } from './schema.mjs'
+import express from 'express'
 
 // Fetch all dashboards
 const fetchDashboards = (req, res) => {
@@ -76,11 +76,9 @@ const deleteDashboard = (req, res) => {
   })
 }
 
-router
+export default express.Router()
   .get('/dashboards', fetchDashboards)
   .get('/dashboards/:dashboard_id', getDashboard)
   .post('/dashboards', createDashboard)
   .put('/dashboards/:dashboard_id', updateDashboard)
   .delete('/dashboards/:dashboard_id', deleteDashboard)
-
-module.exports = router

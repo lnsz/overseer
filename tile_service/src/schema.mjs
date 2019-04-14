@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const TileSchema = new Schema({
@@ -39,16 +39,4 @@ const TileSchema = new Schema({
   }
 })
 
-
-const Tile = mongoose.model("Tile", TileSchema)
-const autoPopulate = (next) => {
-  this.populate('style')
-  next()
-}
-
-TileSchema
-  .pre('save', autoPopulate)
-  .pre('find', autoPopulate)
-  .pre('findOne', autoPopulate)
-
-module.exports = Tile
+export const Tile = mongoose.model("Tile", TileSchema)
