@@ -1,7 +1,8 @@
-const LocalStrategy = require('passport-local').Strategy;
-const axios = require('axios')
+import axios from 'axios'
+import passportLocal from 'passport-local'
+const LocalStrategy = passportLocal.Strategy
 
-module.exports = passport => {
+const login = passport => {
   passport.use(
     new LocalStrategy({
       usernameField: 'username',
@@ -24,3 +25,18 @@ module.exports = passport => {
     })
   )
 }
+
+const init = passport => {
+  passport.serializeUser((user, done) => {
+    done(null, user)
+  });
+        
+  passport.deserializeUser((user, done) => {
+    done(null, user)
+  });
+
+  // Set up strategies for login and register
+  login(passport)
+}
+
+export default init 

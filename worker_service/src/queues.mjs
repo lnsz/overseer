@@ -1,6 +1,6 @@
-const Queue = require('bull');
+import Queue from 'bull'
 
-const NOTIFY_URL = 'NOTIFY_URL';
+const NOTIFY_URL = 'NOTIFY_URL'
 
 const queues = {
   [NOTIFY_URL]: new Queue(
@@ -11,6 +11,9 @@ const queues = {
       }
     }
   )
-};
+}
 
-module.exports = { NOTIFY_URL, queues }
+export {
+  NOTIFY_URL,
+  queues
+}

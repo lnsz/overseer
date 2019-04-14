@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const DashboardSchema = new Schema({
@@ -28,5 +28,4 @@ const DashboardSchema = new Schema({
   }
 })
 
-const Dashboard = mongoose.model('Dashboard', DashboardSchema)
-module.exports = Dashboard
+export const Dashboard = mongoose.model('Dashboard', DashboardSchema)

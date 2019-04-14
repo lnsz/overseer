@@ -1,8 +1,9 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const morgan = require('morgan')
-const mongoose = require('mongoose')
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import morgan from 'morgan'
+import mongoose from 'mongoose'
+import router from './router.mjs'
 
 // DB Setup
 mongoose.connect(`mongodb://${process.env.DATABASE_URL}`)
@@ -18,7 +19,8 @@ app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use('/api', require('./router'))
+
+app.use('/api', router)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on ${process.env.SERVICE_URL}`)

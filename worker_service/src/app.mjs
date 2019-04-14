@@ -1,11 +1,11 @@
-const express = require('express')
-const url = require('url')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const morgan = require('morgan')
-const Arena = require('bull-arena')
-const { queues, NOTIFY_URL } = require('./queues')
-const { setWebhook, getWebhook } = require('./db')
+import express from 'express'
+import url from 'url'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import morgan from 'morgan'
+import Arena from 'bull-arena'
+import { queues, NOTIFY_URL } from './queues.mjs'
+import db from './db'
 
 const app = express()
 app.use(morgan('combined'))
@@ -32,44 +32,43 @@ app.use('/', Arena(
 ))
 
 app.post('/webhooks', async (req, res, next) => {
-  const { payload, urls } = req.body;
+  const { payload, urls } = req.body
   try {
-    const id = await setWebhook(payload, urls);
+    const id = await db.setWebhook(payload, urls)
     return res.json({
       id
-    });
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
 app.post('/webhooks/notify', async (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.body
   try {
-    const { payload, urls } = await getWebhook(id);
-    console.log(payload, urls)
+    const { payload, urls } = await db.getWebhook(id)
     urls.forEach(url => {
       queues[NOTIFY_URL].add({
         payload,
         url,
         id
-      });
-    });
-    return res.status(200).send();
+      })
+    })
+    return res.status(200).send()
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
 app.post('/example', (req, res) => {
-  console.log(`Hit example with ${JSON.stringify(req.body)}`);
-  return res.status(200).send({ success: true });
-});
+  console.log(`Hit example with ${JSON.stringify(req.body)}`)
+  return res.status(200).send({ success: true })
+})
 
 app.post('/example2', (req, res) => {
-  console.log(`Hit example2 with ${JSON.stringify(req.body)}`);
-  return res.status(200).send({ success: false });
-});
+  console.log(`Hit example2 with ${JSON.stringify(req.body)}`)
+  return res.status(200).send({ success: false })
+})
 
 app.listen(process.env.PORT || 8000, () => {
   console.log(`Server running on ${process.env.SERVICE_URL}`)

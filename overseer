@@ -201,9 +201,10 @@ services:
       - ${GATEWAY_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/app.js" 
+      - "./src/app.mjs" 
     
   ${DASHBOARD_SERVICE_NAME}:
     container_name: ${DASHBOARD_SERVICE_NAME}
@@ -223,9 +224,10 @@ services:
       - ${DASHBOARD_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/app.js" 
+      - "./src/app.mjs" 
 
   ${DASHBOARD_DB_NAME}:
     container_name: ${DASHBOARD_DB_NAME}
@@ -254,9 +256,10 @@ services:
       - ${TILE_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/app.js" 
+      - "./src/app.mjs" 
 
   ${TILE_DB_NAME}:
     container_name: ${TILE_DB_NAME}
@@ -285,9 +288,10 @@ services:
       - ${USER_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/app.js" 
+      - "./src/app.mjs" 
 
   ${USER_DB_NAME}:
     container_name: ${USER_DB_NAME}
@@ -317,9 +321,10 @@ services:
       - ${WORKER_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/app.js" 
+      - "./src/app.mjs" 
 
   ${WORKER_RUNNER_SERVICE_NAME}:
     container_name: ${WORKER_RUNNER_SERVICE_NAME}
@@ -340,9 +345,10 @@ services:
       - ${WORKER_SERVICE_PATH}/src:/data/src
     command:
       - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
       - "--legacy-watch"
       - "--inspect=0.0.0.0"
-      - "./src/worker.js" 
+      - "./src/worker.mjs" 
 
   ${WORKER_DB_NAME}:
     container_name: ${WORKER_DB_NAME}
