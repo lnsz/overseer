@@ -12,8 +12,7 @@ app.use(expressSession({secret: 'secret'}));
 app.use(bodyParser.json())
 
 const whitelist = [
-  process.env.CLIENT_URL,
-  'http://localhost:4000'
+  process.env.CLIENT_URL
 ]
 const corsOptions = {
   origin: (origin, callback) => {
@@ -54,6 +53,6 @@ app.use('/api', require('./dashboards/router'))
 app.use('/api', require('./tiles/router'))
 app.use('/api', require('./users/router'))
 
-app.listen(process.env.PORT || 8000, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server running on ${process.env.SERVICE_URL}`)
 })
