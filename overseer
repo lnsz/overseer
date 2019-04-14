@@ -23,12 +23,12 @@
 [ "$CLIENT_NAME" ]                     || CLIENT_NAME='overseer_client'
 [ "$CLIENT_IMAGE" ]                    || CLIENT_IMAGE='overseer/client'
 [ "$CLIENT_TAG" ]                      || CLIENT_TAG='latest'
-[ "$CLIENT_PATH" ]                     || CLIENT_PATH="$GIT_ROOT/client"
-[ "$CLIENT_IP" ]                       || CLIENT_IP="$LOCAL_IP"
+[ "$CLIENT_PATH" ]                     || CLIENT_PATH="${GIT_ROOT}/client"
+[ "$CLIENT_IP" ]                       || CLIENT_IP="${LOCAL_IP}"
 [ "$CLIENT_HP" ]                       || CLIENT_HP='4000'
 [ "$CLIENT_CP" ]                       || CLIENT_CP='4000'
 [ "$CLIENT_PROTOCOL" ]                 || CLIENT_PROTOCOL='http'
-[ "$CLIENT_URL" ]                      || CLIENT_URL="$CLIENT_PROTOCOL://$CLIENT_IP:$CLIENT_HP"
+[ "$CLIENT_URL" ]                      || CLIENT_URL="${CLIENT_PROTOCOL}://${CLIENT_IP}:${CLIENT_HP}"
 
 ######################
 # GATEWAY
@@ -36,12 +36,12 @@
 [ "$GATEWAY_NAME" ]                    || GATEWAY_NAME='overseer_gateway'
 [ "$GATEWAY_IMAGE" ]                   || GATEWAY_IMAGE='overseer/gateway'
 [ "$GATEWAY_TAG" ]                     || GATEWAY_TAG='latest'
-[ "$GATEWAY_PATH" ]                    || GATEWAY_PATH="$GIT_ROOT/gateway"
-[ "$GATEWAY_IP" ]                      || GATEWAY_IP="$LOCAL_IP"
+[ "$GATEWAY_PATH" ]                    || GATEWAY_PATH="${GIT_ROOT}/gateway"
+[ "$GATEWAY_IP" ]                      || GATEWAY_IP="${LOCAL_IP}"
 [ "$GATEWAY_HP" ]                      || GATEWAY_HP='41000'
 [ "$GATEWAY_CP" ]                      || GATEWAY_CP='8000'
 [ "$GATEWAY_PROTOCOL" ]                || GATEWAY_PROTOCOL='http'
-[ "$GATEWAY_URL" ]                     || GATEWAY_URL="$GATEWAY_PROTOCOL://$GATEWAY_IP:$GATEWAY_HP"
+[ "$GATEWAY_URL" ]                     || GATEWAY_URL="${GATEWAY_PROTOCOL}://${GATEWAY_IP}:${GATEWAY_HP}"
 
 ######################
 # DASHBOARD_SERVICE
@@ -50,12 +50,11 @@
 [ "$DASHBOARD_SERVICE_NAME" ]          || DASHBOARD_SERVICE_NAME='overseer_dashboard_service'
 [ "$DASHBOARD_SERVICE_IMAGE" ]         || DASHBOARD_SERVICE_IMAGE='overseer/dashboard_service'
 [ "$DASHBOARD_SERVICE_TAG" ]           || DASHBOARD_SERVICE_TAG='latest'
-[ "$DASHBOARD_SERVICE_PATH" ]          || DASHBOARD_SERVICE_PATH="$GIT_ROOT/dashboard_service"
-[ "$DASHBOARD_SERVICE_IP" ]            || DASHBOARD_SERVICE_IP="$LOCAL_IP"
+[ "$DASHBOARD_SERVICE_PATH" ]          || DASHBOARD_SERVICE_PATH="${GIT_ROOT}/dashboard_service"
 [ "$DASHBOARD_SERVICE_HP" ]            || DASHBOARD_SERVICE_HP='41010'
 [ "$DASHBOARD_SERVICE_CP" ]            || DASHBOARD_SERVICE_CP='8000'
 [ "$DASHBOARD_SERVICE_PROTOCOL" ]      || DASHBOARD_SERVICE_PROTOCOL='http'
-[ "$DASHBOARD_SERVICE_URL" ]           || DASHBOARD_SERVICE_URL="$DASHBOARD_SERVICE_PROTOCOL://$DASHBOARD_SERVICE_IP:$DASHBOARD_SERVICE_HP"
+[ "$DASHBOARD_SERVICE_URL" ]           || DASHBOARD_SERVICE_URL="${DASHBOARD_SERVICE_PROTOCOL}://${DASHBOARD_SERVICE_NAME}:${DASHBOARD_SERVICE_CP}"
 
 # Database
 [ "$DASHBOARD_DB_NAME" ]               || DASHBOARD_DB_NAME='overseer_dashboard_db'
@@ -72,12 +71,11 @@
 [ "$TILE_SERVICE_NAME" ]               || TILE_SERVICE_NAME='overseer_tile_service'
 [ "$TILE_SERVICE_IMAGE" ]              || TILE_SERVICE_IMAGE='overseer/tile_service'
 [ "$TILE_SERVICE_TAG" ]                || TILE_SERVICE_TAG='latest'
-[ "$TILE_SERVICE_PATH" ]               || TILE_SERVICE_PATH="$GIT_ROOT/tile_service"
-[ "$TILE_SERVICE_IP" ]                 || TILE_SERVICE_IP="$LOCAL_IP"
+[ "$TILE_SERVICE_PATH" ]               || TILE_SERVICE_PATH="${GIT_ROOT}/tile_service"
 [ "$TILE_SERVICE_HP" ]                 || TILE_SERVICE_HP='41020'
 [ "$TILE_SERVICE_CP" ]                 || TILE_SERVICE_CP='8000'
 [ "$TILE_SERVICE_PROTOCOL" ]           || TILE_SERVICE_PROTOCOL='http'
-[ "$TILE_SERVICE_URL" ]                || TILE_SERVICE_URL="$TILE_SERVICE_PROTOCOL://$TILE_SERVICE_IP:$TILE_SERVICE_HP"
+[ "$TILE_SERVICE_URL" ]                || TILE_SERVICE_URL="${TILE_SERVICE_PROTOCOL}://${TILE_SERVICE_NAME}:${TILE_SERVICE_CP}"
 
 # Database
 [ "$TILE_DB_NAME" ]                    || TILE_DB_NAME='overseer_tile_db'
@@ -94,12 +92,11 @@
 [ "$USER_SERVICE_NAME" ]               || USER_SERVICE_NAME='overseer_user_service'
 [ "$USER_SERVICE_IMAGE" ]              || USER_SERVICE_IMAGE='overseer/user_service'
 [ "$USER_SERVICE_TAG" ]                || USER_SERVICE_TAG='latest'
-[ "$USER_SERVICE_PATH" ]               || USER_SERVICE_PATH="$GIT_ROOT/user_service"
-[ "$USER_SERVICE_IP" ]                 || USER_SERVICE_IP="$LOCAL_IP"
+[ "$USER_SERVICE_PATH" ]               || USER_SERVICE_PATH="${GIT_ROOT}/user_service"
 [ "$USER_SERVICE_HP" ]                 || USER_SERVICE_HP='41030'
 [ "$USER_SERVICE_CP" ]                 || USER_SERVICE_CP='8000'
 [ "$USER_SERVICE_PROTOCOL" ]           || USER_SERVICE_PROTOCOL='http'
-[ "$USER_SERVICE_URL" ]                || USER_SERVICE_URL="$USER_SERVICE_PROTOCOL://$USER_SERVICE_IP:$USER_SERVICE_HP"
+[ "$USER_SERVICE_URL" ]                || USER_SERVICE_URL="${USER_SERVICE_PROTOCOL}://${USER_SERVICE_NAME}:${USER_SERVICE_CP}"
 
 # Database
 [ "$USER_DB_NAME" ]                    || USER_DB_NAME='overseer_user_db'
@@ -117,13 +114,12 @@
 [ "$WORKER_RUNNER_SERVICE_NAME" ]      || WORKER_RUNNER_SERVICE_NAME='overseer_worker_runner_service'
 [ "$WORKER_SERVICE_IMAGE" ]            || WORKER_SERVICE_IMAGE='overseer/worker_service'
 [ "$WORKER_SERVICE_TAG" ]              || WORKER_SERVICE_TAG='latest'
-[ "$WORKER_SERVICE_PATH" ]             || WORKER_SERVICE_PATH="$GIT_ROOT/worker_service"
-[ "$WORKER_SERVICE_IP" ]               || WORKER_SERVICE_IP="$LOCAL_IP"
+[ "$WORKER_SERVICE_PATH" ]             || WORKER_SERVICE_PATH="${GIT_ROOT}/worker_service"
 [ "$WORKER_QUEUE_SERVICE_HP" ]         || WORKER_QUEUE_SERVICE_HP='41040'
 [ "$WORKER_RUNNER_SERVICE_HP" ]        || WORKER_RUNNER_SERVICE_HP='41140'
 [ "$WORKER_SERVICE_CP" ]               || WORKER_SERVICE_CP='8000'
 [ "$WORKER_SERVICE_PROTOCOL" ]         || WORKER_SERVICE_PROTOCOL='http'
-[ "$WORKER_SERVICE_URL" ]              || WORKER_SERVICE_URL="$WORKER_SERVICE_PROTOCOL://$WORKER_SERVICE_IP:$WORKER_QUEUE_SERVICE_HP"
+[ "$WORKER_SERVICE_URL" ]              || WORKER_SERVICE_URL="${WORKER_SERVICE_PROTOCOL}://${WORKER_SERVICE_NAME}:${WORKER_SERVICE_CP}"
 
 # Database
 [ "$WORKER_DB_NAME" ]                  || WORKER_DB_NAME='overseer_worker_db'
