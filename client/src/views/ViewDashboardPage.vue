@@ -30,6 +30,8 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
+        :isDraggable="!dashboard.locked"
+        :isResizable="!dashboard.locked"
         :drag-allow-from="'.drag'"
         :resize-ignore-from="'.tile'"
         class="grid-item"

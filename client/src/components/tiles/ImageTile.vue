@@ -1,17 +1,17 @@
 <template>
   <div class="iframe-tile">
-    <transition name="fade">
-      <div
-        class="zoom-button plus"
-        @click.stop="zoomOut"
-      >
-        <font-awesome-icon
-          class="icon"
-          icon="plus"
-        />
-      </div>
-    </transition>
     <div
+      v-if="!locked"
+      class="zoom-button plus"
+      @click.stop="zoomOut"
+    >
+      <font-awesome-icon
+        class="icon"
+        icon="plus"
+      />
+    </div>
+    <div
+      v-if="!locked"
       class="zoom-button minus"
       @click.stop="zoomIn"
     >
@@ -42,6 +42,10 @@ export default {
     columns: {
       type: Number,
       default: 1
+    },
+    locked: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

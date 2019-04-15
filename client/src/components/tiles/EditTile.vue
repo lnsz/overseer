@@ -115,6 +115,17 @@
             </ActionButton>
           </div>
         </div>
+        <div v-else-if="currentTab === 'iframe'">
+          <div class="input-wrapper">
+            Scrollable?
+            <input
+              v-model="scrollable"
+              type="checkbox"
+              placeholder="Scrollable?"
+              class="input-box"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <ActionButton @click="saveTile" text="Save" />
@@ -147,7 +158,8 @@ export default {
       style: '',
       backgroundColor: '',
       textColor: '',
-      chartData: []
+      chartData: [],
+      scrollLock: false
     }
   },
   mounted () {
@@ -163,6 +175,7 @@ export default {
     this.chartData = this.tile.chart ? this.tile.chart.data.map(x => {
       return { ...x }
     }) : []
+    this.scrollable = this.tile.iframe.scrollable
   },
   methods: {
     saveTile () {
@@ -173,12 +186,19 @@ export default {
         url: this.url,
         description: this.description,
         type: this.type,
-        status: { state: this.state },
+        status: {
+          state: this.state
+        },
         style: {
           backgroundColor: this.backgroundColor,
           textColor: this.textColor
         },
-        chart: { data: this.chartData }
+        chart: {
+          data: this.chartData
+        },
+        iframe: {
+          scrollable: this.scrollable
+        }
       }
       this.$emit('update-tile', newTile)
       this.$emit('close')
@@ -200,6 +220,8 @@ export default {
           return ['general', 'status', 'colors', 'other']
         case 'piechart':
           return ['general', 'chart', 'colors', 'other']
+        case 'iframe':
+          return ['general', 'colors', 'iFrame', 'other']
       }
       return ['general', 'colors', 'other']
     },

@@ -25,6 +25,7 @@
       v-else-if="tile.type === 'image'"
       :tile="tile"
       :columns="columns"
+      :locked="locked"
     />
     <TextTile
       v-else-if="tile.type === 'text'"
