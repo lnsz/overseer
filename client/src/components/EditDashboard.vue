@@ -134,7 +134,7 @@
               v-model="tileBorderRadius"
               type="number"
               placeholder="Tile Border Radius"
-              class="input-box check-box"
+              class="input-box"
             />
           </div>
         </div>

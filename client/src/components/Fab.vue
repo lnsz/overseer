@@ -11,6 +11,7 @@
       v-for="(button) in buttons"
       :key="button.name"
       :button="button"
+      :isOpen="isOpen"
     />
     <button
       class="fab-button"

@@ -1,6 +1,8 @@
 <template>
   <button
     class="fab-option"
+    :style="{'pointer-events': isOpen ? 'all' : 'none'}"
+    :class="{'open': isOpen}"
     @mouseover="$parent.$emit('mouse-over')"
     @mouseleave="$parent.$emit('mouse-leave')"
     @click="button.click()"
@@ -20,6 +22,10 @@ export default {
     button: {
       type: Object,
       default: () => {}
+    },
+    isOpen: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -30,7 +36,7 @@ export default {
   @import "../assets/styles/functions";
 
   .fab-option {
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
+    box-shadow: none;
     transition: all 0.2s ease;
     cursor: pointer;
     border: none;
@@ -45,6 +51,9 @@ export default {
     color: color('text');
     margin-left: -140px;
     transform: translateX(140px);
+    &.open {
+      box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
+    }
 
     .tooltip {
       transition: all 0.4s ease;
@@ -68,10 +77,6 @@ export default {
       background-color: tint(color('foreground'), 20%);
       .tooltip {
         opacity: 1;
-      }
-      &.yellow {
-        background-color: tint(color('yellow'), 20%);
-
       }
     }
     &:active {

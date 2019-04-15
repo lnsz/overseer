@@ -1,17 +1,17 @@
 <template>
   <div class="iframe-tile">
-    <transition name="fade">
-      <div
-        class="zoom-button plus"
-        @click.stop="zoomOut"
-      >
-        <font-awesome-icon
-          class="icon"
-          icon="plus"
-        />
-      </div>
-    </transition>
     <div
+      v-if="!locked"
+      class="zoom-button plus"
+      @click.stop="zoomOut"
+    >
+      <font-awesome-icon
+        class="icon"
+        icon="plus"
+      />
+    </div>
+    <div
+      v-if="!locked"
       class="zoom-button minus"
       @click.stop="zoomIn"
     >
@@ -22,8 +22,9 @@
     </div>
     <iframe
       class="iframe"
-      scrolling="no"
       frameborder="0"
+      :class="{'scrollable': scrolling}"
+      :scrolling="scrolling ? 'yes' : 'no'"
       :src="tile.url"
       :style="iframeStyle"
     />
@@ -87,6 +88,9 @@ export default {
       return {
         ...this.iframe
       }
+    },
+    scrolling () {
+      return this.tile.iframe && this.tile.iframe.scrollable && this.locked
     }
   }
 }
@@ -146,6 +150,9 @@ export default {
       width: 100%;
       height: 100%;
       overflow: hidden;
+      &.scrollable {
+        overflow: auto;
+      }
     }
     .edit {
       position: absolute;
