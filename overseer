@@ -5,6 +5,7 @@
 #####################
 [ "$ENV_FILE" ]                        || ENV_FILE='./.env'
 [ ! -f "$ENV_FILE" ]                   || . "$ENV_FILE"
+[ "$MODE" ]                            || MODE='dev'
 
 #####################
 # NETWORKING
@@ -16,6 +17,11 @@
 #####################
 [ "$DOCKER_COMPOSE" ]                  || DOCKER_COMPOSE='docker-compose.yml'
 [ "$GIT_ROOT" ]                        || GIT_ROOT="$(pwd)"
+
+#####################
+# DOCKER
+#####################
+[ "$DOCKER_REPO" ]                     || DOCKER_REPO='lucaslunasouza/overseer'
 
 #####################
 # CLIENT
@@ -110,6 +116,7 @@
 # WORKER_SERVICE
 ######################
 # Server
+[ "$WORKER_SERVICE_NAME" ]             || WORKER_SERVICE_NAME="overseer_worker_service"
 [ "$WORKER_QUEUE_SERVICE_NAME" ]       || WORKER_QUEUE_SERVICE_NAME='overseer_worker_queue_service'
 [ "$WORKER_RUNNER_SERVICE_NAME" ]      || WORKER_RUNNER_SERVICE_NAME='overseer_worker_runner_service'
 [ "$WORKER_SERVICE_IMAGE" ]            || WORKER_SERVICE_IMAGE='overseer/worker_service'
@@ -137,6 +144,20 @@ stop_container() {
   echo "Container '$1' stopped"
 }
 
+push_image() {
+  IMAGE="${DOCKER_REPO}:${1}"
+  docker tag "${2}:${3}" "$IMAGE"
+  docker push "$IMAGE"
+  docker image rm "$IMAGE"
+}
+
+install_image() {
+  IMAGE="${DOCKER_REPO}:${1}"
+  docker pull "$IMAGE"
+  docker tag "$IMAGE" "${2}:${3}"
+  docker image rm "$IMAGE"
+}
+
 stop_overseer() {
   stop_container "$CLIENT_NAME"
   stop_container "$GATEWAY_NAME"
@@ -160,6 +181,9 @@ setup() {
 }
 
 create_compose_file() {
+if [ "$MODE" = 'dev' ]
+then
+echo $MODE
 cat <<EOT > $DOCKER_COMPOSE
 version: "3"
 
@@ -368,6 +392,167 @@ volumes:
   ${WORKER_DB_VOLUME_NAME}:
     external: true
 EOT
+elif [ "$MODE" = 'prod' ]
+then
+cat <<EOT > $DOCKER_COMPOSE
+version: "3"
+
+services:
+  ${CLIENT_NAME}:
+    container_name: ${CLIENT_NAME}
+    image: ${CLIENT_IMAGE}:${CLIENT_TAG}
+    ports:
+      - '${CLIENT_HP}:${CLIENT_CP}'
+    environment:
+      - PORT=${CLIENT_CP}
+      - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
+
+  ${GATEWAY_NAME}:
+    container_name: ${GATEWAY_NAME}
+    image: ${GATEWAY_IMAGE}:${GATEWAY_TAG}
+    ports:
+      - '${GATEWAY_HP}:${GATEWAY_CP}'
+    environment:
+      - PORT=${GATEWAY_CP}
+      - SERVICE_URL=${GATEWAY_URL}
+      - CLIENT_URL=${CLIENT_URL}
+      - DASHBOARD_SERVICE_URL=${DASHBOARD_SERVICE_URL}
+      - TILE_SERVICE_URL=${TILE_SERVICE_URL}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
+      - WORKER_SERVICE_URL=${WORKER_SERVICE_URL}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/app.mjs" 
+    
+  ${DASHBOARD_SERVICE_NAME}:
+    container_name: ${DASHBOARD_SERVICE_NAME}
+    image: ${DASHBOARD_SERVICE_IMAGE}:${DASHBOARD_SERVICE_TAG}
+    expose:
+      - '${DASHBOARD_SERVICE_CP}'
+    environment:
+      - PORT=${DASHBOARD_SERVICE_CP}
+      - SERVICE_URL=${DASHBOARD_SERVICE_URL}
+      - DATABASE_URL=${DASHBOARD_DB_NAME}:${DASHBOARD_DB_HP}
+    depends_on: 
+      - ${DASHBOARD_DB_NAME}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/app.mjs" 
+
+  ${DASHBOARD_DB_NAME}:
+    container_name: ${DASHBOARD_DB_NAME}
+    image: ${DASHBOARD_DB_IMAGE}:${DASHBOARD_DB_TAG}
+    expose:
+      - '${DASHBOARD_DB_CP}'
+    volumes:
+      - ${DASHBOARD_DB_VOLUME_NAME}:/data/db
+    command: mongod --port ${DASHBOARD_DB_CP}
+    
+  ${TILE_SERVICE_NAME}:
+    container_name: ${TILE_SERVICE_NAME}
+    image: ${TILE_SERVICE_IMAGE}:${TILE_SERVICE_TAG}
+    expose:
+      - '${TILE_SERVICE_CP}'
+    environment:
+      - PORT=${TILE_SERVICE_CP}
+      - SERVICE_URL=${TILE_SERVICE_URL}
+      - DATABASE_URL=${TILE_DB_NAME}:${TILE_DB_HP}
+    depends_on: 
+      - ${TILE_DB_NAME}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/app.mjs" 
+
+  ${TILE_DB_NAME}:
+    container_name: ${TILE_DB_NAME}
+    image: ${TILE_DB_IMAGE}:${TILE_DB_TAG}
+    expose:
+      - '${TILE_DB_CP}'
+    volumes:
+      - ${TILE_DB_VOLUME_NAME}:/data/db
+    command: mongod --port ${TILE_DB_CP}
+
+  ${USER_SERVICE_NAME}:
+    container_name: ${USER_SERVICE_NAME}
+    image: ${USER_SERVICE_IMAGE}:${USER_SERVICE_TAG}
+    expose:
+      - '${USER_SERVICE_CP}'
+    environment:
+      - PORT=${USER_SERVICE_CP}
+      - SERVICE_URL=${USER_SERVICE_URL}
+      - DATABASE_URL=${USER_DB_NAME}:${USER_DB_HP}
+    depends_on: 
+      - ${USER_DB_NAME}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/app.mjs" 
+
+  ${USER_DB_NAME}:
+    container_name: ${USER_DB_NAME}
+    image: ${TILE_DB_IMAGE}:${USER_DB_TAG}
+    expose:
+      - '${USER_DB_CP}'
+    volumes:
+      - ${USER_DB_VOLUME_NAME}:/data/db
+    command: mongod --port ${USER_DB_CP}
+
+  ${WORKER_QUEUE_SERVICE_NAME}:
+    container_name: ${WORKER_QUEUE_SERVICE_NAME}
+    image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
+    expose:
+      - '${WORKER_SERVICE_CP}'
+    environment:
+      - PORT=${WORKER_SERVICE_CP}
+      - SERVICE_URL=${WORKER_SERVICE_URL}
+      - DATABASE_NAME=${WORKER_DB_NAME}
+      - DATABASE_PORT=${WORKER_DB_HP}
+    depends_on: 
+      - ${WORKER_DB_NAME}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/app.mjs" 
+
+  ${WORKER_RUNNER_SERVICE_NAME}:
+    container_name: ${WORKER_RUNNER_SERVICE_NAME}
+    image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
+    expose:
+      - '${WORKER_SERVICE_CP}'
+    environment:
+      - PORT=${WORKER_SERVICE_CP}
+      - SERVICE_URL=${WORKER_SERVICE_URL}
+      - DATABASE_NAME=${WORKER_DB_NAME}
+      - DATABASE_PORT=${WORKER_DB_HP}
+    depends_on: 
+      - ${WORKER_DB_NAME}
+    command:
+      - ./node_modules/nodemon/bin/nodemon.js
+      - "--experimental-modules"
+      - "./src/worker.mjs" 
+
+  ${WORKER_DB_NAME}:
+    container_name: ${WORKER_DB_NAME}
+    image: ${WORKER_DB_IMAGE}:${WORKER_DB_TAG}
+    expose:
+      - '${WORKER_DB_CP}'
+    volumes:
+      - ${WORKER_DB_VOLUME_NAME}:/data/db
+
+volumes:
+  ${DASHBOARD_DB_VOLUME_NAME}:
+    external: true
+  ${TILE_DB_VOLUME_NAME}:
+    external: true
+  ${USER_DB_VOLUME_NAME}:
+    external: true
+  ${WORKER_DB_VOLUME_NAME}:
+    external: true
+EOT
+fi
 }
 
 build_overseer() {
@@ -380,15 +565,8 @@ start_overseer() {
   docker-compose logs -f
 }
 
-dev_overseer() {
-  setup
-  docker-compose up -d
-  docker-compose logs -f
-}
-
 reset_overseer() {
   stop_overseer
-  clear_node_modules
   delete_database
 }
 
@@ -399,6 +577,28 @@ delete_database() {
   docker volume rm "$WORKER_DB_VOLUME_NAME"    > /dev/null 2>&1 && echo "Removed $WORKER_DB_VOLUME_NAME"
 }
 
+push_overseer() {
+  push_image "$CLIENT_NAME" "$CLIENT_IMAGE" "$CLIENT_TAG"
+  push_image "$GATEWAY_NAME" "$GATEWAY_IMAGE" "$GATEWAY_TAG"
+  push_image "$DASHBOARD_SERVICE_NAME" "$DASHBOARD_SERVICE_IMAGE" "$DASHBOARD_SERVICE_TAG"
+  push_image "$TILE_SERVICE_NAME" "$TILE_SERVICE_IMAGE" "$TILE_SERVICE_TAG"
+  push_image "$USER_SERVICE_NAME" "$USER_SERVICE_IMAGE" "$USER_SERVICE_TAG"
+  push_image "$WORKER_SERVICE_NAME" "$WORKER_SERVICE_IMAGE" "$WORKER_SERVICE_TAG"
+}
+
+install_overseer() {
+  install_image "$CLIENT_NAME" "$CLIENT_IMAGE" "$CLIENT_TAG"
+  install_image "$GATEWAY_NAME" "$GATEWAY_IMAGE" "$GATEWAY_TAG"
+  install_image "$DASHBOARD_SERVICE_NAME" "$DASHBOARD_SERVICE_IMAGE" "$DASHBOARD_SERVICE_TAG"
+  install_image "$TILE_SERVICE_NAME" "$TILE_SERVICE_IMAGE" "$TILE_SERVICE_TAG"
+  install_image "$USER_SERVICE_NAME" "$USER_SERVICE_IMAGE" "$USER_SERVICE_TAG"
+  install_image "$WORKER_SERVICE_NAME" "$WORKER_SERVICE_IMAGE" "$WORKER_SERVICE_TAG"
+  docker pull "${DASHBOARD_DB_IMAGE}:${DASHBOARD_DB_TAG}"
+  docker pull "${TILE_DB_IMAGE}:${TILE_DB_TAG}"
+  docker pull "${USER_DB_IMAGE}:${USER_DB_TAG}"
+  docker pull "${WORKER_DB_IMAGE}:${WORKER_DB_TAG}"
+}
+
 create_compose_file
 if [ "${ARGS#*build}" != "$ARGS" ]; then
   build_overseer
@@ -406,11 +606,11 @@ elif [ "${ARGS#*start}" != "$ARGS" ]; then
   start_overseer
 elif [ "${ARGS#*stop}" != "$ARGS" ]; then
   stop_overseer
-elif [ "${ARGS#*dev}" != "$ARGS" ]; then
-  dev_overseer
 elif [ "${ARGS#*reset}" != "$ARGS" ]; then
   reset_overseer
-elif [ "${ARGS#*reset}" != "$ARGS" ]; then
-  stop_overseer
   delete_database
+elif [ "${ARGS#*push}" != "$ARGS" ]; then
+  push_overseer
+elif [ "${ARGS#*install}" != "$ARGS" ]; then
+  install_overseer
 fi
