@@ -74,7 +74,7 @@ export default {
   @import "../assets/styles/functions";
 
   .fab {
-    position: absolute;
+    position: fixed;
     bottom: -100px;
     right: 50px;
     width: 70px;

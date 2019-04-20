@@ -11,7 +11,6 @@
     <grid-layout
       :layout.sync="layout"
       :col-num="gridValues.MAX_COLUMNS"
-      :max-rows="gridValues.MAX_ROWS"
       :row-height="rowHeight(windowHeight)"
       :is-draggable="true"
       :is-resizable="true"
@@ -374,9 +373,9 @@ export default {
     position: relative;
     display: grid;
     width: 100%;
-    height: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: color('background');
     &.hide-cursor {
       cursor: none;
@@ -400,7 +399,7 @@ export default {
       }
     }
     .back-button {
-      position: absolute;
+      position: fixed;
       top: 25px;
       left: 25px;
       background: transparent;
