@@ -26,6 +26,7 @@ const TileSchema = new Schema({
   },
   iframe: {
     zoomLevel: Number,
+    refreshTime: Number,
     scrollable: Boolean
   },
   chart: {

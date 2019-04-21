@@ -51,6 +51,7 @@ export default {
     border-radius: 3px 3px 0px 0px;
     margin: 0 -1px -1px 0;
     padding: 13px 22px 13px 22px;
+    z-index: 1;
     background: color('green');
   }
 </style>

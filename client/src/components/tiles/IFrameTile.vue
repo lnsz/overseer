@@ -23,6 +23,7 @@
     <iframe
       class="iframe"
       frameborder="0"
+      :key="iframeKey"
       :class="{'scrollable': scrolling}"
       :scrolling="scrolling ? 'yes' : 'no'"
       :src="tile.url"
@@ -56,8 +57,12 @@ export default {
   },
   data () {
     return {
-      zoomLevel: this.tile.iframe ? this.tile.iframe.zoomLevel : this.columns
+      zoomLevel: this.tile.iframe ? this.tile.iframe.zoomLevel : this.columns,
+      iframeKey: 0
     }
+  },
+  mounted () {
+    this.refreshIframe()
   },
   methods: {
     updateZoomLevel () {
@@ -78,6 +83,14 @@ export default {
     zoomOut () {
       this.zoomLevel -= 0.1
       this.updateZoomLevel()
+    },
+    refreshIframe () {
+      if (this.tile.iframe && this.tile.iframe.refreshTime) {
+        setTimeout(() => {
+          this.iframeKey = 1 - this.iframeKey // Changing :key reloads a component
+          this.refreshIframe()
+        }, this.tile.iframe.refreshTime)
+      }
     }
   },
   computed: {

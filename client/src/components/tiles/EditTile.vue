@@ -117,6 +117,14 @@
         </div>
         <div v-else-if="currentTab === 'iframe'">
           <div class="input-wrapper">
+            Refresh Time
+            <input
+              v-model="refreshTime"
+              placeholder="Refresh Time"
+              class="input-box"
+            />
+          </div>
+          <div class="input-wrapper">
             Scrollable?
             <input
               v-model="scrollable"
@@ -159,7 +167,8 @@ export default {
       backgroundColor: '',
       textColor: '',
       chartData: [],
-      scrollLock: false
+      scrollable: false,
+      refreshTime: 0
     }
   },
   mounted () {
@@ -175,7 +184,10 @@ export default {
     this.chartData = this.tile.chart ? this.tile.chart.data.map(x => {
       return { ...x }
     }) : []
-    this.scrollable = this.tile.iframe.scrollable
+    if (this.tile.iframe) {
+      this.scrollable = this.tile.iframe.scrollable
+      this.refreshTime = this.tile.iframe.refreshTime
+    }
   },
   methods: {
     saveTile () {
@@ -197,7 +209,8 @@ export default {
           data: this.chartData
         },
         iframe: {
-          scrollable: this.scrollable
+          scrollable: this.scrollable,
+          refreshTime: this.refreshTime
         }
       }
       this.$emit('update-tile', newTile)
