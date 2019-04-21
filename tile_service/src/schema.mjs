@@ -1,44 +1,19 @@
 import mongoose from 'mongoose'
-const Schema = mongoose.Schema
+import {
+  LAYOUT_TYPE,
+  STYLE_TYPE,
+} from './utils/types.mjs'
 
-const TileSchema = new Schema({
+export const OPTIONS = { discriminatorKey: 'type' }
+
+const tileSchema = new mongoose.Schema({
   dashboard_id: String,
   name: String,
   description: String,
+  creator: String,
   updated: Date,
-  url: String,
-  layout: {
-    width: Number,
-    height: Number,
-    x: Number,
-    y: Number
-  },
-  type: { 
-    type: String,
-    enum: ['status', 'iframe', 'image', 'piechart', 'text'],
-    default: 'text'
-  },
-  status: {
-    state: {
-      type: String,
-      enum: ['online', 'offline', '']
-    },
-  },
-  iframe: {
-    zoomLevel: Number,
-    refreshTime: Number,
-    scrollable: Boolean
-  },
-  chart: {
-    data: Object,
-    options: Object
-  },
-  style: {
-    textColor: String,
-    backgroundColor: String,
-    offlineColor: String,
-    onlineColor: String
-  }
-})
+  layout: LAYOUT_TYPE,
+  style: STYLE_TYPE
+}, OPTIONS)
 
-export const Tile = mongoose.model("Tile", TileSchema)
+export const Tile = mongoose.model("Tile", tileSchema)
