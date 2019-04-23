@@ -5,6 +5,10 @@ const statusTileSchema = new mongoose.Schema({
   state: {
     type: String,
     enum: ['online', 'offline', ''] 
+  },
+  style: {
+    onlineColor: String,
+    offlineColor: String
   }
 }, OPTIONS)
 

@@ -120,3 +120,8 @@ export const STYLE_TYPE = {
   spacing: SPACING_TYPE,
   outline: OUTLINE_TYPE
 }
+
+export const INTEGRATION_TYPE = {
+  url: String,
+  refreshTimer: String
+}
