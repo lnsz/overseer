@@ -1,6 +1,11 @@
 import { Tile } from './schema.mjs'
 import express from 'express'
 import axios from 'axios'
+import { parseTileModules } from './utils/tileModuleParser.mjs'
+
+const fetchTileTypes = (req, res) => {
+  res.send(parseTileModules())
+}
 
 // Fetch all tiles with dashboard_id
 const fetchTiles = (req, res) => {
@@ -108,6 +113,7 @@ const deleteTile = (req, res) => {
 }
 
 export default express.Router()
+  .get('/tiles/types', fetchTileTypes)
   .get('/dashboards/:dashboard_id/tiles', fetchTiles)
   .get('/dashboards/:dashboard_id/tiles/:tile_id', getTile)
   .post('/dashboards/:dashboard_id/tiles', createTile)
