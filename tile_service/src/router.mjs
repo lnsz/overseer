@@ -3,8 +3,9 @@ import express from 'express'
 import axios from 'axios'
 import { parseTileModules } from './utils/tileModuleParser.mjs'
 
-const fetchTileTypes = (req, res) => {
-  res.send(parseTileModules())
+const fetchTileTypes = async (req, res) => {
+  const tiles = await parseTileModules()
+  res.send(tiles)
 }
 
 // Fetch all tiles with dashboard_id
