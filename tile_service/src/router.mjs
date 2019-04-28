@@ -1,10 +1,10 @@
-import { Tile } from './schema.mjs'
+import { Tile } from './schema/tile.mjs'
 import express from 'express'
 import axios from 'axios'
-import { parseTileModules } from './utils/tileModuleParser.mjs'
+import { parseModules } from './utils/modules.mjs'
 
 const fetchTileTypes = async (req, res) => {
-  const tiles = await parseTileModules()
+  const tiles = await parseModules()
   res.send(tiles)
 }
 

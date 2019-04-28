@@ -3,7 +3,7 @@ import {
   LAYOUT_TYPE,
   STYLE_TYPE,
   INTEGRATION_TYPE
-} from './utils/types.mjs'
+} from '../utils/types.mjs'
 
 export const OPTIONS = { discriminatorKey: 'type' }
 

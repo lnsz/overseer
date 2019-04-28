@@ -1,0 +1,4 @@
+// This file is auto-generated from the currently loaded modules
+
+import mongoose from 'mongoose'
+import { Tile, Options } from '../../schema.mjs'

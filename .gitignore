@@ -10,3 +10,5 @@ docker-compose.yml
 npm-debug.log
 
 .env
+
+tile_service/src/schema/discriminators.mjs

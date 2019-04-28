@@ -1,0 +1,4 @@
+name: Image
+category: Frame
+attributes:
+  zoom: Number

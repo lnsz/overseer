@@ -183,7 +183,6 @@ setup() {
 create_compose_file() {
 if [ "$MODE" = 'dev' ]
 then
-echo $MODE
 cat <<EOT > $DOCKER_COMPOSE
 version: "3"
 
@@ -278,6 +277,7 @@ services:
       - ${TILE_DB_NAME}
     volumes:
       - ${TILE_SERVICE_PATH}/src:/data/src
+      - ${TILE_SERVICE_PATH}/modules:/data/modules
     command:
       - ./node_modules/nodemon/bin/nodemon.js
       - "--experimental-modules"

@@ -1,0 +1,5 @@
+name: Pie Chart
+category: Charts
+attributes:
+  data: Object
+  options: Object

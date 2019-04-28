@@ -1,0 +1,11 @@
+name: Status
+category: Networking
+attributes:
+  state:
+    type: String
+    enum:
+      - online
+      - offline
+  style:
+    onlineColor: String
+    offlineColor: String
