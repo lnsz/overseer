@@ -1,8 +1,28 @@
 import { User } from './schema.mjs'
 import express from 'express'
 
+// Authenticate
+const authenticateUser = (req, res) => {
+  console.log(req.params)
+  User.findOne({
+    username: req.params.username
+  }, (error, user) => {
+    if (error) {
+      console.log(error)
+      res.status(403).send({ authenticated: false, error: "Invalid user"})
+      return
+    }
+    if (req.body && req.body.password && user.validPassword(req.body.password)) {
+      res.status(200).send({ authenticated: true })
+    } else {
+      res.status(403).send({ authenticated: false, error: "Invalid password" })
+    }
+  })
+}
+
 // Fetch all user
 const getUser = (req, res) => {
+  console.log(req.params)
   User.findOne({
     username: req.params.username
   }, (error, user) => {
@@ -68,6 +88,7 @@ const deleteUser = (req, res) => {
 
 export default express.Router()
   .get('/users/:username', getUser)
+  .post('/users/:username/authenticate', authenticateUser)
   .post('/users', createUser)
   .put('/users/:username', updateUser)
   .delete('/users/:username', deleteUser)

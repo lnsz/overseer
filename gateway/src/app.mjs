@@ -12,8 +12,10 @@ import usersRouter from './users/router.mjs'
 const app = express()
 
 // CORS setup to allow client to send requests
+const splitURL = process.env.CLIENT_URL.split(':')
 const whitelist = [
   process.env.CLIENT_URL,
+  splitURL[0] + splitURL[1],
   'http://localhost:4000'
 ]
 const corsOptions = {

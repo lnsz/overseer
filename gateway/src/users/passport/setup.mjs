@@ -9,13 +9,15 @@ const login = passport => {
       passwordField: 'password'
     },
     (username, password, done) => { 
-      axios.get (`${process.env.USER_SERVICE_URL}/api/users/${username}`)
+      axios.post (`${process.env.USER_SERVICE_URL}/api/users/${username}/authenticate`, {
+        password: password
+      })
         .then(response => {
-          if (response.data.password !== password) {
+          if (response.data && !response.data.authenticated) {
             console.log('Invalid Password');
             return done(null, false, { message: 'Invalid Password' });
           }
-          return done(null, response.data);
+          return done(null, { username: username });
         })
         .catch(error => {
           console.log(`User Not Found with username '${username}'`);
