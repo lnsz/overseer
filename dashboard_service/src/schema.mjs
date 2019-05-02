@@ -2,13 +2,48 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const DashboardSchema = new Schema({
-  name: { type: String, default: '' },
-  description: { type: String, default: '' },
-  creator: { type: String, default: 'Guest' },
-  stars: { type: Number, default: 0 },
-  copies: { type: Number, default: 0 },
-  refreshTimer: { type: Number, default: 30000 },
-  locked: { type: Boolean, default: false },
+  name: {
+    type: String,
+    default: ''
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  creator: {
+    type: String,
+    default: 'Guest'
+  },
+  stars: {
+    type: Number,
+    default: 0
+  },
+  copies: {
+    type: Number,
+    default: 0
+  },
+  refreshTimer: {
+    type: Number,
+    default: 30000
+  },
+  locked: {
+    type: Boolean,
+    default: false
+  },
+  private: {
+    type: Boolean,
+    default: false
+  },
+  users: [
+    {
+      username: String,
+      role: {
+        type: String,
+        enum: ['viewer', 'editor', 'admin'],
+        default: 'viewer'
+      }
+    }
+  ],
   style: {
     color: {
       backgroundColor: String,  // Color of the dashboard background
