@@ -2,7 +2,7 @@
   <transition name="fade">
     <div
       class="modal"
-      @click="closeModal"
+      @mousedown.self="closeModal"
     >
       <div
         class="modal-content"
@@ -46,7 +46,6 @@ export default {
   @import "../assets/styles/functions";
 
   .modal {
-    cursor: pointer;
     z-index: 30000000;
     position: absolute;
     justify-content: center;

@@ -16,7 +16,8 @@ import {
   faBars,
   faArrowLeft,
   faLock,
-  faLockOpen
+  faLockOpen,
+  faCog
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
@@ -29,11 +30,23 @@ library.add(
   faBars,
   faArrowLeft,
   faLock,
-  faLockOpen
+  faLockOpen,
+  faCog
 )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
+
+Vue.directive('scroll', {
+  inserted: function (el, binding) {
+    let f = function (evt) {
+      if (binding.value(evt, el)) {
+        window.removeEventListener('scroll', f)
+      }
+    }
+    window.addEventListener('scroll', f)
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
