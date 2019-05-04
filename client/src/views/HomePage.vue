@@ -42,6 +42,9 @@ export default {
     Header,
     ActionButton
   },
+  mounted () {
+    document.title = 'Overseer'
+  },
   methods: {
     goToDashboardListPage () {
       goToPage(this, 'DashboardListPage', { tab: 'best' })

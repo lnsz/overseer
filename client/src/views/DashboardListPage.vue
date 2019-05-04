@@ -35,6 +35,7 @@ export default {
   },
   mounted () {
     this.getDashboards()
+    document.title = 'Dashboard List'
   },
   methods: {
     async getDashboards () {

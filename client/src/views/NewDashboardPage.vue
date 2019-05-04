@@ -27,6 +27,9 @@ export default {
   components: {
     Header
   },
+  mounted () {
+    document.title = "New Dashboard"
+  },
   data () {
     return {
       name: '',
