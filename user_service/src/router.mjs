@@ -28,10 +28,13 @@ const getUser = (req, res) => {
   }, (error, user) => {
     if (error) {
       console.log(error)
-      res.status(500).send(error)
+      res.status(403).send(error)
       return
+    } else if (user) {
+      res.send({ username: user.username })
+    } else {
+      res.send({ error: "User not found" })
     }
-    res.send(user)
   })
 }
 

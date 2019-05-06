@@ -298,11 +298,6 @@ export default {
   },
   computed: {
     dashboardStyle () {
-      return {
-        ...this.background
-      }
-    },
-    dashboardStyle () {
       return this.dashboard.style || {}
     },
     dashboardLayout () {

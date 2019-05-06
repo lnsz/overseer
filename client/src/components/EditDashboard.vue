@@ -44,13 +44,22 @@
           </div>
           <div
             class="input-row"
+            style="width: 100%;"
             v-for="(input, contentIndex) in section.content"
             :key="contentIndex"
           >
-            <div class="input-left-side">
+            <div class= "permissions" v-if="input.type == 'permissions'">
+              <input
+                class="input-field user-search"
+                v-model="userSearch"
+                placeholder="Username"
+                @input="searchForUsername"
+              />
+            </div>
+            <div class="input-left-side" v-if="input.type != 'permissions'">
               {{input.name}}
             </div>
-            <div class="input-left-side">
+            <div class="input-right-side">
               <div v-if="input.type == 'text'">
                 <textarea
                   class="input-field text-input"
@@ -77,13 +86,10 @@
                 <div class="color-input">
                   <div class="input-field color-demo" :style="{background: model[section.id][input.field]}" />
                   <input
-                    class="input-field color-input"
+                    class="input-field"
                     v-model="model[section.id][input.field]"
                   />
                 </div>
-              </div>
-              <div v-else-if="input.type == 'permissions'">
-                
               </div>
             </div>
           </div>
@@ -96,7 +102,7 @@
 <script>
 import VueScrollTo from 'vue-scrollto'
 import { ToggleButton } from 'vue-js-toggle-button'
-import { getUser } from '@/services/UserService'
+import UserService from '@/services/UserService'
 import ActionButton from '@/components/ActionButton'
 
 export default {
@@ -125,7 +131,9 @@ export default {
         permissions: {}
       },
       currentSection: 0,
-      isScrolling: false
+      isScrolling: false,
+      userSearch: '',
+      username: ''
     }
   },
   mounted () {
@@ -186,6 +194,11 @@ export default {
     deleteDashboard () {
       // TODO show warning
       this.$emit('delete-dashboard')
+    },
+    async searchForUsername () {
+      let res = await UserService.getUser({ username: this.userSearch })
+      console.log(res.data)
+      this.username = res.data.username ? res.data.username : null
     }
   },
   computed: {
@@ -340,12 +353,11 @@ export default {
           &.current {
             background: color('green');
           }
-
         }
-          .save-button {
-            position: absolute;
-            bottom: 10px;
-          }
+        .save-button {
+          position: absolute;
+          bottom: 10px;
+        }
       }
       .edit-menu-content {
         margin: 0 200px calc(80vh - 50px) 20px;
@@ -372,6 +384,11 @@ export default {
               display: flex;
               flex-direction: row;
             }
+            .permissions {
+              display: flex;
+              justify-content: center;
+              width: 100%;
+            }
             .input-left-side {
               align-self: center;
             }
@@ -397,11 +414,16 @@ export default {
                 width: 15vw;
                 resize: none;
               }
+
               &.color-demo {
                 width: 15px;
                 height: 15px;
                 margin-right: 5px;
                 align-self: center;
+              }
+
+              &.user-search {
+                margin-bottom: 10px;
               }
             }
           }
