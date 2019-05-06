@@ -16,7 +16,7 @@
       :is-resizable="true"
       :is-mirrored="false"
       :autoSize="false"
-      :vertical-compact="verticalCompact"
+      :vertical-compact="!freePlacement"
       :margin="margin"
       :use-css-transforms="true"
       @layout-updated="updateAllTileLayouts"
@@ -38,8 +38,8 @@
         <BaseTile
           v-if="tiles[item.i]"
           :tile="tiles[item.i]"
-          :columns="layoutStyle.columns"
-          :rows="layoutStyle.rows"
+          :columns="dashboardLayout.columns"
+          :rows="dashboardLayout.rows"
           :locked="dashboard.locked"
           @edit="openTileEditView"
           @update-tile="updateTile"
@@ -194,8 +194,8 @@ export default {
       await TilesService.createTile({
         dashboard_id: this.$route.params.dashboard_id,
         layout: {
-          width: getTileWidth(this.layoutStyle.columns),
-          height: getTileHeight(this.layoutStyle.rows),
+          width: getTileWidth(this.dashboardLayout.columns),
+          height: getTileHeight(this.dashboardLayout.rows),
           x: 0,
           y: 0
         }
@@ -302,22 +302,22 @@ export default {
         ...this.background
       }
     },
-    colorStyle () {
-      return (this.dashboard.style && this.dashboard.style.color) ? this.dashboard.style.color : {}
+    dashboardStyle () {
+      return this.dashboard.style || {}
     },
-    layoutStyle () {
-      return (this.dashboard.style && this.dashboard.style.layout) ? this.dashboard.style.layout : {}
+    dashboardLayout () {
+      return this.dashboard.layout || {}
     },
-    verticalCompact () {
-      return (this.layoutStyle.verticalCompact != null && this.layoutStyle.verticalCompact)
+    freePlacement () {
+      return (this.dashboardLayout.freePlacement != null && this.dashboardLayout.freePlacement)
     },
     margin () {
-      const marginX = this.layoutStyle && this.layoutStyle.marginX != null ? this.layoutStyle.marginX : 0
-      const marginY = this.layoutStyle && this.layoutStyle.marginY != null ? this.layoutStyle.marginY : 0
+      const marginX = this.dashboardLayout && this.dashboardLayout.marginX != null ? this.dashboardLayout.marginX : 0
+      const marginY = this.dashboardLayout && this.dashboardLayout.marginY != null ? this.dashboardLayout.marginY : 0
       return [marginX, marginY]
     },
     background () {
-      return backgroundCSS(this.colorStyle.backgroundColor)
+      return backgroundCSS(this.dashboardStyle.backgroundColor)
     },
     editTile () {
       return (this.$route.params)

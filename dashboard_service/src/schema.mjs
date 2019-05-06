@@ -48,7 +48,8 @@ const DashboardSchema = new Schema({
   },
   tileSettings: {              // Default tile settings
     tileColor: String,
-    textColor: String
+    textColor: String,
+    tileBorderRadius: { type: Number, default: 0 }
   },
   style: {
     backgroundColor: String,  // Color of the dashboard background
@@ -61,8 +62,7 @@ const DashboardSchema = new Schema({
     marginX: { type: Number, default: 0 },
     marginY: { type: Number, default: 0 },
     showGrid: { type: Boolean, default: false },
-    verticalCompact: { type: Boolean, default: true },
-    tileBorderRadius: { type: Number, default: 0 }
+    freePlacement: { type: Boolean, default: false },
   }
 })
 
