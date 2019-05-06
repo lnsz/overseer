@@ -28,7 +28,7 @@ export default {
     Header
   },
   mounted () {
-    document.title = "New Dashboard"
+    document.title = 'New Dashboard'
   },
   data () {
     return {

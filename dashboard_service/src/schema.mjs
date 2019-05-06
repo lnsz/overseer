@@ -24,42 +24,45 @@ const DashboardSchema = new Schema({
   },
   refreshTimer: {
     type: Number,
-    default: 30000
+    default: 30
   },
   locked: {
     type: Boolean,
     default: false
   },
-  private: {
-    type: Boolean,
-    default: false
-  },
-  users: [
-    {
-      username: String,
-      role: {
-        type: String,
-        enum: ['viewer', 'editor', 'admin'],
-        default: 'viewer'
-      }
-    }
-  ],
-  style: {
-    color: {
-      backgroundColor: String,  // Color of the dashboard background
-      textColor: String,        // Default color of text, can be overriden by tile styles
-      tileColor: String,        // Default color of tiles, can be overriden by tile styles
-      primaryColor: String,     // Color of main buttons (save, open fab)
-      secondaryColor: String,   // Color of secondary buttons (back, fab options)
+  permissions: {
+    private: {
+      type: Boolean,
+      default: false
     },
-    layout: {
-      rows: { type: Number, default: 1 },
-      columns: { type: Number, default: 1 },
-      marginX: { type: Number, default: 0 },
-      marginY: { type: Number, default: 0 },
-      verticalCompact: { type: Boolean, default: true },
-      tileBorderRadius: { type: Number, default: 0 }
-    }
+    users: [
+      {
+        username: String,
+        role: {
+          type: String,
+          enum: ['viewer', 'editor', 'admin'],
+          default: 'viewer'
+        }
+      }
+    ],
+  },
+  tileSettings: {              // Default tile settings
+    tileColor: String,
+    textColor: String
+  },
+  style: {
+    backgroundColor: String,  // Color of the dashboard background
+    primaryColor: String,     // Color of main buttons (save, open fab)
+    secondaryColor: String,   // Color of secondary buttons (back, fab options)
+  },
+  layout: {
+    rows: { type: Number, default: 1 },
+    columns: { type: Number, default: 1 },
+    marginX: { type: Number, default: 0 },
+    marginY: { type: Number, default: 0 },
+    showGrid: { type: Boolean, default: false },
+    verticalCompact: { type: Boolean, default: true },
+    tileBorderRadius: { type: Number, default: 0 }
   }
 })
 

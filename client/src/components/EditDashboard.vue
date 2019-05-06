@@ -20,7 +20,7 @@
         <div
           v-for="(section, index) in sections"
           :key="index"
-          @click="scrollToSection(section.id)"
+          @click="scrollToSection(index)"
           :class="{ 'current': index == currentSection }"
           class="edit-menu-nav-button"
         >
@@ -34,6 +34,7 @@
           :id="section.id"
           :ref="section.id"
           :class="{ 'current': currentSection == index }"
+          @click="clickOnSection(index)"
           class="section"
         >
           {{section.content}}
@@ -57,78 +58,40 @@ export default {
   data () {
     return {
       name: '',
-      url: '',
       description: '',
-      backgroundColor: '',
-      textColor: '',
-      tileColor: '',
-      primaryColor: '',
-      secondaryColor: '',
-      refreshTimer: 30000,
-      rows: 3,
-      columns: 3,
-      marginX: 0,
-      marginY: 0,
-      verticalCompact: false,
-      tileBorderRadius: 3,
-      currentSection: 0,
-      sections: [
-        {
-          id: 'section1',
-          name: 'section 1',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
-        },
-        {
-          id: 'section2',
-          name: 'section 2',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
-        },
-        {
-          id: 'section3',
-          name: 'section 3',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
-        }
-      ]
-
+      refreshTimer: 30,
+      style: {},
+      layout: {},
+      tileSettings: {},
+      permissions: {}
     }
   },
   mounted () {
     this.name = this.dashboard.name
-    this.url = this.dashboard.url
     this.description = this.dashboard.description
     this.refreshTimer = this.dashboard.refreshTimer
-    if (this.dashboard.style) {
-      if (this.dashboard.style.color) {
-        this.backgroundColor = this.dashboard.style.color.backgroundColor
-        this.textColor = this.dashboard.style.color.textColor
-        this.tileColor = this.dashboard.style.color.tileColow
-        this.primaryColor = this.dashboard.style.color.primaryColor
-        this.secondaryColor = this.dashboard.style.color.secondaryColor
-      }
-      if (this.dashboard.style.layout) {
-        this.rows = this.dashboard.style.layout.rows
-        this.columns = this.dashboard.style.layout.columns
-        this.marginX = this.dashboard.style.layout.marginX
-        this.marginY = this.dashboard.style.layout.marginY
-        this.verticalCompact = this.dashboard.style.layout.verticalCompact
-        this.tileBorderRadius = this.dashboard.style.layout.tileBorderRadius
-      }
-    }
+    this.style = this.dashboard.style
+    this.layout = this.dashboard.layout
+    this.tileSettings = this.dashboard.tileSettings
+    this.permissions = this.dashboard.permissions
   },
   methods: {
-    scrollToSection (section) {
+    scrollToSection (index) {
       const options = {
         container: '.edit-dashboard',
         duration: 300,
         easing: 'ease'
       }
-      VueScrollTo.scrollTo(`#${section}`, options.duration, options)
+      VueScrollTo.scrollTo(`#${this.sections[index].id}`, options.duration, options)
+    },
+    clickOnSection (index) {
+      if (this.currentSection < index) this.scrollToSection(index)
     },
     updateCurrentSection () {
       for (let [index, section] of this.sections.entries()) {
         let rect = this.$refs[section.id][0].getBoundingClientRect()
         let viewHeight = Math.max(this.$refs[section.id][0].clientHeight, window.innerHeight)
-        if (rect.bottom >= window.innerHeight / 3 && rect.top - viewHeight < 0) {
+        if (rect.bottom >= window.innerHeight / 4 && rect.top - viewHeight < 0) {
           this.currentSection = index
           break
         }
@@ -142,27 +105,11 @@ export default {
         dashboard_id: this.$route.params.dashboard_id,
         name: this.name,
         description: this.description,
-        creator: this.creator,
-        stars: this.stars,
-        copies: this.copies,
         refreshTimer: this.refreshTimer,
-        style: {
-          color: {
-            backgroundColor: this.backgroundColor,
-            textColor: this.textColor,
-            tileColor: this.tileColor,
-            primaryColor: this.primaryColor,
-            secondaryColor: this.secondaryColor
-          },
-          layout: {
-            rows: this.rows,
-            columns: this.columns,
-            marginX: this.marginX,
-            marginY: this.marginY,
-            verticalCompact: this.verticalCompact,
-            tileBorderRadius: this.tileBorderRadius
-          }
-        }
+        style: this.style,
+        layout: this.layout,
+        tileSettings: this.tileSettings,
+        permissions: this.permissions
       }
       this.$emit('update-dashboard', newDashboard)
       this.$emit('close')
@@ -173,8 +120,36 @@ export default {
     }
   },
   computed: {
-    tab () {
-      return this.$route.query.tab
+    sections () {
+      let visibleSections = [
+        {
+          id: 'general',
+          name: 'General',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
+        },
+        {
+          id: 'layout',
+          name: 'Layout',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
+        },
+        {
+          id: 'style',
+          name: 'Style',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
+        },
+        {
+          id: 'tiles',
+          name: 'Tiles',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
+        }
+      ]
+      // TODO: Only if user has admin access
+      visibleSections.push({
+        id: 'permissions',
+        name: 'Permissions',
+        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vestibulum ex vel dui tristique, sit amet laoreet ante viverra. Duis eleifend augue id nisl imperdiet, vitae interdum mauris semper. Nunc congue tincidunt mauris ac ultricies. Pellentesque sagittis efficitur magna, in faucibus diam scelerisque a. Etiam id felis lobortis nibh gravida dapibus interdum eu ipsum. Sed iaculis lacinia arcu, ac pharetra velit. Praesent ac dignissim nunc. Maecenas iaculis felis eget congue dictum. Aliquam mattis eros vel tellus feugiat, sit amet luctus neque pharetra. Ut ultrices bibendum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus nec ligula non odio suscipit blandit vel eu mi. Nulla feugiat lectus at elit varius pellentesque. Praesent aliquam risus diam, eget tristique enim feugiat in. Duis vulputate sit amet elit et gravida. Mauris vel est ac lacus porta pellentesque. Duis et mi id lacus luctus molestie eu et magna. Aenean turpis augue, dapibus ac neque vel, facilisis sagittis velit. Aliquam turpis ligula, dapibus mollis condimentum vitae, fringilla vitae nisi. Vivamus eget enim tortor. Nulla rutrum orci eu neque rhoncus commodo. Maecenas sem risus, imperdiet sed massa id, ornare vulputate quam. Cras massa orci, ornare nec sapien eget, imperdiet tempor eros. Pellentesque tempus velit sed metus maximus pretium. Sed elementum cursus orci sit amet aliquet. Nulla porttitor lobortis lacinia. Duis velit purus, fringilla sed ullamcorper eu, finibus vitae nunc. Sed purus nunc, gravida id rhoncus id, dapibus viverra urna. Nulla neque lorem, pellentesque at ultrices vel, suscipit sit amet nisl. Integer imperdiet congue erat imperdiet rhoncus. Vestibulum eu bibendum dolor, id bibendum risus. Ut a urna et orci lacinia faucibus. Nam placerat ornare lorem, a auctor erat rutrum sit amet. Donec sed nisl placerat, blandit magna eget, commodo nulla. Curabitur sodales quis mauris sed gravida. Nunc eu imperdiet urna. Ut sit amet libero eget metus vestibulum eleifend. Donec eros purus, fringilla fermentum nulla scelerisque, mattis venenatis felis. Quisque interdum in velit sed cursus. Maecenas vel justo euismod, feugiat augue vel, porttitor magna. Nullam eu mattis sapien. Phasellus vitae blandit velit. Maecenas ornare pulvinar ultricies. Sed sed neque lacus. Curabitur at mattis nunc. Proin molestie tortor sed commodo viverra. Ut ac tortor sagittis eros condimentum consectetur. Morbi suscipit, mauris non facilisis lobortis, ipsum turpis hendrerit enim, sed ornare lorem nunc nec massa. Ut id interdum magna. Praesent euismod neque odio, vel lacinia enim luctus eget. Aliquam non semper leo. Duis aliquet, ipsum at suscipit condimentum, neque ligula venenatis nulla, quis lacinia ligula nulla sit amet justo. Suspendisse potenti. Fusce urna arcu, malesuada ac rutrum a, hendrerit id libero. Quisque eu aliquam tortor. Proin lacinia felis mi, eu elementum ipsum mollis id. Fusce aliquet finibus arcu, at interdum purus consequat in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas purus ante, hendrerit et commodo at, ornare vel massa. Mauris ornare eget dui ac semper. Quisque sit amet sagittis lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed nisl dui, tincidunt sed sagittis non, tincidunt sed tellus.'
+      })
+      return visibleSections
     }
   }
 }
@@ -183,10 +158,7 @@ export default {
 <style lang="scss" scoped>
   @import "../assets/styles/colors";
   @import "../assets/styles/functions";
-    .edit-dashboard::-webkit-scrollbar {
-      width: 0 !important;
-      background: transparent;
-    }
+
   .edit-dashboard {
     color: color('text');
     cursor: auto;
@@ -200,6 +172,11 @@ export default {
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
+
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      background: transparent;
+    }
     .top-bar {
       position: absolute;
       top: 0px;
@@ -230,7 +207,9 @@ export default {
         display: flex;
         flex-direction: column;
         right: 50px;
+        text-align: right;
         .edit-menu-nav-button {
+          border-radius: 3px;
           padding: 10px;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -240,18 +219,17 @@ export default {
         }
       }
       .edit-menu-content {
-        margin: 0 150px calc(80vh - 200px) 20px;
+        margin: 0 200px calc(80vh - 200px) 20px;
         .section {
-          transition: opacity 0.3s ease;
-          opacity: 0.5;
+          transition: opacity 0.5s ease;
+          opacity: 0.3;
           border-bottom: 1px solid color('foreground');
+          padding: 15px 0 15px 0;
           &.current {
             opacity: 1;
           }
         }
       }
-
     }
-
   }
 </style>

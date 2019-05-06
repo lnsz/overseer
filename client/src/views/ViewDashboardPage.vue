@@ -240,7 +240,7 @@ export default {
       this.refreshTimeout = setTimeout(() => {
         this.fetchTiles()
         this.refresh()
-      }, this.dashboard.refreshTimer)
+      }, this.dashboard.refreshTimer * 60000) // Convert minutes to ms
     },
     updateTimer () {
       this.isCursorVisible = true
