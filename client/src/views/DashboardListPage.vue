@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-list-page">
-    <Header />
+    <Header @update="getDashboards" />
     <div class="filters">
       <TabBar :tabs="tabs" />
       <SearchBox @search="updateFilter" />

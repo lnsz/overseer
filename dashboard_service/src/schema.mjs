@@ -52,9 +52,9 @@ const DashboardSchema = new Schema({
     tileBorderRadius: { type: Number, default: 0 }
   },
   style: {
-    backgroundColor: String,  // Color of the dashboard background
-    primaryColor: String,     // Color of main buttons (save, open fab)
-    secondaryColor: String,   // Color of secondary buttons (back, fab options)
+    backgroundColor: { type: String, default: '' }, // Color of the dashboard background
+    primaryColor: { type: String, default: '' },     // Color of main buttons (save, open fab)
+    secondaryColor: { type: String, default: '' }   // Color of secondary buttons (back, fab options)
   },
   layout: {
     rows: { type: Number, default: 1 },

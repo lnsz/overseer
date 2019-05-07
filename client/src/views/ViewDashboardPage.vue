@@ -29,8 +29,8 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        :isDraggable="!dashboard.locked"
-        :isResizable="!dashboard.locked"
+        :isDraggable="!locked"
+        :isResizable="!locked"
         :drag-allow-from="'.drag'"
         :resize-ignore-from="'.tile'"
         class="grid-item"
@@ -40,13 +40,13 @@
           :tile="tiles[item.i]"
           :columns="dashboardLayout.columns"
           :rows="dashboardLayout.rows"
-          :locked="dashboard.locked"
+          :locked="locked"
           @edit="openTileEditView"
           @update-tile="updateTile"
           @refresh="fetchTiles"
         />
         <div
-          v-if="!dashboard.locked"
+          v-if="!locked"
           class="drag"
         />
       </grid-item>
@@ -74,8 +74,9 @@
       />
     </router-link>
     <Fab
+      v-if="canUserEdit"
       :isVisible="isButtonVisible"
-      :locked="dashboard.locked"
+      :locked="locked"
       :buttons="fabButtons"
       @mouse-over="setHovering(true)"
       @mouse-leave="setHovering(false)"
@@ -97,6 +98,7 @@
 <script>
 import router from '@/router'
 
+import UserService from '@/services/UserService'
 import DashboardsService from '@/services/DashboardsService'
 
 import VueGridLayout from 'vue-grid-layout'
@@ -133,7 +135,8 @@ export default {
       windowHeight: 0,
       layout: [],
       gridValues: gridValues,
-      rowHeight: rowHeight
+      rowHeight: rowHeight,
+      user: null
     }
   },
   components: {
@@ -158,11 +161,21 @@ export default {
       this.movementTimer
     )
     this.getDashboard()
+      .then(() => {
+        if (!this.dashboard) {
+          router.replace({ name: '404' })
+        }
+      })
       .then(() => (document.title = this.dashboard.name))
       .then(() => this.fetchTiles())
       .then(() => this.checkEditStatus())
+    this.getUserStatus()
   },
   methods: {
+    async getUserStatus () {
+      let status = await UserService.getStatus()
+      if (status && status.data) this.user = status.data.user
+    },
     async getDashboard () {
       let res = await DashboardsService.getDashboard({
         dashboard_id: this.$route.params.dashboard_id
@@ -237,10 +250,12 @@ export default {
       this.getDashboard()
     },
     refresh () {
-      this.refreshTimeout = setTimeout(() => {
-        this.fetchTiles()
-        this.refresh()
-      }, this.dashboard.refreshTimer * 60000) // Convert minutes to ms
+      if (this.dashboard.refreshTimer) {
+        this.refreshTimeout = setTimeout(() => {
+          this.fetchTiles()
+          this.refresh()
+        }, this.dashboard.refreshTimer * 60000) // Convert minutes to ms
+      }
     },
     updateTimer () {
       this.isCursorVisible = true
@@ -350,6 +365,16 @@ export default {
           click: this.openDashboardEditView
         }
       ]
+    },
+    canUserEdit () {
+      if (!this.dashboard.permissions) return true
+      if (!this.user && this.dashboard.creator === 'Guest') return true
+      if (!this.user) return false
+      let userPermissions = this.dashboard.permissions.users.find(user => user.username === this.user.username)
+      return userPermissions && (userPermissions.role === 'editor' || userPermissions.role === 'admin')
+    },
+    locked () {
+      return this.dashboard.locked || !this.canUserEdit
     }
   },
   watch: {

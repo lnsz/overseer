@@ -35,6 +35,14 @@ export default new Router({
       path: '/dashboards/new',
       name: 'NewDashboardPage',
       component: NewDashboardPage
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: {
+        template: '<p>Page Not Found</p>'
+      }
     }
+
   ]
 })

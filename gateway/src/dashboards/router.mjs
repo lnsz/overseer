@@ -5,7 +5,19 @@ import axios from 'axios'
 const fetchDashboards = (req, res) => {
   axios.get(`${process.env.DASHBOARD_SERVICE_URL}${req.originalUrl}`)
     .then((response) => {
-      res.send(response.data)
+      let dashboards = response.data.dashboards
+      if (!req.user) {
+        dashboards = dashboards.filter((dashboard) => {
+          return !dashboard.permissions.private
+        })
+      }
+      if (req.user && req.user.username) {
+        dashboards = dashboards.filter((dashboard) => {
+          return !dashboard.permissions.private ||
+            dashboard.permissions.users.map(user => user.username).includes(req.user.username)
+        })
+      }
+      res.send({ dashboards: dashboards })
     })
     .catch((error) => {
       console.log(error)
@@ -16,7 +28,7 @@ const fetchDashboards = (req, res) => {
 // Create a dashboard
 const createDashboard = (req, res) => {
   let body = { ...req.body }
-  if (req.user && req.user.username) body["creator"] = req.user.username
+  if (req.user && req.user.username) body.creator = req.user.username
   axios.post(`${process.env.DASHBOARD_SERVICE_URL}${req.originalUrl}`, body)
     .then((response) => {
       res.send(response.data)
@@ -43,7 +55,18 @@ const updateDashboard = (req, res) => {
 const getDashboard = (req, res) => {
   axios.get(`${process.env.DASHBOARD_SERVICE_URL}${req.originalUrl}`)
     .then((response) => {
-      res.send(response.data)
+      let dashboard = response.data
+      if (!req.user && dashboard.permissions.private) {
+        dashboard = null
+      }
+      if (req.user &&
+        req.user.username &&
+        dashboard.permissions.private &&
+        !dashboard.permissions.users.map(user => user.username).includes(req.user.username)
+      ) {
+        dashboard = null
+      }
+      res.send(dashboard)
     })
     .catch((error) => {
       console.log(error)

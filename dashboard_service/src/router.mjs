@@ -15,10 +15,19 @@ const fetchDashboards = (req, res) => {
 
 // Create a dashboard
 const createDashboard = (req, res) => {
+  let body = req.body
+  if (body.creator) {
+    body.permissions = {}
+    body.permissions.users = [] 
+    body.permissions.users.push({
+      username: body.creator,
+      role: 'admin'
+    })
+  }
   new Dashboard({
     stars: 0,
     copies: 0,
-    ...req.body
+    ...body
   }).save((error) => {
     if (error) {
       console.log(error)

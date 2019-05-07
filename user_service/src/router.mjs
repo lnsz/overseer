@@ -3,11 +3,10 @@ import express from 'express'
 
 // Authenticate
 const authenticateUser = (req, res) => {
-  console.log(req.params)
   User.findOne({
     username: req.params.username
   }, (error, user) => {
-    if (error) {
+    if (error || !user) {
       console.log(error)
       res.status(403).send({ authenticated: false, error: "Invalid user"})
       return
@@ -22,7 +21,6 @@ const authenticateUser = (req, res) => {
 
 // Fetch all user
 const getUser = (req, res) => {
-  console.log(req.params)
   User.findOne({
     username: req.params.username
   }, (error, user) => {

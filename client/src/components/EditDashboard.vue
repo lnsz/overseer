@@ -50,7 +50,7 @@
           >
             <div
               class= "permissions"
-              v-if="input.type == 'permissions' && model.permissions && model.permissions.private"
+              v-if="input.type == 'permissions' && model.permissions && model.permissions.users"
             >
               <input
                 class="input-field user-search"
@@ -86,6 +86,7 @@
                 <select
                   v-model="user.role"
                   @change="removeNone"
+                  :disabled="user.username == creator"
                 >
                   <option
                     v-for="(role) in roleOptions"
@@ -176,6 +177,7 @@ export default {
       isScrolling: false,
       userSearch: '',
       username: '',
+      creator: '',
       roleOptions: ['none', 'viewer', 'editor', 'admin']
     }
   },
@@ -187,6 +189,7 @@ export default {
     this.model.layout = this.dashboard.layout
     this.model.tileSettings = this.dashboard.tileSettings
     this.model.permissions = this.dashboard.permissions
+    this.creator = this.dashboard.creator
   },
   methods: {
     addUserPermission (e) {

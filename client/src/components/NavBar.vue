@@ -32,7 +32,7 @@
       v-if="isLoginView"
       @close="isLoginView = false"
     >
-      <Login @login="() => { isLoginView = false; getUserStatus() }" />
+      <Login @login="() => { $parent.$emit('update'); isLoginView = false; getUserStatus() }" />
     </Modal>
     <div class="mobile-nav-bar">
       <div class="hamburger" />
@@ -58,7 +58,7 @@ export default {
     NavButton,
     Register
   },
-  created () {
+  mounted () {
     this.getUserStatus()
   },
   data () {
