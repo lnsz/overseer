@@ -48,13 +48,54 @@
             v-for="(input, contentIndex) in section.content"
             :key="contentIndex"
           >
-            <div class= "permissions" v-if="input.type == 'permissions'">
+            <div
+              class= "permissions"
+              v-if="input.type == 'permissions' && model.permissions && model.permissions.private"
+            >
               <input
                 class="input-field user-search"
                 v-model="userSearch"
-                placeholder="Username"
+                placeholder="Search"
                 @input="searchForUsername"
               />
+              <div
+                class="user-role-picker"
+                v-if="username && !(model.permissions.users.map(x => x.username).includes(username))"
+              >
+                <div class="username">
+                  {{username}}
+                </div>
+                <select @change="addUserPermission">
+                  <option
+                    v-for="(role) in roleOptions"
+                    :value="role"
+                    :key="role"
+                  >
+                    {{role}}
+                  </option>
+                </select>
+              </div>
+              <div
+                v-for="(user, userIndex) in model.permissions.users.filter(x => x.username.startsWith(userSearch))"
+                class="user-role-picker"
+                :key="userIndex"
+              >
+                <div class="username">
+                  {{user.username}}
+                </div>
+                <select
+                  v-model="user.role"
+                  @change="removeNone"
+                >
+                  <option
+                    v-for="(role) in roleOptions"
+                    :value="role"
+                    :key="role"
+                  >
+                    {{role}}
+                  </option>
+                </select>
+              </div>
             </div>
             <div class="input-left-side" v-if="input.type != 'permissions'">
               {{input.name}}
@@ -79,6 +120,7 @@
                   color="#42b983"
                   :width="50"
                   :height="25"
+                  sync
                   v-model="model[section.id][input.field]"
                 />
               </div>
@@ -133,7 +175,8 @@ export default {
       currentSection: 0,
       isScrolling: false,
       userSearch: '',
-      username: ''
+      username: '',
+      roleOptions: ['none', 'viewer', 'editor', 'admin']
     }
   },
   mounted () {
@@ -146,6 +189,15 @@ export default {
     this.model.permissions = this.dashboard.permissions
   },
   methods: {
+    addUserPermission (e) {
+      this.model.permissions.users.push({
+        username: this.username,
+        role: e.target.value
+      })
+    },
+    removeNone () {
+      this.model.permissions.users = this.model.permissions.users.filter(x => x.role !== 'none')
+    },
     scrollToSection (index) {
       const options = {
         container: '.edit-dashboard',
@@ -197,7 +249,6 @@ export default {
     },
     async searchForUsername () {
       let res = await UserService.getUser({ username: this.userSearch })
-      console.log(res.data)
       this.username = res.data.username ? res.data.username : null
     }
   },
@@ -277,11 +328,18 @@ export default {
       visibleSections.push({
         id: 'permissions',
         name: 'Permissions',
-        content: [{
-          name: 'Users',
-          field: 'users',
-          type: 'permissions'
-        }]
+        content: [
+          {
+            name: 'Private',
+            field: 'private',
+            type: 'toggle'
+          },
+          {
+            name: 'Users',
+            field: 'users',
+            type: 'permissions'
+          }
+        ]
       })
       return visibleSections
     }
@@ -386,8 +444,23 @@ export default {
             }
             .permissions {
               display: flex;
-              justify-content: center;
+              flex-direction: column;
+              align-content: center;
+              justify-self: center;
               width: 100%;
+              .user-role-picker {
+                display: flex;
+                width: 25%;
+                align-self: center;
+                justify-content: space-between;
+                align-content: center;
+                padding-bottom: 10px;
+                height: 24px;
+                .username {
+                  font-weight: 300;
+                  font-size: 16px;
+                }
+              }
             }
             .input-left-side {
               align-self: center;
@@ -414,16 +487,18 @@ export default {
                 width: 15vw;
                 resize: none;
               }
-
               &.color-demo {
                 width: 15px;
                 height: 15px;
                 margin-right: 5px;
                 align-self: center;
               }
-
               &.user-search {
                 margin-bottom: 10px;
+                width: 40%;
+                align-self: center;
+                margin-bottom: 25px;
+                text-align: center;
               }
             }
           }
