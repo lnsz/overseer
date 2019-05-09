@@ -8,6 +8,12 @@
       {{text.toUpperCase()}}
       <slot />
     </router-link>
+    <input
+      v-else-if="submit"
+      class="button"
+      type="submit"
+      :value="text.toUpperCase()"
+    />
     <div
       v-else
       class="button"
@@ -27,6 +33,10 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    submit: {
+      type: Boolean,
+      default: false
     },
     link: {
       type: String,

@@ -3,9 +3,12 @@
     <div class="form-container">
       <div class="form" style="z-index: 1;">
         {{error}}
-        <input class="field text-field" type="text" placeholder="Username" v-model="username" />
-        <input class="field text-field" type="password" placeholder="Password" v-model="password" />
-        <ActionButton @click="login" text="Login" />
+        <form @submit.prevent="login">
+          <input class="field text-field" type="text" placeholder="Username" v-model="username" />
+          <input class="field text-field" type="password" placeholder="Password" v-model="password" />
+       
+          <ActionButton submit text="Login" />
+        </form>
       </div>
     </div>
   </div>

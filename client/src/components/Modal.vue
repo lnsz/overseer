@@ -47,7 +47,7 @@ export default {
 
   .modal {
     z-index: 30000000;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     display: flex;
     left: 0;

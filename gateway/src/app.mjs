@@ -15,7 +15,7 @@ const app = express()
 const splitURL = process.env.CLIENT_URL.split(':')
 const whitelist = [
   process.env.CLIENT_URL,
-  splitURL[0] + splitURL[1],
+  `${splitURL[0]}:${splitURL[1]}`,
   'http://localhost:4000'
 ]
 const corsOptions = {
