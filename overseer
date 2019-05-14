@@ -183,7 +183,6 @@ setup() {
 create_compose_file() {
 if [ "$MODE" = 'dev' ]
 then
-echo $MODE
 cat <<EOT > $DOCKER_COMPOSE
 version: "3"
 
@@ -199,11 +198,12 @@ services:
     environment:
       - PORT=${CLIENT_CP}
       - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
+      - CHOKIDAR_USEPOLLING=true
     volumes:
-      - ${CLIENT_PATH}/src:/data/src
-      - ${CLIENT_PATH}/test:/data/test
-      - ${CLIENT_PATH}/build:/data/build
-      - ${CLIENT_PATH}/config:/data/config
+      - ${CLIENT_PATH}/src:/app/src
+      - ${CLIENT_PATH}/test:/app/test
+      - ${CLIENT_PATH}/build:/app/build
+      - ${CLIENT_PATH}/config:/app/config
 
   ${GATEWAY_NAME}:
     container_name: ${GATEWAY_NAME}
@@ -401,6 +401,7 @@ services:
   ${CLIENT_NAME}:
     container_name: ${CLIENT_NAME}
     image: ${CLIENT_IMAGE}:${CLIENT_TAG}
+    restart: always
     ports:
       - '${CLIENT_HP}:${CLIENT_CP}'
     environment:
@@ -410,6 +411,7 @@ services:
   ${GATEWAY_NAME}:
     container_name: ${GATEWAY_NAME}
     image: ${GATEWAY_IMAGE}:${GATEWAY_TAG}
+    restart: always
     ports:
       - '${GATEWAY_HP}:${GATEWAY_CP}'
     environment:
@@ -428,6 +430,7 @@ services:
   ${DASHBOARD_SERVICE_NAME}:
     container_name: ${DASHBOARD_SERVICE_NAME}
     image: ${DASHBOARD_SERVICE_IMAGE}:${DASHBOARD_SERVICE_TAG}
+    restart: always
     expose:
       - '${DASHBOARD_SERVICE_CP}'
     environment:
@@ -444,6 +447,7 @@ services:
   ${DASHBOARD_DB_NAME}:
     container_name: ${DASHBOARD_DB_NAME}
     image: ${DASHBOARD_DB_IMAGE}:${DASHBOARD_DB_TAG}
+    restart: always
     expose:
       - '${DASHBOARD_DB_CP}'
     volumes:
@@ -453,6 +457,7 @@ services:
   ${TILE_SERVICE_NAME}:
     container_name: ${TILE_SERVICE_NAME}
     image: ${TILE_SERVICE_IMAGE}:${TILE_SERVICE_TAG}
+    restart: always
     expose:
       - '${TILE_SERVICE_CP}'
     environment:
@@ -469,6 +474,7 @@ services:
   ${TILE_DB_NAME}:
     container_name: ${TILE_DB_NAME}
     image: ${TILE_DB_IMAGE}:${TILE_DB_TAG}
+    restart: always
     expose:
       - '${TILE_DB_CP}'
     volumes:
@@ -478,6 +484,7 @@ services:
   ${USER_SERVICE_NAME}:
     container_name: ${USER_SERVICE_NAME}
     image: ${USER_SERVICE_IMAGE}:${USER_SERVICE_TAG}
+    restart: always
     expose:
       - '${USER_SERVICE_CP}'
     environment:
@@ -494,6 +501,7 @@ services:
   ${USER_DB_NAME}:
     container_name: ${USER_DB_NAME}
     image: ${TILE_DB_IMAGE}:${USER_DB_TAG}
+    restart: always
     expose:
       - '${USER_DB_CP}'
     volumes:
@@ -503,6 +511,7 @@ services:
   ${WORKER_QUEUE_SERVICE_NAME}:
     container_name: ${WORKER_QUEUE_SERVICE_NAME}
     image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
+    restart: always
     expose:
       - '${WORKER_SERVICE_CP}'
     environment:
@@ -520,6 +529,7 @@ services:
   ${WORKER_RUNNER_SERVICE_NAME}:
     container_name: ${WORKER_RUNNER_SERVICE_NAME}
     image: ${WORKER_SERVICE_IMAGE}:${WORKER_SERVICE_TAG}
+    restart: always
     expose:
       - '${WORKER_SERVICE_CP}'
     environment:
@@ -537,6 +547,7 @@ services:
   ${WORKER_DB_NAME}:
     container_name: ${WORKER_DB_NAME}
     image: ${WORKER_DB_IMAGE}:${WORKER_DB_TAG}
+    restart: always
     expose:
       - '${WORKER_DB_CP}'
     volumes:

@@ -1,9 +1,17 @@
-FROM node:10.15-alpine
+FROM node:12.3-alpine
 
-WORKDIR /data/
+RUN apk add --no-cache --virtual .gyp \
+  python \
+  make \
+  g++
+
+WORKDIR /app
+
+COPY package.json yarn* ./
+RUN yarn
 
 COPY . .
 
-RUN npm install --no-package-lock
+USER node
 
-CMD ["npm", "start"]
+CMD [ "yarn", "serve" ]

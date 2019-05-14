@@ -1,0 +1,31 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**",
+      "src/vue-apollo.js"
+    ]
+  },
+  "rules": {
+    "quotemark": [true, "single"],
+    "indent": [true, "spaces", 2],
+    "semicolon": [true, "never"],
+    "trailing-comma": [true, "never"],
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": true,
+    "prefer-object-spread": true,
+    "prefer-const": true,
+    "arrow-return-shorthand": true,
+    "class-name": true,
+    "no-trailing-whitespace": true,
+    "no-irregular-whitespace": true,
+    "curly": true,
+    "eofline": true,
+    "no-console": false
+  }
+}

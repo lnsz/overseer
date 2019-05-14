@@ -1,62 +1,29 @@
 <template>
   <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
     <router-view/>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
-</script>
-
 <style lang="scss">
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto:300,400,500');
-  @import "assets/styles/colors";
-  @import "assets/styles/functions";
-
-  #app {
-    font-family: 'Roboto', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    position: absolute;
-    width: 100%;
-    height: 100%;
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+#nav {
+  padding: 30px;
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+    &.router-link-exact-active {
+      color: #42b983;
+    }
   }
-
-  // Global Styles
-  // Elements
-  body {
-    margin: 0;
-  }
-  a, a:visited, a:hover, a:active, a:focus {
-    text-decoration: none;
-  }
-
-  // Pseudo Elements
-  ::selection {
-    background: color('green');
-    color: color('text');
-  }
-  ::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
-  }
-
-  // States
-  :focus {
-    outline: none;
-  }
-
-  // Transitions
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
+}
 </style>
