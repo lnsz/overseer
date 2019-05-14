@@ -1,0 +1,37 @@
+@import "./theme/colors.scss";
+@import "./theme/fonts.scss";
+@import "./theme/fontsizes.scss";
+@import "./theme/values.scss";
+@import "./theme/breakpoints.scss";
+
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
+@function textColor($key: 'primary') {
+  @return map-get($textColors, $key);
+}
+
+@function bgColor($key: 'primary') {
+  @return map-get($bgColors, $key);
+}
+
+@function font($key: 'primary') {
+  @return map-get($fonts, $key);
+}
+
+@function fontsize($key: 'primary') {
+  @return map-get($fontsizes, $key);
+}
+
+@function values($key: 'primary') {
+  @return map-get($values, $key);
+}
+
+@function breakpoints($key: 'primary') {
+  @return map-get($breakpoints, $key);
+}

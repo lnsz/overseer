@@ -201,9 +201,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ${CLIENT_PATH}/src:/app/src
-      - ${CLIENT_PATH}/test:/app/test
-      - ${CLIENT_PATH}/build:/app/build
-      - ${CLIENT_PATH}/config:/app/config
+      - ${CLIENT_PATH}/test:/app/tests
 
   ${GATEWAY_NAME}:
     container_name: ${GATEWAY_NAME}
