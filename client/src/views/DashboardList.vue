@@ -2,8 +2,7 @@
   <div class="dashboard-list-page">
     <Header @update="() => {}" />
     <div class="filters">
-      <!-- <TabBar :tabs="tabs" /> -->
-      <div>tabs</div>
+      <TabBar :tabs="tabs" />
       <SearchBox @search="() => {}" />
     </div>
     <!-- <DashboardList
@@ -13,17 +12,54 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import Header from '@/components/Header.vue'
-  import SearchBox from '@/components/SearchBox.vue'
+import { Component, Vue } from 'vue-property-decorator'
+import Header from '@/components/Header.vue'
+import SearchBox from '@/components/SearchBox.vue'
+import TabBar from '@/components/TabBar.vue'
+import { DashboardApi } from '../api'
 
-  @Component({
-    components: {
-      Header,
-      SearchBox
-    }
-  })
-  export default class DashboardList extends Vue {}
+@Component({
+  components: {
+    Header,
+    SearchBox,
+    TabBar
+  }
+})
+export default class DashboardList extends Vue {
+  // Data
+  private tabs = ['best', 'hot', 'newest', 'private', 'stars']
+  private dashboardFilter = ''
+  private dashboards = []
+
+  // Mounted
+  private mounted() {
+    // this.getDashboards()
+    document.title = 'Dashboard List'
+  }
+
+  // Computed
+  get filteredDashboards(): any[] {
+    return this.dashboards.filter(
+      (dashboard) => dashboard.name.toUpperCase().includes(
+        this.dashboardFilter.toUpperCase()
+      )
+    )
+  }
+
+  get tab(): string {
+    return `${this.$route.query.tab}`
+  }
+
+  // Methods
+  private async getDashboards(): Promise<void> {
+    const response = await DashboardApi.fetchDashboards()
+    this.dashboards = response.data.dashboards
+  }
+
+  private async updateFilter(event: Event): Promise<void> {
+    this.dashboardFilter = (event.target as HTMLInputElement).value
+  }
+}
 </script>
 
 <style lang="scss" scoped>

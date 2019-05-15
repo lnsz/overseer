@@ -197,7 +197,7 @@ services:
       - '${CLIENT_HP}:${CLIENT_CP}'
     environment:
       - PORT=${CLIENT_CP}
-      - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
+      - VUE_APP_API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ${CLIENT_PATH}/src:/app/src
@@ -404,7 +404,7 @@ services:
       - '${CLIENT_HP}:${CLIENT_CP}'
     environment:
       - PORT=${CLIENT_CP}
-      - API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}/
+      - VUE_APP_API_URL=http://${GATEWAY_IP}:${GATEWAY_HP}
 
   ${GATEWAY_NAME}:
     container_name: ${GATEWAY_NAME}

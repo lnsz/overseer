@@ -15,6 +15,8 @@
         :key="navLink.name"
         :name="navLink.name"
         :page="navLink.page"
+        :action="navLink.action"
+        :border="navLink.border"
       />
     </div>
   </div>

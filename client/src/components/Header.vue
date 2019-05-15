@@ -7,27 +7,83 @@
     >
       <Logo />
     </router-link>
-    <NavBar :navLinks="navLinks" />
+    <NavBar
+      :navLinks="navLinks"
+      @open-login="openLoginView"
+      @open-register="openRegisterView"
+    />
+    <Modal
+      v-if="isRegisterView"
+      @close="isRegisterView = false"
+    >
+      <Register
+        @login="isRegisterView = false"
+      />
+    </Modal>
+    <Modal
+      v-if="isLoginView"
+      @close="isLoginView = false"
+    >
+      <Login
+        @login="isLoginView = false"
+      />
+    </Modal>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
+  import Login from '@/components/Login.vue'
+  import Register from '@/components/Register.vue'
   import Logo from '@/components/Logo.vue'
+  import Modal from '@/components/Modal.vue'
   import NavBar from '@/components/NavBar.vue'
+  import strings from '../shared/constants/strings'
 
   @Component({
     components: {
+      Login,
       Logo,
-      NavBar
+      Modal,
+      NavBar,
+      Register
     }
   })
   export default class Header extends Vue {
+    // Data
     private navLinks = [
-      { name: 'About', page: 'Home' },
-      { name: 'Sign Up', page: 'Home' },
-      { name: 'Log in', page: 'Home' },
+      {
+        name: strings.about,
+        page: 'Home',
+        border: false,
+      },
+      {
+        name: strings.create,
+        page: 'Home',
+        border: false,
+      },
+      {
+        name: strings.signUp,
+        border: true,
+        action: 'open-register'
+      },
+      {
+        name: strings.logIn,
+        border: false,
+        action: 'open-login'
+      },
     ]
+    private isLoginView = false
+    private isRegisterView = false
+
+    // Methods
+    private openLoginView(): void {
+      this.isLoginView = true
+    }
+
+    private openRegisterView(): void {
+      this.isRegisterView = true
+    }
   }
 </script>
 
