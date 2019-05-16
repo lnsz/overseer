@@ -11,6 +11,7 @@
       :navLinks="navLinks"
       @open-login="openLoginView"
       @open-register="openRegisterView"
+      @logout="logout"
     />
     <Modal
       v-if="isRegisterView"
@@ -33,12 +34,14 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
+  import { NavLink } from '../types'
   import Login from '@/components/Login.vue'
   import Register from '@/components/Register.vue'
   import Logo from '@/components/Logo.vue'
   import Modal from '@/components/Modal.vue'
   import NavBar from '@/components/NavBar.vue'
   import strings from '../shared/constants/strings'
+  import { UserApi } from '../api'
 
   @Component({
     components: {
@@ -51,30 +54,59 @@
   })
   export default class Header extends Vue {
     // Data
-    private navLinks = [
-      {
-        name: strings.about,
-        page: 'Home',
-        border: false,
-      },
-      {
-        name: strings.create,
-        page: 'Home',
-        border: false,
-      },
-      {
-        name: strings.signUp,
-        border: true,
-        action: 'open-register'
-      },
-      {
-        name: strings.logIn,
-        border: false,
-        action: 'open-login'
-      },
-    ]
     private isLoginView = false
     private isRegisterView = false
+
+    // Computed
+    get navLinks(): NavLink[] {
+      if (this.$store.state.user) {
+        return [
+          {
+            name: strings.about,
+            page: 'Home',
+            border: false,
+          },
+          {
+            name: strings.create,
+            page: 'Home',
+            border: false,
+          },
+          {
+            name: strings.myAccount,
+            page: 'Home',
+            border: false
+          },
+          {
+            name: strings.logOut,
+            border: false,
+            action: 'logout'
+          }
+        ]
+      } else {
+       return [
+          {
+            name: strings.about,
+            page: 'Home',
+            border: false,
+          },
+          {
+            name: strings.create,
+            page: 'Home',
+            border: false,
+          },
+          {
+            name: strings.signUp,
+            border: true,
+            action: 'open-register'
+          },
+          {
+            name: strings.logIn,
+            border: false,
+            action: 'open-login'
+          },
+        ]
+      }
+    }
 
     // Methods
     private openLoginView(): void {
@@ -83,6 +115,13 @@
 
     private openRegisterView(): void {
       this.isRegisterView = true
+    }
+
+    private async logout(): Promise<void> {
+      const res = await UserApi.logout()
+      if (res.data && res.data.success) {
+        this.$store.dispatch('logout')
+      }
     }
   }
 </script>

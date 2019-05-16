@@ -4,5 +4,7 @@ export default {
   about: 'About',
   create: 'Create Dashboard',
   signUp: 'Sign Up',
-  logIn: 'Log In'
+  logIn: 'Log In',
+  logOut: 'Log Out',
+  myAccount: 'My Account'
 }

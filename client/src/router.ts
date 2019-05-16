@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import DashboardList from './views/DashboardList.vue'
+import DashboardListPage from './views/DashboardListPage.vue'
 
 Vue.use(Router)
 
@@ -16,7 +16,7 @@ export default new Router({
     {
       path: '/dashboards',
       name: 'Dashboards',
-      component: DashboardList,
+      component: DashboardListPage,
     },
   ],
 })

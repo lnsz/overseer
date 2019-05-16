@@ -52,7 +52,7 @@
         }
       } else {
         if (res.data && res.data.error && res.data.error.errors) {
-          let errors = res.data.error.errors
+          const errors = res.data.error.errors
           this.error = errors[Object.keys(errors)[0]].message
         }
       }

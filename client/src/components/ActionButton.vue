@@ -46,7 +46,6 @@
 
     @Prop({ default: 'normal' })
     private size: string
-
   }
 </script>
 

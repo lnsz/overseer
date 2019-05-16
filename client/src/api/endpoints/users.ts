@@ -19,7 +19,7 @@ export default {
   login(params) {
     return Gateway().post('login', params)
   },
-  logout(params) {
-    return Gateway().post('logout', params)
+  logout() {
+    return Gateway().post('logout')
   }
 }
