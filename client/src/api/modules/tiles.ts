@@ -1,6 +1,6 @@
 import Gateway from '../gateway'
 
-export default {
+export const TileApi = {
   fetchTiles(params) {
     return Gateway().get(`dashboards/${params.dashboard_id}/tiles`)
   },

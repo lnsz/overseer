@@ -1,6 +1,6 @@
 import Gateway from '../gateway'
 
-export default {
+export const UserApi = {
   getStatus() {
     return Gateway().get('users')
   },

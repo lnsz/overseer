@@ -1,6 +1,6 @@
 import Gateway from '../gateway'
 
-export default {
+export const DashboardApi = {
   fetchDashboards() {
     return Gateway().get('dashboards')
   },

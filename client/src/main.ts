@@ -16,7 +16,8 @@ import {
   faArrowLeft,
   faLock,
   faLockOpen,
-  faCog
+  faCog,
+  faEllipsisV
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
@@ -30,7 +31,8 @@ library.add(
   faArrowLeft,
   faLock,
   faLockOpen,
-  faCog
+  faCog,
+  faEllipsisV
 )
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 

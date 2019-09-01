@@ -11,5 +11,19 @@ export interface Dashboard {
   description: string,
   creator: string,
   stars: number,
-  copies: number
+  copies: number,
+  refreshTimer: number,
+  locked: boolean,
+  style: any,
+  layout: any,
+  tileSettings: any,
+  permissions: {
+    users: any[]
+  }
+}
+
+export interface FabData {
+  name: string,
+  icon: string,
+  click?: () => void
 }

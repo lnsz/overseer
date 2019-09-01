@@ -1,18 +1,20 @@
 <template>
   <div class="dashboard-list-page">
-    <Header @update="() => {}" />
-    <div class="filters">
-      <TabBar :tabs="tabs" />
-      <SearchBox @search="() => {}" />
+    <Header />
+    <div class="dashboard-list-container">
+      <div class="filters">
+        <TabBar :tabs="tabs" />
+        <SearchBox @search="() => {}" />
+      </div>
+      <DashboardList
+        :dashboards="filteredDashboards"
+      />
     </div>
-    <DashboardList
-      :dashboards="filteredDashboards"
-    />
   </div>
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
+  import { Component, Vue, Watch } from 'vue-property-decorator'
   import Header from '@/components/Header.vue'
   import SearchBox from '@/components/SearchBox.vue'
   import TabBar from '@/components/TabBar.vue'
@@ -53,6 +55,10 @@
       return `${this.$route.query.tab}`
     }
 
+    get user() {
+      return this.$store.state.user
+    }
+
     // Methods
     private async getDashboards(): Promise<void> {
       const response = await DashboardApi.fetchDashboards()
@@ -62,26 +68,37 @@
     private async updateFilter(event: Event): Promise<void> {
       this.dashboardFilter = (event.target as HTMLInputElement).value
     }
+
+    // Watchers
+    @Watch('user')
+    private onUserChanged(val: string, oldVal: string) {
+      this.getDashboards()
+    }
   }
 </script>
 
 <style lang="scss" scoped>
   @import "../shared/styles/functions";
 
-  .filters{
-    display: flex;
-    justify-content: space-between;
-    max-height: 46px;
-    margin: 0 30px;
-    padding: 30px 0 0 0;
-  }
+
   .dashboard-list-page {
     display: flex;
     flex-direction: column;
-    flex: 1;
     width: 100%;
     justify-content: flex-start;
     min-height: 100%;
     background-color: bgColor('default');
+    .dashboard-list-container {
+      display: flex;
+      flex-direction: column;
+      margin: 0 7%;
+      .filters{
+        display: flex;
+        justify-content: space-between;
+        max-height: 46px;
+        margin: 0 30px;
+        padding: 30px 0 0 0;
+      }
+    }
   }
 </style>

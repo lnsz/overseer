@@ -98,7 +98,7 @@
       }
       .dashboard-description {
         font-weight: 100;
-          color: textColor('default');
+        color: textColor('default');
       }
       .dashboard-info {
         color: textColor('secondary');

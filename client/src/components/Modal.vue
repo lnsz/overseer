@@ -47,7 +47,7 @@
     display: flex;
     align-self: center;
     position: relative;
-    background: color('background');
+    background: bgColor('default');
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 1);
     border-radius: 3px;
     padding: 10px;

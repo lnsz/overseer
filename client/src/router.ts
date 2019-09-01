@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import DashboardListPage from './views/DashboardListPage.vue'
 
 Vue.use(Router)
 
@@ -16,7 +15,28 @@ export default new Router({
     {
       path: '/dashboards',
       name: 'Dashboards',
-      component: DashboardListPage,
+      component: () => import('./views/DashboardListPage.vue'),
     },
+    {
+      path: '/dashboards/:dashboard_id/view',
+      alias: '/dashboards/:dashboard_id/edit',
+      name: 'ViewDashboardPage',
+      component: () => import('./views/DashboardPage.vue')
+    },
+    {
+      path: '/dashboards/:dashboard_id/tiles/:tile_id/edit',
+      name: 'EditTilePage',
+      component: () => import('./views/DashboardPage.vue')
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: () => import('./views/NotFound.vue')
+    },
+    {
+      path: '/500',
+      name: '500',
+      component: () => import('./views/ServerError.vue')
+    }
   ],
 })
