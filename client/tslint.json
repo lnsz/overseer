@@ -26,6 +26,7 @@
     "no-irregular-whitespace": true,
     "curly": true,
     "eofline": true,
-    "no-console": false
+    "no-console": false,
+    "no-empty": false
   }
 }

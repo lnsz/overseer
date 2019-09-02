@@ -6,24 +6,12 @@
     <div
       class="options-button"
       v-if="!locked"
-      @click="toggleOptions"
-      v-click-outside="() => console.log('a')"
-      @delete="deleteTile"
-      @copy="copyTile"
-      @edit="$emit('edit', tile)"
+      @click="$emit('edit', tile)"
     >
       <FontAwesomeIcon
         class="icon"
         icon="ellipsis-v"
       />
-    </div>
-    <div
-      class="tile-options"
-      :class="{ show: isOptionsOpen }"
-    >
-      <div>Edit</div>
-      <div>Copy</div>
-      <div>Delete</div>
     </div>
     <!-- <StatusTile
       v-if="tile.type === 'status'"

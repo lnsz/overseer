@@ -34,10 +34,31 @@ const TileSchema = new Schema({
     options: Object
   },
   style: {
-    textColor: String,
-    backgroundColor: String,
-    offlineColor: String,
-    onlineColor: String
+    font: {
+      color: String,
+      family: String,
+      size: String,
+      weight: String,
+      style: String
+    },
+    background: {
+      color: String
+    },
+    border: {
+      color: String,
+      width: Number,
+      radius: Number,
+      style: String
+    },
+    outline: {
+      color: String,
+      style: String,
+      width: Number,
+      offset: Number,
+    },
+    shadow: {
+      enabled: Boolean
+    }
   }
 })
 

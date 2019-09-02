@@ -51,14 +51,9 @@ const DashboardSchema = new Schema({
     textColor: String,
     tileBorderRadius: { type: Number, default: 0 }
   },
-  style: {
-    backgroundColor: { type: String, default: '' }, // Color of the dashboard background
-    primaryColor: { type: String, default: '' },     // Color of main buttons (save, open fab)
-    secondaryColor: { type: String, default: '' }   // Color of secondary buttons (back, fab options)
-  },
   layout: {
-    rows: { type: Number, default: 1 },
-    columns: { type: Number, default: 1 },
+    rows: { type: Number, default: 4 },
+    columns: { type: Number, default: 4 },
     marginX: { type: Number, default: 0 },
     marginY: { type: Number, default: 0 },
     showGrid: { type: Boolean, default: false },

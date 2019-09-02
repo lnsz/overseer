@@ -94,5 +94,11 @@
         background-color: shade(bgColor('red'), 20%);
       }
     }
+    &.grey {
+      background-color: bgColor('grey');
+      &:hover {
+        background-color: shade(bgColor('grey'), 20%);
+      }
+    }
   }
 </style>

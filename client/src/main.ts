@@ -17,7 +17,8 @@ import {
   faLock,
   faLockOpen,
   faCog,
-  faEllipsisV
+  faEllipsisV,
+  faTrashAlt
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
@@ -32,7 +33,8 @@ library.add(
   faLock,
   faLockOpen,
   faCog,
-  faEllipsisV
+  faEllipsisV,
+  faTrashAlt
 )
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 

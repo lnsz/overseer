@@ -1,17 +1,20 @@
 <template>
-  <div @scroll="updateCurrentSection" class="edit-dashboard">
+  <div @scroll="updateCurrentSection" class="edit-tile">
     <div class="top-bar">
       <input
         class="title"
-        placeholder="name"
+        placeholder="Name"
         v-model="model.general.name"
       />
-      <div class="delete-button">
+      <div
+        @click="deleteTile"
+        class="delete-button"
+      >
         <font-awesome-icon
           class="icon"
           icon="trash-alt"
         />
-        <div class="tooltip">Delete Dashboard</div>
+        <div class="tooltip">Delete Tile</div>
       </div>
     </div>
     <div class="edit-menu" id='edit-menu'>
@@ -26,8 +29,14 @@
           {{section.name}}
         </div>
         <ActionButton
+          class="copy-button"
+          @click="copyTile"
+          color="grey"
+          text="copy"
+        />
+        <ActionButton
           class="save-button"
-          @click="saveDashboard"
+          @click="saveTile"
           text="Save"
         />
       </div>
@@ -50,56 +59,6 @@
             v-for="(input, contentIndex) in section.content"
             :key="contentIndex"
           >
-            <div
-              class= "permissions"
-              v-if="input.type == 'permissions' && model.permissions && model.permissions.users"
-            >
-              <input
-                class="input-field user-search"
-                v-model="userSearch"
-                placeholder="Search"
-                @input="searchForUsername"
-              />
-              <div
-                class="user-role-picker"
-                v-if="username && !(model.permissions.users.map(x => x.username).includes(username))"
-              >
-                <div class="username">
-                  {{username}}
-                </div>
-                <select @change="addUserPermission">
-                  <option
-                    v-for="(role) in roleOptions"
-                    :value="role"
-                    :key="role"
-                  >
-                    {{role}}
-                  </option>
-                </select>
-              </div>
-              <div
-                v-for="(user, userIndex) in model.permissions.users.filter(x => x.username.startsWith(userSearch))"
-                class="user-role-picker"
-                :key="userIndex"
-              >
-                <div class="username">
-                  {{user.username}}
-                </div>
-                <select
-                  v-model="user.role"
-                  @change="removeNone"
-                  :disabled="user.username == creator"
-                >
-                  <option
-                    v-for="(role) in roleOptions"
-                    :value="role"
-                    :key="role"
-                  >
-                    {{role}}
-                  </option>
-                </select>
-              </div>
-            </div>
             <div class="input-left-side" v-if="input.type != 'permissions'">
               {{input.name}}
             </div>
@@ -110,6 +69,12 @@
                   v-model="model[section.id][input.field]"
                 >
                 </textarea>
+              </div>
+              <div v-if="input.type == 'input'">
+                <input
+                  class="input-field text-input"
+                  v-model="model[section.id][input.field]"
+                />
               </div>
               <div v-else-if="input.type == 'number'">
                 <input
@@ -136,6 +101,20 @@
                   />
                 </div>
               </div>
+              <div v-else-if="input.type == 'dropdown'">
+                <div class="picker-input">
+                  <select
+                    v-model="model[section.id][input.field]"
+                  >
+                    <option
+                      :key="option"
+                      v-for="(option) in input.options"
+                    >
+                      {{option}}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -148,9 +127,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import VueScrollTo from 'vue-scrollto'
 import { ToggleButton } from 'vue-js-toggle-button'
-import { UserApi } from '../api'
 import ActionButton from '@/components/ActionButton.vue'
-import { Dashboard } from '../types'
 
 @Component({
   components: {
@@ -158,61 +135,59 @@ import { Dashboard } from '../types'
     ToggleButton
   }
 })
-export default class EditDashboard extends Vue {
+export default class EditTile extends Vue {
   // Props
-  @Prop({ default: {} })
-  private dashboard: Dashboard
+  @Prop({ default: () => {} })
+  private tile: any
 
   // Data
   private model = {
     general: {
       name: '',
+      url: '',
       description: '',
-      refreshTimer: 30
     },
-    style: {},
+    font: {},
+    border: {},
+    background: {},
+    outline: {},
+    shadow: {},
     layout: {},
-    tileSettings: {},
-    permissions: {
-      users: []
-    }
+    status: {},
+    iframe: {},
+    chart: {},
   }
   private currentSection = 0
   private isScrolling = false
-  private userSearch = ''
-  private username = ''
-  private creator = ''
-  private roleOptions = ['none', 'viewer', 'editor', 'admin']
 
   // Mounted
   private mounted(): void {
-    this.model.general.name = this.dashboard.name || ''
-    this.model.general.description = this.dashboard.description || ''
-    this.model.general.refreshTimer = this.dashboard.refreshTimer || 30
-    this.model.style = this.dashboard.style || {}
-    this.model.layout = this.dashboard.layout || {}
-    this.model.tileSettings = this.dashboard.tileSettings || {}
-    this.model.permissions = this.dashboard.permissions || { users: [] }
-    this.creator = this.dashboard.creator || ''
+    this.model.general.name = this.tile.name
+    this.model.general.description = this.tile.description || ''
+    this.model.general.url = this.tile.url || ''
+    this.model.layout = this.tile.layout || {}
+    this.model.status = this.tile.status || {}
+    this.model.iframe = this.tile.iframe || {}
+    this.model.chart = this.tile.chart || {}
+    if (this.tile.style) {
+      this.model.font = this.tile.style.font || {}
+      this.model.background = this.tile.style.background || {}
+      this.model.border = this.tile.style.border || {}
+      this.model.outline = this.tile.style.outline || {}
+      this.model.shadow = this.tile.style.shadow || {}
+    } else {
+      this.model.font = {}
+      this.model.background = {}
+      this.model.border = {}
+      this.model.outline = {}
+      this.model.shadow = {}
+    }
   }
 
   // Methods
-  private addUserPermission(e: Event): void {
-    this.model.permissions.users.push({
-      username: this.username,
-      role: (event.target as HTMLInputElement).value
-    })
-  }
-
-  private removeNone(): void {
-    this.model.permissions.users = this.model.permissions.users.filter((x) => {
-      return x.role !== 'none'
-    })
-  }
-
   private scrollToSection(index: number): void {
     const options = {
-      container: '.edit-dashboard',
+      container: '.edit-tile',
       duration: 300,
       easing: 'ease',
       onStart: () => { this.isScrolling = true },
@@ -247,29 +222,34 @@ export default class EditDashboard extends Vue {
     this.model[section][field] = (e.target as HTMLInputElement).innerText
   }
 
-  private saveDashboard(): void {
-    const newDashboard = {
-      dashboard_id: this.$route.params.dashboard_id,
+  private saveTile(): void {
+    const newTile = {
+      tile_id: this.tile._id,
       name: this.model.general.name,
       description: this.model.general.description,
-      refreshTimer: this.model.general.refreshTimer,
-      style: this.model.style,
-      layout: this.model.layout,
-      tileSettings: this.model.tileSettings,
-      permissions: this.model.permissions
+      url: this.model.general.url,
+      iframe: this.model.iframe,
+      chart: this.model.chart,
+      style: {
+        font: this.model.font,
+        background: this.model.background,
+        outline: this.model.outline,
+        border: this.model.border
+      }
     }
-    this.$emit('update-dashboard', newDashboard)
+    this.$emit('update-tile', newTile)
     this.$emit('close')
   }
 
-  private deleteDashboard(): void {
-    // TODO show warning
-    this.$emit('delete-dashboard')
+  private deleteTile(): void {
+    this.$emit('delete-tile', { tile_id: this.tile._id })
+    this.$emit('close')
   }
 
-  private async searchForUsername(): Promise<void> {
-    const res = await UserApi.getUser({ username: this.userSearch })
-    this.username = res.data.username ? res.data.username : null
+  private copyTile(): void {
+    const { _id, ...newTile } = this.tile
+    this.$emit('copy-tile', newTile)
+    this.$emit('close')
   }
 
   // Computed
@@ -285,96 +265,129 @@ export default class EditDashboard extends Vue {
             type: 'text'
           },
           {
-            name: 'Refresh Timer (minutes)',
-            field: 'refreshTimer',
-            type: 'number'
+            name: 'URL',
+            field: 'url',
+            type: 'input'
           }
         ]
       },
       {
-        id: 'layout',
-        name: 'Layout',
+        id: 'font',
+        name: 'Font',
         content: [
           {
-            name: 'Rows',
-            field: 'rows',
+            name: 'Color',
+            field: 'color',
+            type: 'color'
+          },
+          {
+            name: 'Family',
+            field: 'family',
+            type: 'dropdown',
+            options: [
+              'Arial',
+              'Comic Sans MS',
+              'Courier New',
+              'Impact',
+              'Georgia',
+              'Lucida Console',
+              'Lucida Sans Unicode',
+              'Palantino Linotype',
+              'Roboto',
+              'Tahoma',
+              'Times New Roman',
+              'Trebuchet MS',
+              'Verdana'
+            ]
+          },
+          {
+            name: 'Size (px)',
+            field: 'size',
             type: 'number'
           },
           {
-            name: 'Columns',
-            field: 'columns',
+            name: 'Weight',
+            field: 'weight',
             type: 'number'
           },
           {
-            name: 'Horizontal Margin',
-            field: 'marginX',
-            type: 'number'
-          },
-          {
-            name: 'Vertical Margin',
-            field: 'marginY',
-            type: 'number'
-          },
-          {
-            name: 'Show Grid',
-            field: 'showGrid',
-            type: 'toggle'
-          },
-          {
-            name: 'Free Placement',
-            field: 'freePlacement',
-            type: 'toggle'
+            name: 'Style',
+            field: 'style',
+            type: 'dropdown',
+            options: ['normal', 'italic', 'oblique']
           }
         ]
       },
       {
-        id: 'style',
-        name: 'Style',
+        id: 'background',
+        name: 'Background',
         content: [
           {
-            name: 'Background Color',
-            field: 'backgroundColor',
+            name: 'Color',
+            field: 'color',
+            type: 'color'
+          }
+        ]
+      },
+      {
+        id: 'border',
+        name: 'Border',
+        content: [
+          {
+            name: 'Color',
+            field: 'color',
             type: 'color'
           },
           {
-            name: 'Primary Color',
-            field: 'primaryColor',
-            type: 'color'
+            name: 'Width (px)',
+            field: 'width',
+            type: 'number'
           },
           {
-            name: 'Secondary Color',
-            field: 'secondaryColor',
-            type: 'color'
+            name: 'Radius (%)',
+            field: 'radius',
+            type: 'number'
+          },
+          {
+            name: 'Style',
+            field: 'style',
+            type: 'dropdown',
+            options: [
+              'none',
+              'dotted',
+              'dashed',
+              'solid',
+              'double',
+              'groove',
+              'ridge',
+              'inset',
+              'outset',
+              'hidden'
+            ]
+          }
+        ]
+      },
+      {
+        id: 'shadow',
+        name: 'Shadow',
+        content: [
+          {
+            name: 'Enabled?',
+            field: 'enabled',
+            type: 'toggle'
           }
         ]
       }
     ]
-    // TODO: Only if user has admin access
-    visibleSections.push({
-      id: 'permissions',
-      name: 'Permissions',
-      content: [
-        {
-          name: 'Private',
-          field: 'private',
-          type: 'toggle'
-        },
-        {
-          name: 'Users',
-          field: 'users',
-          type: 'permissions'
-        }
-      ]
-    })
     return visibleSections
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "../shared/styles/functions";
+  @import "../../shared/styles/functions";
 
-  .edit-dashboard {
+  .edit-tile {
     color: textColor('default');
     width: calc(60vw - 20px);
     height: calc(85vh - 90px);
@@ -426,8 +439,8 @@ export default class EditDashboard extends Vue {
           padding: 3px;
           z-index: 2;
           top: -70%;
-          width: 500%;
-          left: -200%;
+          width: 300%;
+          left: -100%;
           font-size: 14px;
           background-color: rgba(0, 0, 0, 0.5);
           color: textColor('default');
@@ -454,10 +467,15 @@ export default class EditDashboard extends Vue {
             background: bgColor('primary');
           }
         }
+        .copy-button {
+          position: absolute;
+          bottom: 70px;
+          align-self: flex-end;
+        }
         .save-button {
           position: absolute;
           bottom: 10px;
-          align-self: center;
+          align-self: flex-end;
         }
       }
       .edit-menu-content {
@@ -484,26 +502,6 @@ export default class EditDashboard extends Vue {
             .color-input {
               display: flex;
               flex-direction: row;
-            }
-            .permissions {
-              display: flex;
-              flex-direction: column;
-              align-content: center;
-              justify-self: center;
-              width: 100%;
-              .user-role-picker {
-                display: flex;
-                width: 25%;
-                align-self: center;
-                justify-content: space-between;
-                align-content: center;
-                padding-bottom: 10px;
-                height: 24px;
-                .username {
-                  font-weight: 300;
-                  font-size: 16px;
-                }
-              }
             }
             .input-left-side {
               align-self: center;

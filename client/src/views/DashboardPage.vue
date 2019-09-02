@@ -54,6 +54,8 @@
       <EditTile
         :tile="editTile"
         @update-tile="updateTile"
+        @copy-tile="copyTile"
+        @delete-tile="deleteTile"
         @close="closeTileEditView"
       />
     </Modal>
@@ -98,7 +100,7 @@
   import VueGridLayout from 'vue-grid-layout'
   import { StyleHelper, GridHelper } from '../shared/helpers'
   import { Dashboard, FabData } from '../types'
-    // import EditTile from '@/components/tiles/EditTile.vue'
+  import EditTile from '@/components/tiles/EditTile.vue'
   import EditDashboard from '@/components/EditDashboard.vue'
   import BaseTile from '@/components/tiles/BaseTile.vue'
   import Modal from '@/components/Modal.vue'
@@ -107,7 +109,7 @@
   @Component({
     components: {
       BaseTile,
-      // EditTile,
+      EditTile,
       EditDashboard,
       Fab,
       Modal,
@@ -234,8 +236,18 @@
     }
 
     private async updateTile(newTile: any): Promise<void> {
-      await TileApi.updateTile(newTile)
+      await TileApi.updateTile({ dashboard_id: this.dashboard._id, ...newTile })
       this.getTile(newTile.tile_id)
+    }
+
+    private async deleteTile(tile: any): Promise<void> {
+      await TileApi.deleteTile({ dashboard_id: this.dashboard._id, ...tile })
+      this.fetchTiles()
+    }
+
+    private async copyTile(newTile: any): Promise<void> {
+      await TileApi.createTile({ dashboard_id: this.dashboard._id, ...newTile })
+      this.fetchTiles()
     }
 
     private async updateDashboard(newDashboard: Dashboard): Promise<void> {
