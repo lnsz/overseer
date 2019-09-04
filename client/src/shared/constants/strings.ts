@@ -6,5 +6,7 @@ export default {
   signUp: 'Sign Up',
   logIn: 'Log In',
   logOut: 'Log Out',
-  myAccount: 'My Account'
+  myAccount: 'My Account',
+  collections: 'Collections',
+  tileTypes: 'Tile Types'
 }

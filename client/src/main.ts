@@ -18,7 +18,17 @@ import {
   faLockOpen,
   faCog,
   faEllipsisV,
-  faTrashAlt
+  faTrashAlt,
+  faShapes,
+  faNetworkWired,
+  faPhotoVideo,
+  faChartBar,
+  faFont,
+  faWifi,
+  faImage,
+  faDesktop,
+  faChartLine,
+  faChartPie
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
@@ -34,7 +44,17 @@ library.add(
   faLockOpen,
   faCog,
   faEllipsisV,
-  faTrashAlt
+  faTrashAlt,
+  faShapes,
+  faNetworkWired,
+  faPhotoVideo,
+  faChartBar,
+  faFont,
+  faWifi,
+  faImage,
+  faDesktop,
+  faChartLine,
+  faChartPie
 )
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 

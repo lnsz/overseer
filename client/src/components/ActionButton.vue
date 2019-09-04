@@ -85,7 +85,7 @@
 
     // Modifiers
     &.small {
-      padding: 2px 10px 2px 10px;
+      padding: 5px 10px 5px 10px;
       font-size: 12px;
     }
     &.red {

@@ -29,6 +29,11 @@ export default new Router({
       component: () => import('./views/DashboardPage.vue')
     },
     {
+      path: '/dashboards/:dashboard_id/tiles/create',
+      name: 'TileTypePickerPage',
+      component: () => import('./views/DashboardPage.vue')
+    },
+    {
       path: '/404',
       name: '404',
       component: () => import('./views/NotFound.vue')

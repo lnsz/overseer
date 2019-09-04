@@ -13,6 +13,11 @@ const TileSchema = new Schema({
     x: Number,
     y: Number
   },
+  text: {
+    content: String,
+    verticalAlignment: String,
+    horizontalAlignment: String
+  },
   type: { 
     type: String,
     enum: ['status', 'iframe', 'image', 'piechart', 'text'],

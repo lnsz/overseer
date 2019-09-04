@@ -115,6 +115,54 @@
                   </select>
                 </div>
               </div>
+              <div v-else-if="input.type == 'chartData'">
+                <div class="chart-data">
+                  <div
+                    v-for="(data, index) in model[section.id][input.field]"
+                    :key="index"
+                    class="chart-data-wrapper"
+                  >
+                    <input
+                      class="input-field chart-data-input"
+                      v-model="model[section.id][input.field][index]['label']"
+                      placeholder="Label"
+                    />
+                    <input
+                      class="input-field chart-data-input"
+                      v-model="model[section.id][input.field][index]['data']"
+                      placeholder="Value"
+                    />
+                    <input
+                      class="input-field chart-data-input"
+                      v-model="model[section.id][input.field][index]['backgroundColor']"
+                      placeholder="Color"
+                    />
+                    <div class="remove-data-wrapper">
+                      <ActionButton
+                        size="small"
+                        color="red"
+                        @click="removeData(index)"
+                      >
+                        <font-awesome-icon
+                          class="icon"
+                          icon="minus"
+                        />
+                      </ActionButton>
+                    </div>
+                  </div>
+                  <div class="add-data-wrapper">
+                    <ActionButton
+                      size="small"
+                      @click="addData"
+                    >
+                      <font-awesome-icon
+                        class="icon"
+                        icon="plus"
+                      />
+                    </ActionButton>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -150,12 +198,15 @@ export default class EditTile extends Vue {
     font: {},
     border: {},
     background: {},
+    text: {},
     outline: {},
     shadow: {},
     layout: {},
     status: {},
     iframe: {},
-    chart: {},
+    chart: {
+      data: []
+    },
   }
   private currentSection = 0
   private isScrolling = false
@@ -168,7 +219,8 @@ export default class EditTile extends Vue {
     this.model.layout = this.tile.layout || {}
     this.model.status = this.tile.status || {}
     this.model.iframe = this.tile.iframe || {}
-    this.model.chart = this.tile.chart || {}
+    this.model.chart = this.tile.chart || { data: [] }
+    this.model.text = this.tile.text || {}
     if (this.tile.style) {
       this.model.font = this.tile.style.font || {}
       this.model.background = this.tile.style.background || {}
@@ -230,6 +282,7 @@ export default class EditTile extends Vue {
       url: this.model.general.url,
       iframe: this.model.iframe,
       chart: this.model.chart,
+      text: this.model.text,
       style: {
         font: this.model.font,
         background: this.model.background,
@@ -252,9 +305,104 @@ export default class EditTile extends Vue {
     this.$emit('close')
   }
 
+  private getTypeSpecificSection(): any {
+    switch(this.tile.type) {
+      case 'text':
+        return [{
+          id: 'text',
+          name: 'Text',
+          content: [
+            {
+              name: 'Content',
+              field: 'content',
+              type: 'text'
+            },
+            {
+              name: 'Vertical Alignment',
+              field: 'verticalAlignment',
+              type: 'dropdown',
+              options: ['start', 'center', 'end']
+            },
+            {
+              name: 'Horizontal Alignment',
+              field: 'horizontalAlignment',
+              type: 'dropdown',
+              options: ['start', 'center', 'end']
+            }
+          ]
+        }]
+      case 'iframe':
+        return [{
+          id: 'iframe',
+          name: 'iFrame',
+          content: [
+            {
+              name: 'Zoom',
+              field: 'zoomLevel',
+              type: 'number'
+            },
+            {
+              name: 'Refresh Time (minutes)',
+              field: 'refreshTime',
+              type: 'number'
+            },
+            {
+              name: 'Scrollable?',
+              field: 'scrollable',
+              type: 'toggle'
+            }
+          ]
+        }]
+      case 'image':
+        return [{
+          id: 'iframe',
+          name: 'iFrame',
+          content: [
+            {
+              name: 'Zoom',
+              field: 'zoomLevel',
+              type: 'number'
+            },
+            {
+              name: 'Scrollable?',
+              field: 'scrollable',
+              type: 'toggle'
+            }
+          ]
+        }]
+      case 'piechart':
+      case 'linechart':
+        return [{
+          id: 'chart',
+          name: 'Chart',
+          content: [
+            {
+              name: 'Data',
+              field: 'data',
+              type: 'chartData'
+            }
+          ]
+        }]
+      default:
+        return []
+    }
+  }
+
+  private addData(): void {
+    this.model.chart.data.push({
+      label: '',
+      backgroundColor: '',
+      value: ''
+    })
+  }
+
+  private removeData (index) {
+    this.model.chart.data.splice(index)
+  }
+
   // Computed
   get sections(): any {
-    const visibleSections = [
+    return [
       {
         id: 'general',
         name: 'General',
@@ -271,6 +419,7 @@ export default class EditTile extends Vue {
           }
         ]
       },
+      ...this.getTypeSpecificSection(),
       {
         id: 'font',
         name: 'Font',
@@ -379,7 +528,6 @@ export default class EditTile extends Vue {
         ]
       }
     ]
-    return visibleSections
   }
 }
 </script>
@@ -502,6 +650,16 @@ export default class EditTile extends Vue {
             .color-input {
               display: flex;
               flex-direction: row;
+            }
+            .chart-data-wrapper {
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              padding: 10px 0;
+              .chart-data-input {
+                width: 20%;
+                margin: 0 10px;
+              }
             }
             .input-left-side {
               align-self: center;

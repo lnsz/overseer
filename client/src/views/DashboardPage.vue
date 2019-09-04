@@ -47,18 +47,6 @@
         />
       </grid-item>
     </grid-layout>
-    <Modal
-      v-if="isTileEditView"
-      @close="closeTileEditView"
-    >
-      <EditTile
-        :tile="editTile"
-        @update-tile="updateTile"
-        @copy-tile="copyTile"
-        @delete-tile="deleteTile"
-        @close="closeTileEditView"
-      />
-    </Modal>
     <router-link
       v-if="isButtonVisible"
       :to="{ query: { tab: 'best' }, name: 'Dashboards' }"
@@ -80,6 +68,18 @@
       @mouse-leave="setHovering(false)"
     />
     <Modal
+      v-if="isTileEditView && editTile"
+      @close="closeTileEditView"
+    >
+      <EditTile
+        :tile="editTile"
+        @update-tile="updateTile"
+        @copy-tile="copyTile"
+        @delete-tile="deleteTile"
+        @close="closeTileEditView"
+      />
+    </Modal>
+    <Modal
       v-if="isDashboardEditView"
       @close="closeDashboardEditView"
     >
@@ -88,6 +88,15 @@
         @update-dashboard="updateDashboard"
         @delete-dashboard="deleteDashboard"
         @close="closeDashboardEditView"
+      />
+    </Modal>
+    <Modal
+      v-if="isTileTypeView"
+      @close="closeTileTypeView"
+    >
+      <TileTypePicker
+        @create-tile="createTile"
+        @close="closeTileTypeView"
       />
     </Modal>
   </div>
@@ -102,6 +111,7 @@
   import { Dashboard, FabData } from '../types'
   import EditTile from '@/components/tiles/EditTile.vue'
   import EditDashboard from '@/components/EditDashboard.vue'
+  import TileTypePicker from '@/components/TileTypePicker.vue'
   import BaseTile from '@/components/tiles/BaseTile.vue'
   import Modal from '@/components/Modal.vue'
   import Fab from '@/components/Fab.vue'
@@ -111,6 +121,7 @@
       BaseTile,
       EditTile,
       EditDashboard,
+      TileTypePicker,
       Fab,
       Modal,
       GridLayout: VueGridLayout.GridLayout,
@@ -123,6 +134,7 @@
     private tiles = []
     private isTileEditView = false
     private isDashboardEditView = false
+    private isTileTypeView = false
     private movementTimer = 3000
     private movementTimeout = null
     private refreshTimeout = null
@@ -193,9 +205,10 @@
       this.tiles.splice(tileIndex, 0, res.data)
     }
 
-    private async createTile(): Promise<void> {
+    private async createTile(type: string): Promise<void> {
       await TileApi.createTile({
         dashboard_id: this.$route.params.dashboard_id,
+        type: type,
         layout: {
           width: GridHelper.getTileWidth(this.dashboardLayout.columns),
           height: GridHelper.getTileHeight(this.dashboardLayout.rows),
@@ -276,6 +289,10 @@
         this.isDashboardEditView = true
       } else if (this.isDashboardEditView) {
         this.isDashboardEditView = false
+      } else if (this.chooseTileType) {
+        this.isTileTypeView = true
+      } else if (this.isTileTypeView) {
+        this.isTileTypeView = false
       }
     }
 
@@ -301,6 +318,22 @@
         query: { ...this.$route.query }
       })
       this.isDashboardEditView = true
+    }
+
+    private openTileTypeView(): void {
+      this.$router.push({
+        path: `/dashboards/${this.dashboard._id}/tiles/create`,
+        query: { ...this.$route.query }
+      })
+      this.isTileTypeView = true
+    }
+
+    private closeTileTypeView(): void {
+      this.$router.push({
+        path: `/dashboards/${this.dashboard._id}/view`,
+        query: { ...this.$route.query }
+      })
+      this.isTileTypeView = false
     }
 
     private closeDashboardEditView(): void {
@@ -346,6 +379,10 @@
       return this.$route.path.includes('edit')
     }
 
+    get chooseTileType(): boolean {
+      return this.$route.path.includes('tiles/create')
+    }
+
     get isButtonVisible(): boolean {
       return this.isCursorVisible || this.isDashboardEditView || this.isTileEditView
     }
@@ -368,7 +405,7 @@
         {
           name: 'Add Tile',
           icon: 'plus',
-          click: this.createTile
+          click: this.openTileTypeView
         },
         {
           name: 'Edit Dashboard',
