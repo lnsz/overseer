@@ -18,6 +18,21 @@ export default new Router({
       component: () => import('./views/DashboardListPage.vue'),
     },
     {
+      path: '/login',
+      name: 'Login',
+      component: () => import('./views/DashboardListPage.vue'),
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('./views/DashboardListPage.vue'),
+    },
+    {
+      path: '/dashboards/create',
+      name: 'CreateDashboard',
+      component: () => import('./views/DashboardListPage.vue'),
+    },
+    {
       path: '/dashboards/:dashboard_id/view',
       alias: '/dashboards/:dashboard_id/edit',
       name: 'ViewDashboardPage',

@@ -4,7 +4,7 @@
     <div class="dashboard-list-container">
       <div class="filters">
         <TabBar :tabs="tabs" />
-        <SearchBox @search="() => {}" />
+        <SearchBox @search="updateFilter" />
       </div>
       <DashboardList
         :dashboards="filteredDashboards"
@@ -32,7 +32,7 @@
   })
   export default class DashboardListPage extends Vue {
     // Data
-    private tabs = ['best', 'hot', 'newest', 'private', 'stars']
+    private tabs = ['best', 'hot', 'newest', 'private', 'mine']
     private dashboardFilter = ''
     private dashboards = []
 

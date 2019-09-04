@@ -34,107 +34,100 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import strings from '../shared/constants/strings'
-  import ActionButton from '@/components/ActionButton.vue'
+import { Component, Vue } from 'vue-property-decorator'
+import strings from '../shared/constants/strings'
 
-  @Component({
-    components: {
-      ActionButton
+@Component
+export default class TileTypePicker extends Vue {
+  // Data
+  private currentCollection = ''
+  private collections = [
+    {
+      name: 'Standard',
+      value: 'standard',
+      icon: 'shapes',
+      tiles: [
+        {
+          name: 'Text',
+          value: 'text',
+          icon: 'font'
+        }
+      ]
+    },
+    {
+      name: 'Networking',
+      value: 'networking',
+      icon: 'network-wired',
+      tiles: [
+        {
+          name: 'Status',
+          value: 'status',
+          icon: 'wifi'
+        }
+      ]
+    },
+    {
+      name: 'Media',
+      value: 'media',
+      icon: 'photo-video',
+      tiles: [
+        {
+          name: 'Image',
+          value: 'image',
+          icon: 'image'
+        },
+        {
+          name: 'iFrame',
+          value: 'iframe',
+          icon: 'desktop'
+        }
+      ]
+    },
+    {
+      name: 'Charts',
+      value: 'charts',
+      icon: 'chart-bar',
+      tiles: [
+        {
+          name: 'Pie Chart',
+          value: 'piechart',
+          icon: 'chart-pie'
+        },
+        {
+          name: 'Line Chart',
+          value: 'linechart',
+          icon: 'chart-line'
+        },
+        {
+          name: 'Bar Chart',
+          value: 'barchart',
+          icon: 'chart-bar'
+        }
+      ]
     }
-  })
-  export default class TileTypePicker extends Vue {
-    // Data
-    private currentCollection = ''
-    private collections = [
-      {
-        name: 'Standard',
-        value: 'standard',
-        icon: 'shapes',
-        tiles: [
-          {
-            name: 'Text',
-            value: 'text',
-            icon: 'font'
-          }
-        ]
-      },
-      {
-        name: 'Networking',
-        value: 'networking',
-        icon: 'network-wired',
-        tiles: [
-          {
-            name: 'Status',
-            value: 'status',
-            icon: 'wifi'
-          }
-        ]
-      },
-      {
-        name: 'Media',
-        value: 'media',
-        icon: 'photo-video',
-        tiles: [
-          {
-            name: 'Image',
-            value: 'image',
-            icon: 'image'
-          },
-          {
-            name: 'iFrame',
-            value: 'iframe',
-            icon: 'desktop'
-          }
-        ]
-      },
-      {
-        name: 'Charts',
-        value: 'charts',
-        icon: 'chart-bar',
-        tiles: [
-          {
-            name: 'Pie Chart',
-            value: 'piechart',
-            icon: 'chart-pie'
-          },
-          {
-            name: 'Line Chart',
-            value: 'linechart',
-            icon: 'chart-line'
-          },
-          {
-            name: 'Bar Chart',
-            value: 'barchart',
-            icon: 'chart-bar'
-          }
-        ]
-      }
-    ]
+  ]
 
-    // Methods
-    private handleClick(itemValue): void {
-      if (this.currentCollection) {
-        this.$emit('create-tile', itemValue)
-        this.$emit('close')
-      } else {
-        this.currentCollection = itemValue
-      }
-    }
-
-    // Computed
-    get title(): string {
-      return this.currentCollection ? strings.tileTypes : strings.collections
-    }
-
-    get items(): any[] {
-      return this.currentCollection ?
-        this.collections.find(x => x.value == this.currentCollection).tiles :
-        this.collections
+  // Methods
+  private handleClick(itemValue): void {
+    if (this.currentCollection) {
+      this.$emit('create-tile', itemValue)
+      this.$emit('close')
+    } else {
+      this.currentCollection = itemValue
     }
   }
 
+  // Computed
+  get title(): string {
+    return this.currentCollection ? strings.tileTypes : strings.collections
+  }
 
+  get items(): any[] {
+    return this.currentCollection ?
+      this.collections.find((x) => x.value === this.currentCollection).tiles :
+      this.collections
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -147,12 +140,11 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    margin: 10px;
+    margin: 20px;
     position: relative;
     align-items: stretch;
     .title {
       font-size: 28px;
-      margin: 10px 10px 20px 10px;
     }
     .content-wrapper {
       flex: 1 0 auto;
@@ -160,6 +152,8 @@
       margin: 20px;
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr;
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
       .item {
         display: flex;
         flex-direction: column;
@@ -184,4 +178,3 @@
     }
   }
 </style>
-

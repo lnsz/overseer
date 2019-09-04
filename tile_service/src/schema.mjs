@@ -62,7 +62,10 @@ const TileSchema = new Schema({
       offset: Number,
     },
     shadow: {
-      enabled: Boolean
+      enabled: {
+        type: Boolean,
+        default: true
+      }
     }
   }
 })

@@ -28,13 +28,13 @@
       :tile="tile"
       :columns="columns"
       :locked="locked"
-    />
+    /> -->
     <TextTile
-      v-else-if="tile.type === 'text'"
+      v-if="tile.type === 'text'"
       :tile="tile"
       :columns="columns"
     />
-    <ChartTile
+    <!-- <ChartTile
       v-else-if="tile.type === 'piechart'"
       :tile="tile"
     /> -->
@@ -52,7 +52,7 @@ import { StyleHelper } from '../../shared/helpers'
 // import IFrameTile from '@/components/tiles/IFrameTile'
 // import ImageTile from '@/components/tiles/ImageTile'
 // import StatusTile from '@/components/tiles/StatusTile'
-// import TextTile from '@/components/tiles/TextTile'
+import TextTile from '@/components/tiles/TextTile'
 // @Component({
 //   components: {
 //     ChartTile,
@@ -63,7 +63,11 @@ import { StyleHelper } from '../../shared/helpers'
 //     TileOptions
 //   }
 // })
-@Component
+@Component({
+  components: {
+    TextTile
+  }
+})
 export default class BaseTile extends Vue {
   // Props
   @Prop({ default: {} })
@@ -82,26 +86,28 @@ export default class BaseTile extends Vue {
   private isOptionsOpen = false
 
   // Computed
-  get backgroundColor(): string {
-    return this.tile.style ? this.tile.style.backgroundColor : ''
+  get background(): any {
+    return StyleHelper.backgroundCSS(this.tile.style)
   }
 
-  get background(): object {
-    return StyleHelper.backgroundCSS(this.backgroundColor)
+  get font(): any {
+    return StyleHelper.fontCSS(this.tile.style)
   }
 
-  get textColor(): string {
-    return this.tile.style ? this.tile.style.textColor : ''
+  get border(): any {
+    return StyleHelper.borderCSS(this.tile.style)
   }
 
-  get text(): object {
-    return StyleHelper.textCSS(this.textColor)
+  get shadow(): any {
+    return StyleHelper.shadowCSS(this.tile.style)
   }
 
   get tileStyle(): object {
     return {
       ...this.background,
-      ...this.text
+      ...this.font,
+      ...this.border,
+      ...this.shadow
     }
   }
 
@@ -123,7 +129,6 @@ export default class BaseTile extends Vue {
   }
 
   private toggleOptions(): void {
-    console.log('options')
     this.isOptionsOpen = !this.isOptionsOpen
   }
 
@@ -143,7 +148,6 @@ export default class BaseTile extends Vue {
     cursor: pointer;
     height: calc(100% - 10px);
     width: calc(100% - 10px);
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1);
     color: textColor('default');
     margin: 5px;
     background: bgColor('secondary');

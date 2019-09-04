@@ -287,7 +287,8 @@ export default class EditTile extends Vue {
         font: this.model.font,
         background: this.model.background,
         outline: this.model.outline,
-        border: this.model.border
+        border: this.model.border,
+        shadow: this.model.shadow
       }
     }
     this.$emit('update-tile', newTile)
@@ -306,7 +307,7 @@ export default class EditTile extends Vue {
   }
 
   private getTypeSpecificSection(): any {
-    switch(this.tile.type) {
+    switch (this.tile.type) {
       case 'text':
         return [{
           id: 'text',
@@ -321,13 +322,13 @@ export default class EditTile extends Vue {
               name: 'Vertical Alignment',
               field: 'verticalAlignment',
               type: 'dropdown',
-              options: ['start', 'center', 'end']
+              options: ['top', 'center', 'bottom']
             },
             {
               name: 'Horizontal Alignment',
               field: 'horizontalAlignment',
               type: 'dropdown',
-              options: ['start', 'center', 'end']
+              options: ['left', 'center', 'right']
             }
           ]
         }]
@@ -396,7 +397,7 @@ export default class EditTile extends Vue {
     })
   }
 
-  private removeData (index) {
+  private removeData(index) {
     this.model.chart.data.splice(index)
   }
 
@@ -571,7 +572,7 @@ export default class EditTile extends Vue {
       .delete-button {
         cursor: pointer;
         color: textColor('default');
-        font-size: 30px;
+        font-size: 24px;
         position: relative;
         &:hover {
           color: shade(textColor('default'), 20%);
@@ -587,8 +588,8 @@ export default class EditTile extends Vue {
           padding: 3px;
           z-index: 2;
           top: -70%;
-          width: 300%;
-          left: -100%;
+          width: 500%;
+          left: -200%;
           font-size: 14px;
           background-color: rgba(0, 0, 0, 0.5);
           color: textColor('default');

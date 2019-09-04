@@ -145,230 +145,230 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import VueScrollTo from 'vue-scrollto'
-import { ToggleButton } from 'vue-js-toggle-button'
-import { UserApi } from '../api'
-import ActionButton from '@/components/ActionButton.vue'
-import { Dashboard } from '../types'
+  import { Component, Vue, Prop } from 'vue-property-decorator'
+  import VueScrollTo from 'vue-scrollto'
+  import { ToggleButton } from 'vue-js-toggle-button'
+  import { UserApi } from '../api'
+  import ActionButton from '@/components/ActionButton.vue'
+  import { Dashboard } from '../types'
 
-@Component({
-  components: {
-    ActionButton,
-    ToggleButton
-  }
-})
-export default class EditDashboard extends Vue {
-  // Props
-  @Prop({ default: {} })
-  private dashboard: Dashboard
-
-  // Data
-  private model = {
-    general: {
-      name: '',
-      description: '',
-      refreshTimer: 30
-    },
-    style: {},
-    layout: {},
-    tileSettings: {},
-    permissions: {
-      users: []
+  @Component({
+    components: {
+      ActionButton,
+      ToggleButton
     }
-  }
-  private currentSection = 0
-  private isScrolling = false
-  private userSearch = ''
-  private username = ''
-  private creator = ''
-  private roleOptions = ['none', 'viewer', 'editor', 'admin']
+  })
+  export default class EditDashboard extends Vue {
+    // Props
+    @Prop({ default: {} })
+    private dashboard: Dashboard
 
-  // Mounted
-  private mounted(): void {
-    this.model.general.name = this.dashboard.name || ''
-    this.model.general.description = this.dashboard.description || ''
-    this.model.general.refreshTimer = this.dashboard.refreshTimer || 30
-    this.model.style = this.dashboard.style || {}
-    this.model.layout = this.dashboard.layout || {}
-    this.model.tileSettings = this.dashboard.tileSettings || {}
-    this.model.permissions = this.dashboard.permissions || { users: [] }
-    this.creator = this.dashboard.creator || ''
-  }
-
-  // Methods
-  private addUserPermission(e: Event): void {
-    this.model.permissions.users.push({
-      username: this.username,
-      role: (event.target as HTMLInputElement).value
-    })
-  }
-
-  private removeNone(): void {
-    this.model.permissions.users = this.model.permissions.users.filter((x) => {
-      return x.role !== 'none'
-    })
-  }
-
-  private scrollToSection(index: number): void {
-    const options = {
-      container: '.edit-dashboard',
-      duration: 300,
-      easing: 'ease',
-      onStart: () => { this.isScrolling = true },
-      onDone: () => { this.isScrolling = false }
-    }
-    if (!this.isScrolling) {
-      VueScrollTo.scrollTo(
-        `#${this.sections[index].id}`,
-        options.duration, options
-      )
-    }
-  }
-
-  private clickOnSection(index: number): void {
-    if (this.currentSection < index) {
-      this.scrollToSection(index)
-    }
-  }
-
-  private updateCurrentSection(): void {
-    for (const [index, section] of this.sections.entries()) {
-      const rect = this.$refs[section.id][0].getBoundingClientRect()
-      const viewHeight = Math.max(this.$refs[section.id][0].clientHeight, window.innerHeight)
-      if (rect.bottom >= window.innerHeight / 4 && rect.top - viewHeight < 0) {
-        this.currentSection = index
-        break
+    // Data
+    private model = {
+      general: {
+        name: '',
+        description: '',
+        refreshTimer: 30
+      },
+      style: {},
+      layout: {},
+      tileSettings: {},
+      permissions: {
+        users: []
       }
     }
-  }
+    private currentSection = 0
+    private isScrolling = false
+    private userSearch = ''
+    private username = ''
+    private creator = ''
+    private roleOptions = ['none', 'viewer', 'editor', 'admin']
 
-  private updateField(e: Event, section: number, field: string): void {
-    this.model[section][field] = (e.target as HTMLInputElement).innerText
-  }
-
-  private saveDashboard(): void {
-    const newDashboard = {
-      dashboard_id: this.$route.params.dashboard_id,
-      name: this.model.general.name,
-      description: this.model.general.description,
-      refreshTimer: this.model.general.refreshTimer,
-      style: this.model.style,
-      layout: this.model.layout,
-      tileSettings: this.model.tileSettings,
-      permissions: this.model.permissions
+    // Mounted
+    private mounted(): void {
+      this.model.general.name = this.dashboard.name || ''
+      this.model.general.description = this.dashboard.description || ''
+      this.model.general.refreshTimer = this.dashboard.refreshTimer || 30
+      this.model.style = this.dashboard.style || {}
+      this.model.layout = this.dashboard.layout || {}
+      this.model.tileSettings = this.dashboard.tileSettings || {}
+      this.model.permissions = this.dashboard.permissions || { users: [] }
+      this.creator = this.dashboard.creator || ''
     }
-    this.$emit('update-dashboard', newDashboard)
-    this.$emit('close')
-  }
 
-  private deleteDashboard(): void {
-    // TODO show warning
-    this.$emit('delete-dashboard')
-  }
+    // Methods
+    private addUserPermission(e: Event): void {
+      this.model.permissions.users.push({
+        username: this.username,
+        role: (event.target as HTMLInputElement).value
+      })
+    }
 
-  private async searchForUsername(): Promise<void> {
-    const res = await UserApi.getUser({ username: this.userSearch })
-    this.username = res.data.username ? res.data.username : null
-  }
+    private removeNone(): void {
+      this.model.permissions.users = this.model.permissions.users.filter((x) => {
+        return x.role !== 'none'
+      })
+    }
 
-  // Computed
-  get sections(): any {
-    const visibleSections = [
-      {
-        id: 'general',
-        name: 'General',
-        content: [
-          {
-            name: 'Description',
-            field: 'description',
-            type: 'text'
-          },
-          {
-            name: 'Refresh Timer (minutes)',
-            field: 'refreshTimer',
-            type: 'number'
-          }
-        ]
-      },
-      {
-        id: 'layout',
-        name: 'Layout',
-        content: [
-          {
-            name: 'Rows',
-            field: 'rows',
-            type: 'number'
-          },
-          {
-            name: 'Columns',
-            field: 'columns',
-            type: 'number'
-          },
-          {
-            name: 'Horizontal Margin',
-            field: 'marginX',
-            type: 'number'
-          },
-          {
-            name: 'Vertical Margin',
-            field: 'marginY',
-            type: 'number'
-          },
-          {
-            name: 'Show Grid',
-            field: 'showGrid',
-            type: 'toggle'
-          },
-          {
-            name: 'Free Placement',
-            field: 'freePlacement',
-            type: 'toggle'
-          }
-        ]
-      },
-      {
-        id: 'style',
-        name: 'Style',
-        content: [
-          {
-            name: 'Background Color',
-            field: 'backgroundColor',
-            type: 'color'
-          },
-          {
-            name: 'Primary Color',
-            field: 'primaryColor',
-            type: 'color'
-          },
-          {
-            name: 'Secondary Color',
-            field: 'secondaryColor',
-            type: 'color'
-          }
-        ]
+    private scrollToSection(index: number): void {
+      const options = {
+        container: '.edit-dashboard',
+        duration: 300,
+        easing: 'ease',
+        onStart: () => { this.isScrolling = true },
+        onDone: () => { this.isScrolling = false }
       }
-    ]
-    // TODO: Only if user has admin access
-    visibleSections.push({
-      id: 'permissions',
-      name: 'Permissions',
-      content: [
+      if (!this.isScrolling) {
+        VueScrollTo.scrollTo(
+          `#${this.sections[index].id}`,
+          options.duration, options
+        )
+      }
+    }
+
+    private clickOnSection(index: number): void {
+      if (this.currentSection < index) {
+        this.scrollToSection(index)
+      }
+    }
+
+    private updateCurrentSection(): void {
+      for (const [index, section] of this.sections.entries()) {
+        const rect = this.$refs[section.id][0].getBoundingClientRect()
+        const viewHeight = Math.max(this.$refs[section.id][0].clientHeight, window.innerHeight)
+        if (rect.bottom >= window.innerHeight / 4 && rect.top - viewHeight < 0) {
+          this.currentSection = index
+          break
+        }
+      }
+    }
+
+    private updateField(e: Event, section: number, field: string): void {
+      this.model[section][field] = (e.target as HTMLInputElement).innerText
+    }
+
+    private saveDashboard(): void {
+      const newDashboard = {
+        dashboard_id: this.$route.params.dashboard_id,
+        name: this.model.general.name,
+        description: this.model.general.description,
+        refreshTimer: this.model.general.refreshTimer,
+        style: this.model.style,
+        layout: this.model.layout,
+        tileSettings: this.model.tileSettings,
+        permissions: this.model.permissions
+      }
+      this.$emit('update-dashboard', newDashboard)
+      this.$emit('close')
+    }
+
+    private deleteDashboard(): void {
+      // TODO show warning
+      this.$emit('delete-dashboard')
+    }
+
+    private async searchForUsername(): Promise<void> {
+      const res = await UserApi.getUser({ username: this.userSearch })
+      this.username = res.data.username ? res.data.username : null
+    }
+
+    // Computed
+    get sections(): any {
+      const visibleSections = [
         {
-          name: 'Private',
-          field: 'private',
-          type: 'toggle'
+          id: 'general',
+          name: 'General',
+          content: [
+            {
+              name: 'Description',
+              field: 'description',
+              type: 'text'
+            },
+            {
+              name: 'Refresh Timer (minutes)',
+              field: 'refreshTimer',
+              type: 'number'
+            }
+          ]
         },
         {
-          name: 'Users',
-          field: 'users',
-          type: 'permissions'
+          id: 'layout',
+          name: 'Layout',
+          content: [
+            {
+              name: 'Rows',
+              field: 'rows',
+              type: 'number'
+            },
+            {
+              name: 'Columns',
+              field: 'columns',
+              type: 'number'
+            },
+            {
+              name: 'Horizontal Margin',
+              field: 'marginX',
+              type: 'number'
+            },
+            {
+              name: 'Vertical Margin',
+              field: 'marginY',
+              type: 'number'
+            },
+            {
+              name: 'Show Grid',
+              field: 'showGrid',
+              type: 'toggle'
+            },
+            {
+              name: 'Free Placement',
+              field: 'freePlacement',
+              type: 'toggle'
+            }
+          ]
+        },
+        {
+          id: 'style',
+          name: 'Style',
+          content: [
+            {
+              name: 'Background Color',
+              field: 'backgroundColor',
+              type: 'color'
+            },
+            {
+              name: 'Primary Color',
+              field: 'primaryColor',
+              type: 'color'
+            },
+            {
+              name: 'Secondary Color',
+              field: 'secondaryColor',
+              type: 'color'
+            }
+          ]
         }
       ]
-    })
-    return visibleSections
+      // TODO: Only if user has admin access
+      visibleSections.push({
+        id: 'permissions',
+        name: 'Permissions',
+        content: [
+          {
+            name: 'Private',
+            field: 'private',
+            type: 'toggle'
+          },
+          {
+            name: 'Users',
+            field: 'users',
+            type: 'permissions'
+          }
+        ]
+      })
+      return visibleSections
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -410,7 +410,7 @@ export default class EditDashboard extends Vue {
       .delete-button {
         cursor: pointer;
         color: textColor('default');
-        font-size: 30px;
+        font-size: 24px;
         position: relative;
         &:hover {
           color: shade(textColor('default'), 20%);
@@ -426,8 +426,8 @@ export default class EditDashboard extends Vue {
           padding: 3px;
           z-index: 2;
           top: -70%;
-          width: 500%;
-          left: -200%;
+          width: 700%;
+          left: -300%;
           font-size: 14px;
           background-color: rgba(0, 0, 0, 0.5);
           color: textColor('default');
