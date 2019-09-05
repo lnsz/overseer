@@ -34,10 +34,10 @@
       :tile="tile"
       :columns="columns"
     />
-    <!-- <ChartTile
-      v-else-if="tile.type === 'piechart'"
+    <ChartTile
+      v-else-if="tile.type === 'piechart' || tile.type === 'linechart' || tile.type === 'barchart'"
       :tile="tile"
-    /> -->
+    />
   </div>
 </template>
 
@@ -46,13 +46,15 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import strings from '../../shared/constants/strings'
 import { TileApi } from '../../api'
 import { StyleHelper } from '../../shared/helpers'
+import TextTile from '@/components/tiles/TextTile.vue'
+import ChartTile from '@/components/tiles/ChartTile.vue'
+
 
 // import ChartTile from '@/components/tiles/ChartTile'
 // import TileOptions from '@/components/tiles/TileOptions'
 // import IFrameTile from '@/components/tiles/IFrameTile'
 // import ImageTile from '@/components/tiles/ImageTile'
 // import StatusTile from '@/components/tiles/StatusTile'
-import TextTile from '@/components/tiles/TextTile'
 // @Component({
 //   components: {
 //     ChartTile,
@@ -65,7 +67,8 @@ import TextTile from '@/components/tiles/TextTile'
 // })
 @Component({
   components: {
-    TextTile
+    TextTile,
+    ChartTile
   }
 })
 export default class BaseTile extends Vue {

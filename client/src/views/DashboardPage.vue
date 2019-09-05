@@ -6,7 +6,7 @@
     }"
     @mousemove="updateTimer"
     @click="updateTimer"
-    :style="dashboardStyle"
+    :style="background"
   >
     <grid-layout
       :layout.sync="layout"
@@ -367,7 +367,11 @@ export default class DashboardPage extends Vue {
   }
 
   get background(): any {
-    return StyleHelper.backgroundCSS(this.dashboardStyle.backgroundColor)
+    return StyleHelper.backgroundCSS({
+      background: {
+        color: this.dashboardStyle.backgroundColor
+      }
+    })
   }
 
   get editTile(): any {

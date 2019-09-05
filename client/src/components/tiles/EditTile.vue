@@ -129,7 +129,7 @@
                     />
                     <input
                       class="input-field chart-data-input"
-                      v-model="model[section.id][input.field][index]['data']"
+                      v-model="model[section.id][input.field][index]['value']"
                       placeholder="Value"
                     />
                     <input
@@ -372,6 +372,7 @@ export default class EditTile extends Vue {
           ]
         }]
       case 'piechart':
+      case 'barchart':
       case 'linechart':
         return [{
           id: 'chart',

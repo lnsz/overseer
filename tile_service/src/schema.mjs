@@ -20,7 +20,7 @@ const TileSchema = new Schema({
   },
   type: { 
     type: String,
-    enum: ['status', 'iframe', 'image', 'piechart', 'text'],
+    enum: ['status', 'iframe', 'image', 'piechart', 'text', 'barchart', 'linechart'],
     default: 'text'
   },
   status: {
