@@ -1,27 +1,52 @@
 # Overseer
 
+![Alt text](demo/overseer.gif)
+
 ## Build Setup
 
-``` bash
-# build
+### build
+```
 ./overseer build
+```
 
-# start in dev
+### start in dev
+```
 ./overseer start
+```
 
-# start in prod
+### start in prod
+```
 MODE=prod ./overseer start
+```
 
-# stop
+### stop
+```
 ./overseer stop
+```
 
-# reset db
+### reset db
+```
 ./overseer reset
+```
 
-# push to dockerhub
+### push to dockerhub
+```
 docker login docker.io
 ./overseer push
+```
 
-# install from dockerhub
+### install from dockerhub
+```
 docker login docker.io
 ./overseer install
+```
+
+### Create db backup
+```
+./overseer backup
+```
+
+### Restore db from backup
+```
+./overseer restore [filename]
+```

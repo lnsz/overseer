@@ -17,6 +17,7 @@
 #####################
 [ "$DOCKER_COMPOSE" ]                  || DOCKER_COMPOSE='docker-compose.yml'
 [ "$GIT_ROOT" ]                        || GIT_ROOT="$(pwd)"
+[ "$BACKUPS_PATH" ]                    || BACKUPS_PATH="${GIT_ROOT}/backups"
 
 #####################
 # DOCKER
@@ -608,6 +609,44 @@ install_overseer() {
   docker pull "${WORKER_DB_IMAGE}:${WORKER_DB_TAG}"
 }
 
+backup_overseer() {
+  if [ ! -d "$BACKUPS_PATH" ]; then
+    mkdir -p "$BACKUPS_PATH"
+  fi
+  TIMESTAMP=$(date +%y%m%d%H%M%S)
+  echo "$TIMESTAMP - Starting backup"
+  BACKUP_NAME="overseer-db-$TIMESTAMP"
+  cd $BACKUPS_PATH
+  mkdir $BACKUP_NAME
+  docker exec -it $DASHBOARD_DB_NAME mongodump --port 41011 --out overseer_dashboards     \
+  && docker cp $DASHBOARD_DB_NAME:/overseer_dashboards "${BACKUPS_PATH}/${BACKUP_NAME}/"  \
+  && docker exec -it $TILE_DB_NAME mongodump --port 41021 --out overseer_tiles            \
+  && docker cp $TILE_DB_NAME:/overseer_tiles "${BACKUPS_PATH}/${BACKUP_NAME}/"            \
+  && docker exec -it $USER_DB_NAME mongodump --port 41031 --out overseer_users            \
+  && docker cp $USER_DB_NAME:/overseer_users "${BACKUPS_PATH}/${BACKUP_NAME}/"            \
+  && echo "Backup completed - Saved $(pwd)/${BACKUP_NAME}"                        \
+  || echo "Backup failed"
+}
+
+restore_overseer() {
+  BACKUP_FILE="${BACKUPS_PATH}/${1}"
+  if [ -d "$BACKUP_FILE" ]; then
+    echo "Restoring ${BACKUP_FILE}"
+    cd $BACKUP_FILE
+    docker cp overseer_dashboards $DASHBOARD_DB_NAME:/                                   \
+      && docker exec -it $DASHBOARD_DB_NAME mongorestore --port 41011 overseer_dashboards  \
+      && docker cp overseer_tiles $TILE_DB_NAME:/                                          \
+      && docker exec -it $TILE_DB_NAME mongorestore --port 41021 overseer_tiles            \
+      && docker cp overseer_users $USER_DB_NAME:/                                          \
+      && docker exec -it $USER_DB_NAME mongorestore --port 41031 overseer_users            \
+      && echo "Restoration completed"                                            \
+      || echo "Restoration failed"
+  else
+    echo "File ${BACKUP_FILE} does not exist"
+    echo "Usage: ./overseer restore overseer-db-xxxxxxxxxx"
+  fi
+}
+
 create_compose_file
 if [ "${ARGS#*build}" != "$ARGS" ]; then
   build_overseer
@@ -622,4 +661,8 @@ elif [ "${ARGS#*push}" != "$ARGS" ]; then
   push_overseer
 elif [ "${ARGS#*install}" != "$ARGS" ]; then
   install_overseer
+elif [ "${ARGS#*backup}" != "$ARGS" ]; then
+  backup_overseer
+elif [ "${ARGS#*restore}" != "$ARGS" ]; then
+  restore_overseer $2
 fi
